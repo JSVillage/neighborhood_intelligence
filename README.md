@@ -20,3 +20,10 @@ Design Criteria:
 - Web app but think native experience, interaction
 - Select or develop a strong collection of visual assets (icons) to help communicate information. 
 - Use color to subtly convey emotion associated with safety: calm/caution/danger as well as night/day/morning/twilight
+
+
+Dates:
+- August 10th first programming day
+- August 17th Second programming day
+- August 24th Judging and Presentation day
+
