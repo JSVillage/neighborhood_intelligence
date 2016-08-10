@@ -3,14 +3,7 @@
 @import 'variables';
 
 
-//
-// Load third party css (bower and otherwise):
-// --------------------------------------------------
-// bower
-// @import '../bower_components/owlcarousel2/src/owl.carousel.scss';
-
-@import '../bower_components/bower-custom-bootstrap/assets/stylesheets/bootstrap-custom';
-
+// bower imports
 
 //
 // Load core styles
@@ -27,7 +20,12 @@
 //
 // component css aggregated and pulled here via gulp
 
-
+.foo{
+  line-height: 2;
+}
+h1{
+  font-weight:bold;
+}
 
 
 

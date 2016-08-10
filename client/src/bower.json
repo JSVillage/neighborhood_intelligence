@@ -1,11 +1,11 @@
 {
-  "name": "skeleton-bower",
+  "name": "ni-bower",
   "version": "0.0.0",
-  "homepage": "https://github.com/vespoli/skeleton2.git",
+  "homepage": "https://github.com/JSVillage/neighborhood_intelligence.git",
   "authors": [
-    "David Vespoli <david.vespoli@gmail.com>"
+    "Neighborhood Intelligence JS Village team"
   ],
-  "description": "Bower components for skeleton",
+  "description": "Neighborhood Intelligence - JS Village",
   "license": "MIT",
   "ignore": [
     "**/.*",
@@ -15,9 +15,7 @@
     "tests"
   ],
   "dependencies": {
-    "bower-custom-bootstrap": "https://github.com/vespoli/bower-custom-bootstrap.git",
-    "angular": "^1.5.6",
-    "jquery": ">= 1.9.0",
+    "express": "^4.14.0",
     "d3": "^3.5.17"
   }
 }

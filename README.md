@@ -49,5 +49,7 @@ bower install
 
 ## Troubleshooting
 
-If you're receiving dependency errors you may be running a newer version of node than what is supported. Install [nvm](https://github.com/creationix/nvm) . Once installed type "nvm install 0.12.0" and then "nvm use 0.12.0". If you are having trouble getting nvm installed, see this issue for help: [https://github.com/creationix/nvm/issues/576](https://github.com/creationix/nvm/issues/576)
+~~If you're receiving dependency errors you may be running a newer version of node than what is supported. Install [nvm](https://github.com/creationix/nvm) . Once installed type "nvm install 0.12.0" and then "nvm use 0.12.0". If you are having trouble getting nvm installed, see this issue for help: [https://github.com/creationix/nvm/issues/576](https://github.com/creationix/nvm/issues/576)~~
+
+Updated package to use current node LTS 4.4.7. No longer need to run nvm to get an older version of node
 
