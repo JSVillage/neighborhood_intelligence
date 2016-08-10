@@ -1,14 +1,14 @@
 {
-  "name": "skeleton2",
+  "name": "neighborhood intelligence",
   "version": "1.0.0",
-  "description": "Base front end project framework",
+  "description": "An app that warns you if you're walking into high crime areas.",
   "main": "index.js",
   "scripts": {
     "test": "node index.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/vespoli/skeleton2.git"
+    "url": "https://github.com/JSVillage/neighborhood_intelligence.git"
   },
   "keywords": [
     "node",
@@ -16,7 +16,7 @@
     "sass",
     "angular"
   ],
-  "author": "David Vespoli",
+  "author": "Neighborhood Intelligence team",
   "devDependencies": {
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^3.1.0",
