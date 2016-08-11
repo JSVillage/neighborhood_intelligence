@@ -57,3 +57,12 @@ Updated package to use current node LTS 4.4.7. No longer need to run nvm to get 
 
 https://guides.github.com/introduction/flow/
 
+## Data
+
+### Neighborhood
+
+https://www.phoenix.gov/nsd/programs/neighborhood-coordination
+
+### City of Phoenix
+
+https://www.phoenix.gov/OpenDataFiles/Crime%20Stats.csv
