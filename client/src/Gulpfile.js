@@ -31,7 +31,7 @@ gulp.task('scripts', function() {
 });
 
 gulp.task('libscripts', function() {
-  gulp.src(['./js/lib/**/*.js'])
+  gulp.src(['./js/lib/*.*'])
     .pipe(plumber())
     .pipe(include())
     .pipe(gulp.dest(buildDirectory + '/js/lib'));
