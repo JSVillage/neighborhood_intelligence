@@ -73,8 +73,5 @@ https://www.phoenix.gov/OpenDataFiles/Crime%20Stats.csv
 # Install dependencies
 npm install
 
-# Start development live-reload server
-PORT=8080 npm run dev
-
-# Start production server:
-PORT=8080 npm start
+# Boot your db
+https://www.npmjs.com/package/mongodb#booting-up-a-mongodb-server
