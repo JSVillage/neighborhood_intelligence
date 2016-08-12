@@ -54,7 +54,7 @@ gulp.task('markup', function() {
     .pipe(jade({
       pretty: true
     }))
-    .pipe(gulp.dest(buildDirectory + '/html'));
+    .pipe(gulp.dest(buildDirectory + '/'));
 });
 
 gulp.task('copy-robots', function() {
