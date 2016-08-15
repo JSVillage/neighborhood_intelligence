@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var data = require('./data');
 
 var db = require('./db');
 
@@ -59,5 +60,7 @@ app.use(function(err, req, res, next) {
   });
 });
 
+//run data cron job
+data.cron();
 
 module.exports = app;
