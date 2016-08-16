@@ -13,6 +13,8 @@ var gulp    = require('gulp'),
     plumber = require('gulp-plumber'),
     rename = require("gulp-rename"),
     minify = require('gulp-minifier'),
+    browserSync = require('browser-sync').create(),
+    reload = browserSync.reload,
     buildDirectory = '../build';
 
 
@@ -45,7 +47,7 @@ gulp.task('styles', function() {
     .pipe(autoprefixer('last 2 versions', '> 1%', 'ie 8'))
     .pipe(rename('main.css'))
     .pipe(gulp.dest(buildDirectory + '/styles'));
-    
+
 });
 
 gulp.task('markup', function() {
@@ -92,6 +94,13 @@ gulp.task('minify', function() {
   })).pipe(gulp.dest(buildDirectory + '/'));
 });
 
+gulp.task('serve', function () {
+  browserSync.init({
+    server: {
+      baseDir: buildDirectory
+    }
+  });
+});
 
 gulp.task('watch', function() {
 
@@ -101,13 +110,13 @@ gulp.task('watch', function() {
                 './templates/pages/**/*.jade',
                 './templates/layouts/*.jade'
               ], ['markup']);
-  
+
   //style sheets
   gulp.watch([  './scss/*.scss',
-                './components/**/*.scss', 
+                './components/**/*.scss',
                 '!./scss/temp.scss'
               ], ['styles']);
-  
+
   //plain old copy stuff over
   gulp.watch('./js/lib/*.js', ['copy-lib']);
   gulp.watch('./data/*.json', ['copy-data']);
@@ -120,6 +129,4 @@ gulp.task('watch', function() {
 
 });
 
-gulp.task('default', ['scripts', 'styles', 'markup', 'copy-data', 'copy-robots', 'libscripts', 'copy-media', 'watch' ]);
-
-
+gulp.task('default', ['scripts', 'styles', 'markup', 'copy-data', 'copy-robots', 'libscripts', 'copy-media', 'watch', 'serve' ]);
