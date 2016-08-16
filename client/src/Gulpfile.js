@@ -31,7 +31,7 @@ gulp.task('scripts', function() {
 });
 
 gulp.task('libscripts', function() {
-  gulp.src(['./js/lib/**/*.js'])
+  gulp.src(['./js/lib/*.*'])
     .pipe(plumber())
     .pipe(include())
     .pipe(gulp.dest(buildDirectory + '/js/lib'));
@@ -54,7 +54,7 @@ gulp.task('markup', function() {
     .pipe(jade({
       pretty: true
     }))
-    .pipe(gulp.dest(buildDirectory + '/html'));
+    .pipe(gulp.dest(buildDirectory + '/'));
 });
 
 gulp.task('copy-robots', function() {

@@ -53,3 +53,25 @@ bower install
 
 Updated package to use current node LTS 4.4.7. No longer need to run nvm to get an older version of node
 
+## Git process
+
+https://guides.github.com/introduction/flow/
+
+## Data
+
+### Neighborhood
+
+https://www.phoenix.gov/nsd/programs/neighborhood-coordination
+
+### City of Phoenix
+
+https://www.phoenix.gov/OpenDataFiles/Crime%20Stats.csv
+
+
+## Server 
+
+# Install dependencies
+npm install
+
+# Boot your db
+https://www.npmjs.com/package/mongodb#booting-up-a-mongodb-server
