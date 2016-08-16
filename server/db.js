@@ -66,6 +66,13 @@ var deleteAllDocuments = function(db, callback) {
 MongoClient.connect(dburl, function(err, db) {
   assert.equal(null, err);
   console.log("Connected correctly to server");
+  
+  var schematodo = db.collection('records').findOne().then(function(foo){
+    console.log(foo);
+  });
+  
+
+  // for (var key in schematodo) { console.log (key, typeof key) ; }
   // deleteAllDocuments(db, function(){
   //   console.log('Bam...its all gone!');
   // });
@@ -85,3 +92,12 @@ MongoClient.connect(dburl, function(err, db) {
   //   });
   // });
 });
+
+//shell commands
+// https://docs.mongodb.com/manual/reference/mongo-shell/
+// db.records.find().forEach(printjson)
+// db.records.distinct('100 BLOCK ADDR')
+
+// db.createCollection('locations')
+// db.locations.createIndex({'100 BLOCK ADDR':1}, {unique: true})
+// db.records.distinct('100 BLOCK ADDR').forEach(function(r){db.locations.insert({'100 BLOCK ADDR' : r})});
