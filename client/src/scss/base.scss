@@ -12,3 +12,26 @@
 //     font-size:12px;
 //   }
 // }  
+.footer {
+	@include clearfix;
+	font-size: 10px;
+	.col {
+		float: left;
+		width: 25%;
+	}
+}
+.bgLow{
+	// Needs latest Compass, add '@import "compass"' to your scss
+	// Permalink - use to edit and share this gradient:
+	// http://colorzilla.com/gradient-editor/#eaec7b+0,99de13+100
+	//background-color: #eaec7b; // Old browsers
+	//@include filter-gradient(#eaec7b, #99de13, vertical); // IE6-9
+	//@include background-image(linear-gradient(top,  #eaec7b 0%,#99de13 100%));
+	/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#eaec7b+0,99de13+100 */
+	background: #eaec7b; /* Old browsers */
+	background: -moz-linear-gradient(top,  #eaec7b 0%, #99de13 100%); /* FF3.6-15 */
+	background: -webkit-linear-gradient(top,  #eaec7b 0%,#99de13 100%); /* Chrome10-25,Safari5.1-6 */
+	background: linear-gradient(to bottom,  #eaec7b 0%,#99de13 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eaec7b', endColorstr='#99de13',GradientType=0 ); /* IE6-9 */
+
+}
