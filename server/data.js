@@ -3,6 +3,6 @@ var parse = require('./data/parse');
 
 var cron = function(){
 	fetch.run();
-	parse.run();
+	//parse.run();
 }
 module.exports.cron = cron
