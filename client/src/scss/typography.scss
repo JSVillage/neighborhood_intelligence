@@ -1,9 +1,11 @@
 $sans-serif: sans-serif;
 
 body{
-  font: 16px/1.2 $sans-serif; color: #111;
+  font-family: 'montserratultralight';
+  font-weight: 100;
+  text-transform: uppercase;
+  text-align: center;
 }
-
 p {
   margin: 0 0 20px;
 }
@@ -35,26 +37,12 @@ h5,
 h6 {
   margin: 10px 0;
   font-family: inherit;
-  font-weight: 300;
-  line-height: 1.2;
   color: inherit;
   text-rendering: optimizelegibility;
 }
-h1 small,
-h2 small,
-h3 small,
-h4 small,
-h5 small,
-h6 small {
-  font-weight: normal;
-  line-height: 1;
-  color: #999999;
-}
 h1 {
-  font-size: 40px;
-  @media (max-width: $screen-xs-max){
-    font-size:25px;
-  }
+  font-size: 35px;
+  font-weight: 100;
 }
 h2 {
   font-size: 30px;
@@ -119,12 +107,6 @@ dt {
 dd {
   margin-left: 10px;
 }
-hr {
-  margin: 20px 0;
-  border: 0;
-  border-top: 1px solid #eeeeee;
-  border-bottom: 1px solid #ffffff;
-}
 abbr[title],
 abbr[data-original-title] {
   cursor: help;
@@ -175,3 +157,173 @@ nav {
 }
 ul{padding:0;margin:0;}
 li{list-style:none;}
+
+.font-color, .font-color hr {
+  color: white;
+  border-color: rgba(255, 255, 255, .2);
+}
+.align-left {
+  text-align: left;
+}
+.time {
+  margin-top: 36px;
+  font-size: 22px;
+}
+.sub-title {
+  margin-top: 10px;
+  font-size: 19px;
+  font-family: 'montserratultralight';
+  font-weight: 100;
+}
+.title {
+  margin-bottom: 0;
+  margin-top: 29px;
+  font-weight: 100;
+}
+.weight-max {
+  font-weight: 900;
+}
+.address {
+  font-size: 16px;
+  font-weight: 900;
+}
+.address p {
+  margin: 1px;
+}
+.fa {
+  font-size: 40px;
+  margin: 0 14px;
+  transform: translateY(6px);
+}
+.risk-label{
+  margin-top: 50px;
+  font-weight: 600px;
+  font-size: 23px;
+}
+.risk-level p{
+  font-size: 50px;
+  line-height: .3em;
+  margin: 27px 0 20px;
+  font-family: montserratregular;
+  font-weight: bolder;
+}
+.how {
+  font-size:10px;
+  font-style: italic;
+  color: yellow;
+  text-transform: lowercase;
+}
+.nav-more {
+  position: absolute;
+  bottom:4%;
+  right: 8%;
+  font-size: 17px;
+  font-weight: 700;
+}
+.col-half {
+  margin:0px 0;
+  text-align: center;
+  float: left;
+  width: 50%;
+}
+.charts {
+  margin: auto;
+  width: 80%;
+}
+/* The Modal (background) */
+.risk-level .modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.risk-level .modal-content {
+  position: relative;
+  font-size: .2em;
+  line-height: 2em;
+  background-color: #6AA7D5;     /* #FFA50C; */
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  width: 80%; /* Could be more or less, depending on screen size */
+  height: auto;
+  border: 2px solid black;
+  border-radius: 8px;
+}
+.modal-content h1 {
+  color: black;
+  font-size: 18px;
+  line-height: 1em;
+  font-weight: bolder;
+  font-family: montserratregular;
+}
+.modal-content p {
+  font-family: montserratlight;
+  color: black;
+  font-size: 14px;
+  line-height: 1em;
+}
+
+/* The Close Button */
+.close {
+  position: absolute;
+    color: white;
+    background: black;
+    top: -18px;
+    right: -18px;
+    font-family: montserratregular;
+    font-size: 18px;
+    font-weight: bolder;
+    padding: 10px;
+    border: 2px solid black;
+    border-radius: 100px;
+}
+
+.close:hover,
+.close:focus {
+    color: orange;
+    text-decoration: none;
+    cursor: pointer;
+}
+@font-face {
+    font-family: 'montserratlight';
+    src: url('/media/fonts/montserrat-light-webfont.eot');
+    src: url('/media/fonts/montserrat-light-webfont.eot?#iefix') format('embedded-opentype'),
+        url('/media/fonts/montserrat-light-webfont.woff2') format('woff2'),
+        url('/media/fonts/montserrat-light-webfont.woff') format('woff'),
+        url('/media/fonts/montserrat-light-webfont.ttf') format('truetype'),
+        url('/media/fonts/montserrat-light-webfont.svg#montserratlight') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+@font-face {
+    font-family: 'montserratregular';
+    src: url('/media/fonts/montserrat-regular-webfont.eot');
+    src: url('/media/fonts/montserrat-regular-webfont.eot?#iefix') format('embedded-opentype'),
+        url('/media/fonts/montserrat-regular-webfont.woff2') format('woff2'),
+        url('/media/fonts/montserrat-regular-webfont.woff') format('woff'),
+        url('/media/fonts/montserrat-regular-webfont.ttf') format('truetype'),
+        url('/media/fonts/montserrat-regular-webfont.svg#montserratregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+  font-family: 'montserratultralight';
+    src: url('/media/fonts/montserrat-ultralight-webfont.eot');
+    src: url('/media/fonts/montserrat-ultralight-webfont.eot?#iefix') format('embedded-opentype'),
+        url('/media/fonts/montserrat-ultralight-webfont.woff2') format('woff2'),
+        url('/media/fonts/montserrat-ultralight-webfont.woff') format('woff'),
+        url('/media/fonts/montserrat-ultralight-webfont.ttf') format('truetype'),
+        url('/media/fonts/montserrat-ultralight-webfont.svg#montserratultralight') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    
+}

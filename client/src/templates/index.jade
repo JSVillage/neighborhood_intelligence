@@ -8,16 +8,16 @@ block title
 
 block content
   h1.title Phoenix Safe Tip
-  h2.sub-heading neighborhood intelligence
+  h2.sub-title neighborhood intelligence
   div.font-color
     h2.weight-max.time
-      i.fa.fa-minus-square.fa-2x(aria-hidden="true")
+      i.fa.fa-minus-square(aria-hidden="true")
       span#time
-      i.fa.fa-plus-square.fa-2x(aria-hidden="true")
+      i.fa.fa-plus-square(aria-hidden="true")
     div.address
-      p {{ng block }} - {{ng street}} 
-      p {{ng city}}
-      p {{ng zip}}
+      p ng block - ng street 
+      p ng city
+      p ng zip
     h2.risk-label risk level
     div.risk-level
       p high
@@ -32,12 +32,12 @@ block content
           p Some text in the Modal..
           p Some text in the Modal..
           p Some text in the Modal..
-  hr
-  div.rec-crime-box
-    div.col-half
-      canvas.charts#dayChart(width="400" height="350")
-    div.col-half
-      canvas.charts#timeChart(width="400" height="350")
+    hr
+    div.rec-crime-box
+      div.col-half
+        canvas.charts#dayChart(width="165" height="180")
+      div.col-half
+      canvas.charts#timeChart(width="165" height="180")
     span.nav-more more >>
 
 

@@ -5,7 +5,6 @@
 //= include directives.js 
 //= include services.js 
 
-<script>
 		//Day Chart
 		var ctx = document.getElementById("dayChart");
 		var dayChart = new Chart(ctx, {
@@ -26,7 +25,7 @@
 		        	xAxes: [{
 		        		ticks: {
 		                    fontColor: 'white',
-		                    fontSize: 20
+		                    fontSize: 9
 		                },
 		        		gridLines: {
 		        			show: true,
@@ -37,7 +36,7 @@
 		                ticks: {
 		                    beginAtZero:true,
 		                    fontColor: 'white',
-		                    fontSize: 20
+		                    fontSize: 9
 		                },
 		                gridLines: {show: true, color: "white"}
 				            }]
@@ -45,21 +44,21 @@
 				title: {
 					display: true,
             		text: 'Risk x Day',
-					fontSize: 42,
+					fontSize: 18,
 					fontColor: "#fff"
 				    },
 				legend: {
 		            display: true,
 		            labels: {
 	                	fontColor: 'rgb(255, 255, 132)',
-	                	fontSize: 30
+	                	fontSize: 10
 				            }
 				        },
 				data: {
 					labels: {
 						display: true,
 						fontColor: 'rgb(255, 255, 132)',
-	                	fontSize: 30
+	                	fontSize: 20
 					}
 					}
 				}
@@ -84,7 +83,7 @@
 		        	xAxes: [{
 		        		ticks: {
 		                    fontColor: 'white',
-		                    fontSize: 20
+		                    fontSize: 9
 		                },
 		        		gridLines: {
 		        			show: true,
@@ -95,7 +94,7 @@
 		                ticks: {
 		                    beginAtZero:true,
 		                    fontColor: 'white',
-		                    fontSize: 20
+		                    fontSize: 9
 		                },
 		                gridLines: {show: true, color: "white"}
 				            }]
@@ -103,21 +102,21 @@
 				title: {
 					display: true,
             		text: 'Risk x Time',
-					fontSize: 42,
+					fontSize: 18,
 					fontColor: "#fff"
 				    },
 				legend: {
 		            display: true,
 		            labels: {
 	                	fontColor: 'rgb(255, 255, 132)',
-	                	fontSize: 30
+	                	fontSize: 10
 				            }
 				        },
 				data: {
 					labels: {
 						display: true,
 						fontColor: 'rgb(255, 255, 132)',
-	                	fontSize: 30
+	                	fontSize: 20
 					}
 					}
 				}
@@ -146,4 +145,3 @@
 			        modal.style.display = "none";
 			    }
 			}
-		</script>
