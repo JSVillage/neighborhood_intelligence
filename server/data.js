@@ -1,8 +1,7 @@
 var fetch = require('./data/fetch');
-var parse = require('./data/parse');
 
-var cron = function(){
-	fetch.run();
-	//parse.run();
+var cron = function() {
+    fetch.getData();
+    //parse.run();
 }
 module.exports.cron = cron
