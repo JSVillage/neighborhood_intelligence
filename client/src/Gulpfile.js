@@ -25,7 +25,7 @@ gulp.task('lint', function() {
 });
 
 gulp.task('scripts', function() {
-  gulp.src(['./js/main.js','./components/**/*.js'])
+  gulp.src(['./js/*.js','./components/**/*.js'])
     .pipe(plumber())
     .pipe(include())
     .pipe(concat('main.js'))
