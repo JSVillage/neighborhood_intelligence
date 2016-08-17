@@ -70,8 +70,19 @@ https://www.phoenix.gov/OpenDataFiles/Crime%20Stats.csv
 
 ## Server 
 
-# Install dependencies
+### Install dependencies
+
 npm install
 
-# Boot your db
+### Boot your db
+
 https://www.npmjs.com/package/mongodb#booting-up-a-mongodb-server
+
+### Importing from csv via command line
+
+Navigate to the server directory, make sure mongo is running
+
+```
+mongoimport -d server -c records --type csv --file ./public/data/crime-stats.csv --headerline
+```
+

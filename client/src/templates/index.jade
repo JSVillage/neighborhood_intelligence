@@ -2,9 +2,43 @@ extends ./layouts/layout
 
 block vars
   -var page = 'home'
-
+  -var bgLow= 'index'
 block title
-  title Index page
+  title Phoenix Safe Tip
 
 block content
-  h1 here is my index page
+  h1.title Phoenix Safe Tip
+  h2.sub-heading neighborhood intelligence
+  div.font-color
+    h2.weight-max.time
+      i.fa.fa-minus-square.fa-2x(aria-hidden="true")
+      span#time
+      i.fa.fa-plus-square.fa-2x(aria-hidden="true")
+    div.address
+      p ng block  - ng street 
+      p ng city
+      p ng zip
+    h2.risk-label risk level
+    div.risk-level
+      p high
+      <!-- Trigger/Open The Modal -->
+      a.how#how how did we come up with this risk level?
+      <!-- The Modal -->
+      div#howModal.modal
+        <!-- Modal content -->
+        div.modal-content
+          span.close X
+          h1 Here's how we come up with the risk level
+          p Some text in the Modal..
+          p Some text in the Modal..
+          p Some text in the Modal..
+  hr
+  div.rec-crime-box
+    div.col-half
+      canvas.charts#dayChart(width="400" height="350")
+    div.col-half
+      canvas.charts#timeChart(width="400" height="350")
+    span.nav-more more >>
+
+
+ 
