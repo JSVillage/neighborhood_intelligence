@@ -1,4 +1,17 @@
+var NodeGeocoder = require('node-geocoder');
+
+var options = {
+  provider: 'google',
+
+  // Optional depending on the providers
+  httpAdapter: 'https', // Default
+  apiKey: 'AIzaSyBYWWimBkqZeGbqkpxgtKtgarznhew3wmg', // for Mapquest, OpenCage, Google Premier
+  formatter: null         // 'gpx', 'string', ...
+};
+
+
 var dburl = 'mongodb://localhost:27017/server';
+var geocoder = NodeGeocoder(options);
 
 
 // https://www.npmjs.com/package/mongodb
@@ -62,38 +75,94 @@ var deleteAllDocuments = function(db, callback) {
 };
 //end testing
 
+
+// Standard account
+// 2,500 free requests per day, calculated as the sum of client-side and server-side queries.
+// 50 requests per second, calculated as the sum of client-side and server-side queries.
+var getGeo = function(db, callback){
+  var limit = 50;
+  var count = 0;
+  db.collection('locations').aggregate([
+    {$match: {loc: {$eq: null}}},
+    {$limit: limit}    
+  ]).forEach(function(myDoc){
+    var query = myDoc['100 BLOCK ADDR'].replace('XX', '00') + ' ARIZONA ' + myDoc.ZIP;
+    geocoder.geocode(query)
+      .then(function(res) {
+        console.log(myDoc);
+        console.log(res);
+        
+        db.collection('locations').update(
+          { _id: myDoc._id },
+          {
+            $set : {
+              latitude : res[0].latitude,
+              longitude : res[0].longitude,
+              formattedAddress : res[0].formattedAddress,
+              loc : [ res[0].longitude, res[0].latitude ],
+              extra : res[0].extra
+            }
+          });
+        return true;
+      })
+      .catch(function(err) {
+        console.log(err);
+        return err;
+      });    
+
+  });  
+
+};
+
+var updateLocationsCollectionFromRecords = function(db, callback){
+  //create a table with all of our distinct 100 BLOCK ADDR values
+  db.collection('records').aggregate([
+    //{$limit: 10},
+    { $group: {
+        _id: '$100 BLOCK ADDR',
+        ZIP : {$first: '$ZIP'}
+      }
+    }
+  ]).forEach(function(doc){
+    db.collection('locations').insert(
+      {'100 BLOCK ADDR' : doc._id, ZIP : doc.ZIP}
+    );
+  });
+  callback();
+};
+
+
+var callGeo = function(db, callback){
+  setTimeout(function(){
+    getGeo(db, function(){
+      console.log('all done');
+    });
+    callGeo(db);
+  },5000);
+};
+
 // Use connect method to connect to the Server 
 MongoClient.connect(dburl, function(err, db) {
   assert.equal(null, err);
   console.log("Connected correctly to server");
-  
-  var schematodo = db.collection('records').findOne().then(function(foo){
-    console.log(foo);
-  });
-  
 
-  // for (var key in schematodo) { console.log (key, typeof key) ; }
-  // deleteAllDocuments(db, function(){
-  //   console.log('Bam...its all gone!');
-  // });
-  // deleteDocument(db, function() {
+  callGeo(db);
 
-  // };
-  // findDocuments(db, function() {
-  //   db.close();
-  // });
-  // insertDocuments(db, function() {
-  //   updateDocument(db, function() {
-  //     deleteDocument(db, function() {
-  //       findDocuments(db, function() {
-  //         db.close();
-  //       });
-  //     });
-  //   });
-  // });
 });
 
+
+
+
+
+
+
+
+
+
+
 //shell commands
+// db.locations.remove({})
+// db.locations.find({ "loc": { $exists: false } }).count()
 // https://docs.mongodb.com/manual/reference/mongo-shell/
 // db.records.find().forEach(printjson)
 // db.records.distinct('100 BLOCK ADDR')
@@ -101,3 +170,5 @@ MongoClient.connect(dburl, function(err, db) {
 // db.createCollection('locations')
 // db.locations.createIndex({'100 BLOCK ADDR':1}, {unique: true})
 // db.records.distinct('100 BLOCK ADDR').forEach(function(r){db.locations.insert({'100 BLOCK ADDR' : r})});
+
+// mongoexport -d server -c locations -o /Users/dvespoli/Sites/neighborhood-intelligence/server/locations-export.json;
