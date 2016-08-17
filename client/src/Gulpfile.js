@@ -46,8 +46,8 @@ gulp.task('styles', function() {
     .pipe(sass({onError: function(e) { console.log(e); } }))
     .pipe(autoprefixer('last 2 versions', '> 1%', 'ie 8'))
     .pipe(rename('main.css'))
-    .pipe(gulp.dest(buildDirectory + '/styles'));
-
+    .pipe(gulp.dest(buildDirectory + '/styles'))
+    .pipe(reload({stream: true}));
 });
 
 gulp.task('markup', function() {
@@ -126,6 +126,8 @@ gulp.task('watch', function() {
                 './components/**/*.js',
                 './templates/pages/**/*.js'
               ], ['scripts']);
+
+  gulp.watch(buildDirectory + 'index.html').on('change', reload);
 
 });
 
