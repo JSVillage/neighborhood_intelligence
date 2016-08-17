@@ -146,7 +146,7 @@ MongoClient.connect(dburl, function(err, db) {
   assert.equal(null, err);
   console.log("Connected correctly to server");
 
-  callGeo(db);
+  // callGeo(db);
 
 });
 
