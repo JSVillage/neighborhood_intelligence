@@ -1,0 +1,29 @@
+{
+  "name": "CrimeData",
+  "plural": "crimedata",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "incNumber": {
+      "type": "number"
+    },
+    "addressGroup": {
+      "type": "string"
+    },
+    "postalCode": {
+      "type": "string"
+    },
+    "crimes": {
+      "type": [
+        "object"
+      ]
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}

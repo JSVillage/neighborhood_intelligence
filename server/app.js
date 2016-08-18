@@ -9,9 +9,10 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var cron = require('./data/cron');
 
-var db = require('./db');
-
 var app = express();
+
+
+var db = require('./db');
 
 
 // view engine setup

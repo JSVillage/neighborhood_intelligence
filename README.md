@@ -35,6 +35,9 @@ https://trello.com/b/Z4WXaHw2/neighborhood-intelligence
 ## Slack:
 https://neighborhood-intellig.slack.com/messages/
 
+## Machine Learning
+http://burakkanber.com/blog/machine-learning-in-js-k-nearest-neighbor-part-1/
+
 
 ## Getting started:
 - Open terminal and navigate to client > src >
