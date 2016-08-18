@@ -21,24 +21,14 @@ block content
     h2.risk-label risk level
     div.risk-level
       p high
-      <!-- Trigger/Open The Modal -->
-      a.how#how how did we come up with this risk level?
-      <!-- The Modal -->
-      div#howModal.modal
-        <!-- Modal content -->
-        div.modal-content
-          span.close X
-          h1 Here's how we come up with the risk level
-          p Some text in the Modal..
-          p Some text in the Modal..
-          p Some text in the Modal..
+      include ./../components/modal/_default.jade
     hr
     div.rec-crime-box
       div.col-half
         canvas.charts#dayChart(width="165" height="180")
       div.col-half
-      canvas.charts#timeChart(width="165" height="180")
-    span.nav-more more >>
+        canvas.charts#timeChart(width="165" height="180")
+      span.nav-more more >>
 
 
  

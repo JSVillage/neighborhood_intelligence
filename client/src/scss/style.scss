@@ -16,57 +16,14 @@
 @import 'layout';
 @import 'base';
 
-
 //
 // component css aggregated and pulled here via gulp
 
-			.font-color #dayChart, .font-color #timeChart {
-    			width: 250px;
-    			height: 250px;
-    		}
-    		body, html{
-  			height: 100%;
-			}
-			body{
-			  background: linear-gradient(0deg, #ae2860, #fab90e);
-			  background-size: 100% 130%;
-			  overflow: hidden;
-
-			  // -webkit-animation: gradientAnimate 5s ease infinite;
-			  // -moz-animation: gradientAnimate 5s ease infinite;
-			  animation: gradientAnimate 5s ease infinite;
-			}
-			@-webkit-keyframes gradientAnimate {
-			    0%{background-position:0% 0%}
-			    50%{background-position:0% 100%}
-			    100%{background-position:0% 0%}
-			}
-			// @-moz-keyframes gradientAnimate {
-			//     0%{background-position:0% 50%}
-			//     50%{background-position:0% 40%}
-			//     100%{background-position:0% 50%}
-			// }
-			// @keyframes gradientAnimate { 
-			//     0%{background-position:0% 50%}
-			//     50%{background-position:0% 40%}
-			//     100%{background-position:0% 50%}
-			// }
-    			html{
-    			 height: 100%;
-				}
-				h3 {
-					font-size: 1em;
-				}
-				.recent-crime-list p{
-				  margin:0 0 1px 50px;
-				}
-				.recent-crime-list h3{
-				  margin-bottom: 22px;
-				}
-				.rec-crime-box {
-				  min-height: 520px;
-				}
-				
+			
+    		
+    			
+			
+			
 
 
 
