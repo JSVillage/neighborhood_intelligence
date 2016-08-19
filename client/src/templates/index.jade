@@ -15,12 +15,12 @@ block content
       span#time
       i.fa.fa-plus-square(aria-hidden="true")
     div.address
-      p ng block - ng street 
-      p ng city
-      p ng zip
+      p {{address.block}} - {{address.street}} 
+      p {{address.city}}
+      p {{address.zip}}
     h2.risk-label risk level
     div.risk-level
-      p high
+      p {{risk.level[0]}}
       include ./../components/modal/_default.jade
     hr
     div.rec-crime-box

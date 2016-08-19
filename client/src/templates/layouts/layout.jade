@@ -1,14 +1,14 @@
 block vars
 
 doctype html
-html(ng-app="skellieApp")
+html(ng-app="niApp")
   head
     include ../blocks/head.jade
 
     block title
       title Default title
 
-  body
+  body(ng-controller="NIController")
 
     main
       block content
