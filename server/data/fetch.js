@@ -3,7 +3,7 @@ var converter = new Converter({
     constructResult: false,
     workerNum: 2,
     toArrayString: true,
-    headers: ["caseId", "startTime", "endTime", "type", "address", "zip", "premise"]
+    headers: ["caseID", "dateTime", "endTime", "crimeType", "address", "postalCode", "premise"]
 });
 var https = require('https');
 var fs = require('fs');
