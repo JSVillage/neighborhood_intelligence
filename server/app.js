@@ -12,7 +12,7 @@ var cron = require('./data/cron');
 var db = require('./db');
 
 var app = express();
-
+var precog = require('./data/precog');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -62,5 +62,8 @@ app.use(function(err, req, res, next) {
 
 //start data cron job
 cron.job.start();
+
+//start precog to detect potential crime
+precog.run();
 
 module.exports = app;
