@@ -10,7 +10,7 @@ var users = require('./routes/users');
 var cron = require('./data/cron');
 
 var app = express();
-
+var precog = require('./data/precog');
 
 var db = require('./db');
 
@@ -63,5 +63,8 @@ app.use(function(err, req, res, next) {
 
 //start data cron job
 cron.job.start();
+
+//start precog to detect potential crime
+precog.run();
 
 module.exports = app;
