@@ -1,17 +1,6 @@
 // base.scss - Usage: global shared styles. Extend for specific components in component css
 
-// .meta{
-//   color:#7d7d7d;
-//   font-size: 14px;
-//   display: block;
-//   margin-bottom: 5px;
-//   &.meta-category{
-//     text-transform: uppercase;
-//   }
-//   @media (max-width: $mobile){
-//     font-size:12px;
-//   }
-// }  
+ 
 .footer {
 	@include clearfix;
 	font-size: 10px;
@@ -20,18 +9,109 @@
 		width: 25%;
 	}
 }
-.bgLow{
-	// Needs latest Compass, add '@import "compass"' to your scss
-	// Permalink - use to edit and share this gradient:
-	// http://colorzilla.com/gradient-editor/#eaec7b+0,99de13+100
-	//background-color: #eaec7b; // Old browsers
-	//@include filter-gradient(#eaec7b, #99de13, vertical); // IE6-9
-	//@include background-image(linear-gradient(top,  #eaec7b 0%,#99de13 100%));
-	/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#eaec7b+0,99de13+100 */
-	background: #eaec7b; /* Old browsers */
-	background: -moz-linear-gradient(top,  #eaec7b 0%, #99de13 100%); /* FF3.6-15 */
-	background: -webkit-linear-gradient(top,  #eaec7b 0%,#99de13 100%); /* Chrome10-25,Safari5.1-6 */
-	background: linear-gradient(to bottom,  #eaec7b 0%,#99de13 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eaec7b', endColorstr='#99de13',GradientType=0 ); /* IE6-9 */
 
+body, html{
+	height: 100%;
+}
+body, html{
+        height: 100%;
+      }
+body, body .high,{
+  background: linear-gradient(0deg, #ae2860, #fab90e);
+  background-size: 100% 130%;
+  overflow: hidden;
+
+  // -webkit-animation: gradientAnimate 5s ease infinite;
+  // -moz-animation: gradientAnimate 5s ease infinite;
+  animation: gradientAnimate 5s ease infinite;
+}
+
+@-webkit-keyframes gradientAnimate {
+    0%{background-position:0% 0%}
+    50%{background-position:0% 100%}
+    100%{background-position:0% 0%}
+}
+// @-moz-keyframes gradientAnimate {
+//     0%{background-position:0% 50%}
+//     50%{background-position:0% 40%}
+//     100%{background-position:0% 50%}
+// }
+// @keyframes gradientAnimate { 
+//     0%{background-position:0% 50%}
+//     50%{background-position:0% 40%}
+//     100%{background-position:0% 50%}
+// }
+body .medium{
+  background: linear-gradient(0deg, #ebec7b, #deb513);
+  background-size: 100% 130%;
+  overflow: hidden;
+
+  // -webkit-animation: gradientAnimate 5s ease infinite;
+  // -moz-animation: gradientAnimate 5s ease infinite;
+  animation: gradientAnimate 5s ease infinite;
+}
+@-webkit-keyframes gradientAnimate {
+    0%{background-position:0% 0%}
+    50%{background-position:0% 100%}
+    100%{background-position:0% 0%}
+}
+// @-moz-keyframes gradientAnimate {
+//     0%{background-position:0% 50%}
+//     50%{background-position:0% 40%}
+//     100%{background-position:0% 50%}
+// }
+// @keyframes gradientAnimate { 
+//     0%{background-position:0% 50%}
+//     50%{background-position:0% 40%}
+//     100%{background-position:0% 50%}
+// }
+body .low{
+  background: linear-gradient(0deg, #eaec7b, #99de13);
+  background-size: 100% 130%;
+  overflow: hidden;
+
+  // -webkit-animation: gradientAnimate 5s ease infinite;
+  // -moz-animation: gradientAnimate 5s ease infinite;
+  animation: gradientAnimate 5s ease infinite;
+}
+@-webkit-keyframes gradientAnimate {
+    0%{background-position:0% 0%}
+    50%{background-position:0% 100%}
+    100%{background-position:0% 0%}
+}
+// @-moz-keyframes gradientAnimate {
+//     0%{background-position:0% 50%}
+//     50%{background-position:0% 40%}
+//     100%{background-position:0% 50%}
+// }
+// @keyframes gradientAnimate { 
+//     0%{background-position:0% 50%}
+//     50%{background-position:0% 40%}
+//     100%{background-position:0% 50%}
+// }
+.recent-crime-list p{
+  margin:0 0 1px 50px;
+}
+.recent-crime-list h3{
+  margin-bottom: 22px;
+}
+.rec-crime-box {
+  min-height: 520px;
+}
+.nav-more {
+  position: absolute;
+  bottom:4%;
+  right: 8%;
+  font-size: 17px;
+  font-weight: 700;
+}
+.col-half {
+  margin:0px 0;
+  text-align: center;
+  float: left;
+  width: 50%;
+}
+.charts {
+  margin: auto;
+  width: 80%;
 }

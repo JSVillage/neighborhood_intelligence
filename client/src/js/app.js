@@ -1,4 +1,4 @@
-angular.module('niApp', [])
+var niApp = angular.module('niApp', [])
   .config(['$httpProvider', function ($httpProvider) {
     // Intercept POST requests, convert to standard form encoding
     $httpProvider.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
@@ -15,3 +15,14 @@ angular.module('niApp', [])
       return result.join("&");
     });
   }]);
+niApp.controller('NIController', function NIController($scope) {
+	$scope.address = {
+		block: '600 block',
+		street: '6908 E Thomas Rd',
+		city: 'Scottsdale',
+		zip: '85251'
+	},
+	$scope.risk = {
+		level: ['High', 'Medium', 'Low']
+	}
+});

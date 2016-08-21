@@ -8,37 +8,27 @@ block title
 
 block content
   h1.title Phoenix Safe Tip
-  h2.sub-heading neighborhood intelligence
+  h2.sub-title neighborhood intelligence
   div.font-color
     h2.weight-max.time
-      i.fa.fa-minus-square.fa-2x(aria-hidden="true")
+      i.fa.fa-minus-square(aria-hidden="true")
       span#time
-      i.fa.fa-plus-square.fa-2x(aria-hidden="true")
+      i.fa.fa-plus-square(aria-hidden="true")
     div.address
-      p ng block  - ng street 
-      p ng city
-      p ng zip
+      p {{address.block}} - {{address.street}} 
+      p {{address.city}}
+      p {{address.zip}}
     h2.risk-label risk level
     div.risk-level
-      p high
-      <!-- Trigger/Open The Modal -->
-      a.how#how how did we come up with this risk level?
-      <!-- The Modal -->
-      div#howModal.modal
-        <!-- Modal content -->
-        div.modal-content
-          span.close X
-          h1 Here's how we come up with the risk level
-          p Some text in the Modal..
-          p Some text in the Modal..
-          p Some text in the Modal..
-  hr
-  div.rec-crime-box
-    div.col-half
-      canvas.charts#dayChart(width="400" height="350")
-    div.col-half
-      canvas.charts#timeChart(width="400" height="350")
-    span.nav-more more >>
+      p {{risk.level[0]}}
+      include ./../components/modal/_default.jade
+    hr
+    div.rec-crime-box
+      div.col-half
+        canvas.charts#dayChart(width="165" height="180")
+      div.col-half
+        canvas.charts#timeChart(width="165" height="180")
+      span.nav-more more >>
 
 
  
