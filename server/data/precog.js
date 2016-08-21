@@ -13,45 +13,51 @@ var Node = function(object) {
     }
 };
 
-Node.prototype.measureDeltas = function(location_range_obj, time_range_obj, date_range_obj) {
+var NodeList = function(k) {
+    this.nodes = [];
+    this.k = k;
+};
+
+
+NodeList.prototype.measureDeltas = function(location_range_obj, time_range_obj, date_range_obj) {
     var time_range = time_range_obj.max - time_range_obj.min;
     var location_range  = location_range_obj.max  - location_range_obj.min;
     var date_range  = date_range_obj.max  - date_range_obj.min;
 
-    for (var i in this.incidents)
+    for (var i in this.nodes)
     {
         /* Just shortcut syntax */
-        var incident = this.incidents[i];
+        var incident = this.nodes[i];
 
-        var delta_time = Math.abs(incident.time - this.time);
+        var delta_time = Math.abs(incident.time - this.queryNode.time);
         if (delta_time > 720) {
             delta_time = 1440 - delta_time;
         }
 
         delta_time = (delta_time ) / time_range;
 
-        var delta_location  = incident.location  - this.location;
+        var delta_location  = incident.location  - this.queryNode.location;
         delta_location = (delta_location ) / location_range;
 
-        var delta_date  = incident.date  - this.date;
+        var delta_date  = incident.date  - this.queryNode.date;
         delta_date = (delta_date ) / date_range;
 
         incident.delta = Math.sqrt( 5*delta_time*delta_time + 10000000 * delta_location*delta_location + delta_date * delta_date);
         //console.log(incident.type + ": " + delta_time + " " + delta_location + ", Crime Score: " + incident.delta);
     }
 };
-Node.prototype.sortByDelta = function() {
-    this.incidents.sort(function (a, b) {
+NodeList.prototype.sortByDelta = function() {
+    this.nodes.sort(function (a, b) {
         return a.delta - b.delta;
     });
 };
-Node.prototype.guessType = function(k) {
+NodeList.prototype.guessType = function(k) {
     var types = {};
     console.log(k + " crime incidents chosen due to proximity in time and location:")
 
-    for (var i in this.incidents.slice(0, k))
+    for (var i in this.nodes.slice(0, k))
     {
-        var incident = this.incidents[i];
+        var incident = this.nodes[i];
         console.log("Incident #" + i +": " + incident.type + ", " + incident.location + ", " + showTime(incident.time) + ", " + incident.date);
         if ( ! types[incident.type] )
         {
@@ -71,17 +77,12 @@ Node.prototype.guessType = function(k) {
         }
     }
 
-    this.guess = guess;
+    this.queryNode.guess = guess;
 
     return types;
 };
 
 
-
-var NodeList = function(k) {
-    this.nodes = [];
-    this.k = k;
-};
 
 NodeList.prototype.add = function(node) {
     this.nodes.push(node);
@@ -92,38 +93,19 @@ NodeList.prototype.determineUnknown = function() {
     this.calculateRanges();
 
     /*
-     * Loop through our nodes and look for unknown types.
+     * If the node is an unknown type, clone the nodes list and then measure locations.
      */
-    for (var i in this.nodes)
-    {
+    
+    /* Measure deltas */
+    this.measureDeltas(this.location, this.time, this.date);
 
-        if ( ! this.nodes[i].type)
-        {
-            /*
-             * If the node is an unknown type, clone the nodes list and then measure locations.
-             */
-            
-            /* Clone nodes */
-            this.nodes[i].incidents = [];
-            for (var j in this.nodes)
-            {
-                if ( ! this.nodes[j].type)
-                    continue;
-                this.nodes[i].incidents.push( new Node(this.nodes[j]) );
-            }
+    /* Sort by deltas */
+    this.sortByDelta();
 
-            /* Measure deltas */
-            this.nodes[i].measureDeltas(this.location, this.time, this.date);
-
-            /* Sort by deltas */
-            this.nodes[i].sortByDelta();
-
-            /* Guess type */
-            console.log(this.nodes[i].guessType(this.k));
-            console.log("Most likely crime for this time & place: " + this.nodes[i].guess.type);
-
-        }
-    }
+    /* Guess type */
+    console.log(this.guessType(this.k));
+    console.log("Most likely crime for this time & place: " + this.queryNode.guess.type);
+    return this.queryNode.guess.type;
 };
 NodeList.prototype.calculateRanges = function() {
     this.location = {min: 100000, max: 0};
@@ -166,19 +148,41 @@ NodeList.prototype.calculateRanges = function() {
 
 var nodes;
 
+function dateOfYear(date) {
+    var dateNum = 0;
+    switch (parseInt(date[0])) {
+        case 1: dateNum = 0; break;
+        case 2: dateNum = 31; break;
+        case 3: dateNum = 59; break;
+        case 4: dateNum = 90; break;
+        case 5: dateNum = 120; break;
+        case 6: dateNum = 151; break;
+        case 7: dateNum = 181; break;
+        case 8: dateNum = 212; break;
+        case 9: dateNum = 243; break;
+        case 10: dateNum = 273; break;
+        case 11: dateNum = 304; break;
+        case 12: dateNum = 334; break;
+    }
+    dateNum += parseInt(date[1]);
+    return dateNum;
+}
+
 function addNode(record) {
     //console.log(record.dateTime);
     try {
         var dateTime = record.dateTime.split(/\s+/);
         var date = dateTime[0].split(/\//);
-        var crimeDate = parseInt(date[0])*30 + parseInt(date[1]);
+        var crimeDate = dateOfYear(date);
         var time = dateTime[1].split(/:/);
         var crimeTime = parseInt(time[0]*60) + parseInt(time[1]);
         var crimeLocation = record.postalCode;
         nodes.add( new Node({date: crimeDate, time: crimeTime, location: crimeLocation, type: record.crimeType}));
     }
     catch (e) {
+        console.log("Error importing record for: " + record);
         //console.log("Error for: " + record.crimeTime + " " + record.dateTime + " " + record.postalCode);
+        //console.log("Error. Date: " + record.dateTime + " is day " + crimeDate + " and time " + crimeTime );
     }
 }  
 
@@ -186,10 +190,12 @@ function showTime(t) {
     return ('0' + Math.floor(t/60)).slice(-2) + ":" + ('0' + t%60).slice(-2);
 }
 
+
 var run = function() {
+    console.log("Connecting to Mongo");
     MongoClient.connect(url, function(err, db) {
         assert.equal(null, err);
-        db.collection("info").find({dateTime: {$ne: null}, postalCode: {$lte: 85099, $gte: 85001}}).toArray(function(err, docs) {
+        db.collection("info").find({dateTime: {$ne: ""}, postalCode: {$lte: 85099, $gte: 85001}}).toArray(function(err, docs) {
         assert.equal(err, null);
         db.close();
 
@@ -200,17 +206,46 @@ var run = function() {
             //console.log(docs[i]);
         	addNode(docs[i]);
         }
-        
+        console.log(nodes.nodes.length + " records ready to generate reports");
+        console.log();
+        console.log("Press any key to generate report for random user (x = exit)");
+        const readline = require('readline');
+        readline.emitKeypressEvents(process.stdin);
+        process.stdin.setRawMode(true);
+        process.stdin.on('keypress', (str,key) => {
+            if (str == 'x')
+                process.exit();
+            predict();
+            console.log();
+            console.log("Press any key to generate report for random user (x = exit)");
+        });
 
-        // Add user node
-        var queryTime = Math.floor( Math.random() * 1440 );
-        var queryDate = Math.floor( Math.random() * 360);
-        var queryLocation = Math.floor( Math.random() * 98 ) + 85001;
-        console.log("User is querying from zip code " + queryLocation + " at time " + showTime(queryTime) + " and date of year " + queryDate);
-        nodes.add( new Node({date: queryDate, time: queryTime, location: queryLocation, type: false}));
-        nodes.determineUnknown();
        });
     });
 };
 
+var predict = function predict(location, time, date) {
+    // Add user node
+    var queryLocation = location || Math.floor( Math.random() * 98 ) + 85001;
+    var queryTime;
+    var queryDate;
+    var currentDate = new Date();
+    if (time) {
+        queryTime = time;
+    } else {
+        queryTime = currentDate.getHours() * 60 + currentDate.getMinutes();
+    }
+    if (date) {
+        queryDate = date;
+    } else {
+        queryDate = currentDate.getMonth() * 30 + currentDate.getDate();
+    }
+    console.log("User is querying from zip code " + queryLocation + " at time " + showTime(queryTime) + " and date of year " + queryDate);
+    nodes.queryNode = new Node({date: queryDate, time: queryTime, location: queryLocation, type: false});
+
+    var prediction = nodes.determineUnknown();
+    nodes.queryNode = null;
+    return prediction;
+};
 module.exports.run = run;
+module.exports.predict = predict;

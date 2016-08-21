@@ -35,6 +35,8 @@ app.use(function(req, res, next) {
     err.status = 404;
     next(err);
 });
+var port = process.env.PORT || 8080;
+app.listen(port);
 
 // error handlers
 
