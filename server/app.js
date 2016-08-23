@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+var http = require('http');
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -36,6 +38,8 @@ app.use(function(req, res, next) {
     err.status = 404;
     next(err);
 });
+var port = process.env.PORT || 8080;
+app.listen(port);
 
 // error handlers
 
@@ -65,6 +69,8 @@ app.use(function(err, req, res, next) {
 cron.job.start();
 
 //start precog to detect potential crime
-precog.run();
+//precog.run();
 
 module.exports = app;
+
+
