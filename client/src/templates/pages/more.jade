@@ -9,4 +9,8 @@ div(ng-controller="MoreController").font-color
   a(ng-href="#/")
     span.nav-back << back
 <!--font color-->
-<canvas class="charts" id="typeChart" width="350" height="250"></canvas>
+div.col-half
+  canvas.charts#dayChart(width="165" height="180")
+div.col-half
+  canvas.charts#timeChart(width="165" height="180")
+canvas.charts#typeChart(width="270" height="250")

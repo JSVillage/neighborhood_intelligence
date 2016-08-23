@@ -77,7 +77,7 @@ niApp.controller('MoreController', function MoreController($scope, $window) {
 	        
 			title: {
 				display: true,
-        		text: 'Risk x Type',
+        		text: 'History at this location',
 				fontSize: 20,
 				fontColor: "#fff"
 			    },
@@ -85,13 +85,101 @@ niApp.controller('MoreController', function MoreController($scope, $window) {
 	            display: true,
 	            labels: {
                 	fontColor: 'rgb(255, 255, 132)',
-                	fontSize: 9
+                	fontSize: 10
 			            }
 			        },
 				}
 			});
+	var scales = {
+    xAxes: [{
+      ticks: {
+              fontColor: 'white',
+              fontSize: 10
+          },
+      gridLines: {
+        show: true,
+        color: "white",
+
+      } }] ,
+      yAxes: [{
+          ticks: {
+              beginAtZero:true,
+              fontColor: 'white',
+              fontSize: 10
+          },
+          gridLines: {show: true, color: "white"}
+              }]
+          };
+  var legend = {
+        display: true,
+        labels: {
+          fontColor: 'rgb(255, 255, 132)',
+          fontSize: 16
+                }
+            };
+  var data = {
+      labels: {
+        display: true,
+        fontColor: 'rgb(255, 255, 132)',
+            fontSize: 12
+        }
+      }
+  //Day Chart
+  var ctxd = document.getElementById("dayChart");
+  var dayChart = new $window.Chart(ctxd, {
+      type: 'line',
+      data: {
+          labels: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+          datasets: [{
+              label: 'Crimes',
+              data: [12, 19, 3, 5, 2, 3, 6],
+              backgroundColor: 'rgba(255, 255, 0, .1)',
+              borderColor: 'rgba(255, 255, 0, 1)',
+              borderWidth: 1
+          }]
+      },
+      options: {
+        responsive: false,
+          scales: scales,
+      title: {
+        display: true,
+          text: 'Risk x Day',
+        fontSize: 20,
+        fontColor: "#fff"
+          },
+      legend: legend,
+      data: data
+      }
+      });
+  //Time Chart
+  var ctxt = document.getElementById("timeChart");
+  var timeChart = new $window.Chart(ctxt, {
+      type: 'line',
+      data: {
+          labels: ["12a-4a", "4a-8a", "8a-12p", "12p-4p", "4p-8p", "8p-12a"],
+          datasets: [{
+              label: 'Crimes',
+              data: [19, 12, 3, 5, 13, 10],
+              backgroundColor: 'rgba(255, 255, 0, .1)',
+              borderColor: 'rgba(255, 255, 0, 1)',
+              borderWidth: 1
+          }]
+      },
+      options: {
+        responsive: false,
+          scales: scales,
+      title: {
+        display: true,
+          text: 'Risk x Time',
+        fontSize: 20,
+        fontColor: "#fff"
+          },
+      legend: legend,
+      data: data
+      }
+      });
   });
-niApp.controller('ChartsController', function ChartsController($scope, $window){
+/*niApp.controller('ChartsController', function ChartsController($scope, $window){
 var scales = {
     xAxes: [{
       ticks: {
@@ -183,3 +271,4 @@ var timeChart = new $window.Chart(ctxt, {
 
 
 });
+*/
