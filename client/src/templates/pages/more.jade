@@ -1,0 +1,12 @@
+div(ng-controller="MoreController").font-color
+  div.recent-crime-list
+    h3.weight-max Day of highest crime
+    div.align-left
+      p {{highestDay}}
+    h3.weight-max time of highest crime
+    div.align-left
+      p {{highestTime}}
+  a(ng-href="#/")
+    span.nav-back << back
+<!--font color-->
+<canvas class="charts" id="typeChart" width="350" height="250"></canvas>

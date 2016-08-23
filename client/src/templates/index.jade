@@ -9,26 +9,6 @@ block title
 block content
   h1.title Phoenix Safe Tip
   h2.sub-title neighborhood intelligence
-  div.font-color
-    h2.weight-max.time
-      i.fa.fa-minus-square(aria-hidden="true")
-      span#time
-      i.fa.fa-plus-square(aria-hidden="true")
-    div.address
-      p {{address.block}} - {{address.street}} 
-      p {{address.city}}
-      p {{address.zip}}
-    h2.risk-label risk level
-    div.risk-level
-      p {{risk.level[0]}}
-      include ./../components/modal/_default.jade
-    hr
-    div.rec-crime-box
-      div.col-half
-        canvas.charts#dayChart(width="165" height="180")
-      div.col-half
-        canvas.charts#timeChart(width="165" height="180")
-      span.nav-more more >>
-
+  div(ng-view)
 
  

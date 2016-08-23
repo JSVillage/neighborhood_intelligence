@@ -35,6 +35,9 @@ https://trello.com/b/Z4WXaHw2/neighborhood-intelligence
 ## Slack:
 https://neighborhood-intellig.slack.com/messages/
 
+## Machine Learning
+http://burakkanber.com/blog/machine-learning-in-js-k-nearest-neighbor-part-1/
+
 
 ## Getting started:
 - Open terminal and navigate to client > src >
@@ -70,8 +73,19 @@ https://www.phoenix.gov/OpenDataFiles/Crime%20Stats.csv
 
 ## Server 
 
-# Install dependencies
+### Install dependencies
+
 npm install
 
-# Boot your db
+### Boot your db
+
 https://www.npmjs.com/package/mongodb#booting-up-a-mongodb-server
+
+### Importing from csv via command line
+
+Navigate to the server directory, make sure mongo is running
+
+```
+mongoimport -d server -c records --type csv --file ./public/data/crime-stats.csv --headerline
+```
+

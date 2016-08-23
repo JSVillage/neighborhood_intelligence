@@ -1,0 +1,22 @@
+div(ng-controller="NIController").font-color
+  h2.weight-max.time
+    i.fa.fa-minus-square(aria-hidden="true")
+    span#time
+    i.fa.fa-plus-square(aria-hidden="true")
+  div.address
+    p {{address.block}} - {{address.street}} 
+    p {{address.city}}
+    p {{address.zip}}
+  h2.risk-label risk level
+  div.risk-level
+    p {{risk.level[0]}}
+    include ./../../components/modal/_default.jade
+  div.rec-crime-box
+    //div.col-half
+      canvas.charts#dayChart(width="165" height="180")
+    //div.col-half
+      canvas.charts#timeChart(width="165" height="180")
+    h3.weight-max Your highest risk right now is:
+    h1 {{mostLikely}}
+    a(ng-href="#/more")
+      span.nav-more more >>
