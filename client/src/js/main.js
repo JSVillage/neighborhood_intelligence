@@ -1,4 +1,5 @@
 //- bower components
+//= include ../bower_components/ngmap/build/scripts/ng-map.js 
 
 //- application
 //= include app.js

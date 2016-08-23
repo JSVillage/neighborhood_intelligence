@@ -1,18 +1,62 @@
-var niApp = angular.module('niApp', ["ngRoute"]);
-niApp.controller('NIController', function NIController($scope, $window) {
-	$scope.address = {
-		block: '600 block',
-		street: '6908 E Thomas Rd',
-		city: 'Scottsdale',
-		zip: '85251'
-	};
-	$scope.risk = {
-		level: ['High', 'Medium', 'Low']
-	};
+var niApp = angular.module('niApp', ["ngRoute", "ngMap"]);
+
+
+niApp.factory('mapService', ['$http', function($http) {
+  return {
+    getGoogleInfo: function(payload) {
+      return $http({
+          url: 'http://maps.googleapis.com/maps/api/geocode/json', 
+          method: "GET",
+          params: payload
+        }).then(function(result) {
+          return result;
+        });
+    }
+  };
+}])
+
+
+niApp.controller('NIController', function NIController($scope, $window, $http, mapService, $window) {
+
+  var user = {
+    lat : 33.5862677,
+    lon : -111.9769553
+  };
+
+  $window.navigator.geolocation.getCurrentPosition(function(pos){
+    $http.get('http://maps.googleapis.com/maps/api/geocode/json?latlng='+pos.coords.latitude+','+pos.coords.longitude+'&sensor=true').then(function(res){
+      console.log(res.data);
+    });
+  });
+
+  $scope.googleMapsUrl="https://maps.google.com/maps/api/js?key=AIzaSyAtvTUqW2i2tbup-B9tW-4NQ6-bb1H3I_w"
+
+  var getData = function(){
+    $http({
+      url: apiUrl + '/' + user.lat + '/' + user.lon + '/' + $scope.niTime, 
+      method: "GET"
+    }).then(function(results) {
+      $scope.formattedAddress = results.data.records[0].formattedAddress;
+      $scope.riskText = results.data.precog.risk;
+      $scope.mostLikely = results.data.precog.guess.type;
+    });
+  };  
+
+  var apiUrl = 'https://neighborhood-intelligence.tailw.ag/api/';
+
+  $scope.niTime = new Date();
+
+	$scope.formattedAddress = '4800 E Desert Cove Ave, Scottsdale, AZ 85254, USA';
+	$scope.riskText = 'HIGH';
   $scope.mostLikely = "MURDER";
 
-  var d = new Date();//create date object and get current time and date
-	document.getElementById("time").innerHTML = d.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'});
+  $scope.setTime = function(hour){   
+    var d = new Date($scope.niTime); 
+    $scope.niTime = d.setHours(d.getHours()+hour);
+    getData();
+  };
+
+
 
 	// Get the modal
 	var modal = document.getElementById('howModal');
@@ -22,7 +66,7 @@ niApp.controller('NIController', function NIController($scope, $window) {
 	var span = document.getElementsByClassName("close")[0];
 	// When the user clicks on the button, open the modal 
 	btn.onclick = function() {
-	modal.style.display = "block";
+	 modal.style.display = "block";
 	}
 	// When the user clicks on <span> (x), close the modal
 	span.onclick = function() {
@@ -31,10 +75,15 @@ niApp.controller('NIController', function NIController($scope, $window) {
 	// When the user clicks anywhere outside of the modal, close it
 	$window.onclick = function(event) {
 		if (event.target == modal) {
-		    modal.style.display = "none";
-			}
-		};
-    }); 
+		  modal.style.display = "none";
+		}
+	};
+
+
+  getData();
+
+}); 
+
 niApp.controller('MoreController', function MoreController($scope, $window) {
     $scope.highestDay = "Insert highest Day";
     $scope.highestTime = "Insert highest Time";

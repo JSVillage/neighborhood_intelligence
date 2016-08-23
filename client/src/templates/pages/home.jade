@@ -1,18 +1,16 @@
-div(ng-controller="NIController").font-color
+div(ng-controller="NIController").font-color.fade-in
   h2.weight-max.time
-    i.fa.fa-minus-square(aria-hidden="true")
-    span#time
-    i.fa.fa-plus-square(aria-hidden="true")
+    i.fa.fa-minus-square(aria-hidden="true" ng-click="setTime(-1)")
+    span#time {{ niTime | date:'h:mm a'}}
+    i.fa.fa-plus-square(aria-hidden="true" ng-click="setTime(1)")
   div.address
-    p {{address.block}} - {{address.street}} 
-    p {{address.city}}
-    p {{address.zip}}
+    p {{formattedAddress}}
   h2.risk-label risk level
   div.risk-level
-    p {{risk.level[0]}}
+    p {{riskText}}
     include ./../../components/modal/_default.jade
   div.rec-crime-box
-    h3.weight-max Your highest risk right now is:
+    h3.weight-max Most likely crime right now is:
     h1 {{mostLikely}}
     a(ng-href="#/more")
       span.nav-more more >>
