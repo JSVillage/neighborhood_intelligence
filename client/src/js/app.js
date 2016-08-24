@@ -1,4 +1,5 @@
-var niApp = angular.module('niApp', ["ngRoute", "ngMap"]);
+var niApp = angular.module('niApp', ["ngRoute", "ngMap", "chart.js"]);
+
 
 niApp.factory('mapService', ['$http', function($http) {
   return {
@@ -14,24 +15,28 @@ niApp.factory('mapService', ['$http', function($http) {
   };
 }])
 
-
-niApp.controller('NIController', function NIController($scope, $window, $http, mapService, $window) {
-   
+niApp.config(['ChartJsProvider', function (ChartJsProvider) {
+  // Configure all charts
+  ChartJsProvider.setOptions({
+    chartColors: ['#ffffff', '#ffffff']
+  });
+}])
+niApp.controller('NIController', function NIController($scope, $window, $http, NavigatorGeolocation, $window, $rootScope) {
+  
+  $rootScope.niTime = $rootScope.niTime || new Date(); 
   $scope.loading = false;
   $scope.init = false;
   $scope.riskLevel = '';
   var apiUrl = 'https://neighborhood-intelligence.tailw.ag/api/';
-  var user = {
-    lat: 33.4521,
-    lng: -112.0898
-  };
+  $rootScope.user = $rootScope.user || {};
+  $scope.formattedAddress = '';
 
   // $scope.googleMapsUrl="https://maps.google.com/maps/api/js?key=AIzaSyAtvTUqW2i2tbup-B9tW-4NQ6-bb1H3I_w"
 
   var getData = function(){
     $scope.loading = true;
     $http({
-      url: apiUrl + '/' + user.lat + '/' + user.lng + '/' + new Date($scope.niTime), 
+      url: apiUrl + '/' + $rootScope.user.lat + '/' + $rootScope.user.lng + '/' + new Date($rootScope.niTime), 
       method: "GET"
     }).then(function(results) {
       //$scope.formattedAddress = results.data.records[0].formattedAddress;
@@ -43,32 +48,36 @@ niApp.controller('NIController', function NIController($scope, $window, $http, m
     });
   };  
 
+
   var getUserLocation = function(){
     $scope.loading = true;
-    $window.navigator.geolocation.getCurrentPosition(function(pos){
-      $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng='+pos.coords.latitude+','+pos.coords.longitude+'&sensor=true')
-        .then(function(res){
-          console.log(res.data);
-          user.lat = res.data.results[0].geometry.location.lat;
-          user.lng = res.data.results[0].geometry.location.lng;
-          $scope.formattedAddress = res.data.results[0].formatted_address;
-          $scope.loading = false;
-          getData();
+    NavigatorGeolocation.getCurrentPosition()
+     .then(function(position) {
+        var lat = position.coords.latitude, lng = position.coords.longitude;
+        $rootScope.user.lat = position.coords.latitude;
+        $rootScope.user.lng = position.coords.longitude;
+        console.log(position);
+        $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng='+$rootScope.user.lat+','+$rootScope.user.lng+'&sensor=true').then(function(res){
+          $rootScope.user.formattedAddress = $scope.formattedAddress = res.data.results[0].formatted_address;
+          console.log($rootScope.user.formattedAddress);
         });
-    });
+        // 
+        $scope.loading = false;
+        getData();
+
+       }, 
+       function(err){
+        console.log(err);
+       });
   };
 
-  
 
-  $scope.niTime = new Date();
-
-	$scope.formattedAddress = '';
 	$scope.riskText = '';
   $scope.mostLikely = '';
 
   $scope.setTime = function(hour){   
-    var d = new Date($scope.niTime); 
-    $scope.niTime = d.setHours(d.getHours()+hour);
+    var d = new Date($rootScope.niTime); 
+    $rootScope.niTime = d.setHours(d.getHours()+hour);
     getData();
   };
 
@@ -104,17 +113,43 @@ niApp.controller('NIController', function NIController($scope, $window, $http, m
 
 
 
-niApp.controller('MoreController', function MoreController($scope, $window, $http) {
+niApp.controller('MoreController', function MoreController($scope, $window, $http, $rootScope, $timeout) {
+
   
   $scope.loading = false;
   $scope.init = false;
   $scope.riskLevel = '';
-  $scope.highestDay = '';
-  $scope.highestTime = '';
-  $scope.niTime = new Date();
+  $scope.charts = [];
   
-  var timesOfDay = ['12-4am', '4-8am','8am-12','12-4pm','4-8pm','8pm-12'];
-  var daysOfWeek = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  $scope.$on('chart-create', function (evt, chart) {
+    $scope.charts.push(chart);
+    console.log($scope.charts);
+  });
+
+  $scope.dataOptions = {
+    scales: {
+      yAxes: [
+        {
+          id: 'y-axis-1',
+          type: 'linear',
+          display: true,
+          position: 'left'
+        }
+      ]
+    }
+  };
+  
+  $scope.timesOfDay = ['12-4am', '4-8am','8am-12','12-4pm','4-8pm','8pm-12'];
+  $scope.daysOfWeek = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  $scope.highestDay = '';
+  $scope.highestDayData = [0,0,0,0,0,0];
+  $scope.highestTime = '';
+  $scope.highestTimeData = [0,0,0,0,0,0,0];
+  $scope.todSeries = ['Time of Day'];
+  $scope.dowSeries = ['Day of week'];
+
+  $rootScope.niTime = $rootScope.niTime || new Date();  
+  
   var apiUrl = 'https://neighborhood-intelligence.tailw.ag/api/';
   var user = {};
 
@@ -133,20 +168,27 @@ niApp.controller('MoreController', function MoreController($scope, $window, $htt
     return maxIndex;
   };
 
+  $scope.setTime = function(hour){   
+    var d = new Date($rootScope.niTime); 
+    $rootScope.niTime = d.setHours(d.getHours()+hour);
+    getData();
+  };
 
   var getData = function(){
     $scope.loading = true;
     $http({
-      url: apiUrl + '/' + user.lat + '/' + user.lng + '/' + $scope.niTime, 
+      url: apiUrl + '/' + user.lat + '/' + user.lng + '/' + $rootScope.niTime, 
       method: "GET"
     }).then(function(results) {
-      //$scope.formattedAddress = results.data.records[0].formattedAddress;
+      $scope.init = true;
       $scope.riskText = results.data.precog.risk;
       $scope.riskLevel = results.data.precog.risk.toLowerCase();
       $scope.loading = false;
-      $scope.init = true;
-      $scope.highestDay = daysOfWeek[indexOfMax(results.data.precog.dayOfWeek)];
-      $scope.highestTime = timesOfDay[indexOfMax(results.data.precog.timeOfDay)];
+
+      $scope.highestTimeData =results.data.precog.timeOfDay;
+      $scope.highestTime = $scope.timesOfDay[indexOfMax(results.data.precog.timeOfDay)];
+      $scope.highestDayData = results.data.precog.dayOfWeek;
+      $scope.highestDay = $scope.daysOfWeek[indexOfMax(results.data.precog.dayOfWeek)];  
     });
   };
 
@@ -171,8 +213,15 @@ niApp.controller('MoreController', function MoreController($scope, $window, $htt
     );
   };
 
+  
 
 
+  $scope.chartClick = function (points, evt) {
+    console.log(points, evt);
+  };
+
+  
+  getUserLocation();
 
   // //Type Chart
 	// var ctxdo = document.getElementById("typeChart");
@@ -315,7 +364,7 @@ niApp.controller('MoreController', function MoreController($scope, $window, $htt
  //      }
  //      });
   
-  getUserLocation();
+  
 
 });
 

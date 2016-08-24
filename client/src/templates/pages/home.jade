@@ -8,7 +8,7 @@ div(ng-controller="NIController").font-color.fade-in
     i.fa.fa-plus-square(aria-hidden="true" ng-click="setTime(1)")
   
   div.address.fade-in(ng-show="init")
-    p {{formattedAddress}}  
+    p {{user.formattedAddress}}  
   
   div.risk-level.fade-in(ng-show="init")
     h2.risk-label Risk level
@@ -17,8 +17,10 @@ div(ng-controller="NIController").font-color.fade-in
     //-include ./../../components/modal/_default.jade
   
   div.risk-level.fade-in(ng-show="init")
-    h2.risk-label.fade-in Most likely crime:
+    h2.risk-label.fade-in Most likely crime
     p.t2 {{mostLikely}}
     
-  a(ng-href="#/more")
-    span.nav-more more >>
+  a.nav.nav-more(ng-href="#/more") 
+    | more  
+    i.fa.fa-arrow-right
+ 

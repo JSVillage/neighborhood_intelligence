@@ -3,20 +3,25 @@ div(ng-controller="MoreController" ng-class="{loading : loading}").font-color.fa
   div.loading(ng-show="loading")
   
   br
-  br
-  div.risk-level.fade-in(ng-show="init")
+  div.risk-level.fade-in(ng-class="{offscreen : !init}")
     h2.risk-label Day of highest crime
     p {{highestDay}} 
-    i.fa.fa-line-chart(style="font-size:100px;display:block;text-align:center;")
+    canvas#highestDay.chart.chart-line(chart-data="highestDayData"
+      chart-labels="daysOfWeek" chart-series="dowSeries" chart-options="chartOptions"
+      chart-click="chartClick")
 
-  div.risk-level.fade-in(ng-show="init")
+  div.risk-level.fade-in(ng-class="{offscreen : !init}")
     h2.risk-label Time of highest crime
     p {{highestTime}} 
-    i.fa.fa-line-chart(style="font-size:100px;display:block;text-align:center;")
+    canvas#highestTime.chart.chart-line(chart-data="highestTimeData"
+      chart-labels="timesOfDay" chart-series="todSeries" chart-options="chartOptions"
+      chart-click="chartClick")
 
+  
 
-  a(ng-href="#/")
-    span.nav-back << back
+  a.nav.nav-back(ng-href="#/") 
+    i.fa.fa-arrow-left
+    |  back 
 
   //- div.col-half
   //-   canvas.charts#dayChart(width="165" height="180")

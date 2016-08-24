@@ -3,10 +3,12 @@
 .hide {
   display: none !important;
 }
+
 // hidden, but also needs to have it's height/width calculated (so display: none would result in 0);
 .offscreen {
   top: -9999em;
   left: -9999em;
+  position: relative;
 }
 
 .left {float: left !important; }
