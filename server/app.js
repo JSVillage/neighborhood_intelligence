@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+var http = require('http');
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -9,17 +11,18 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var cron = require('./data/cron');
 
-var db = require('./db');
-
 var app = express();
 var precog = require('./data/precog');
+
+var db = require('./db');
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -69,3 +72,5 @@ cron.job.start();
 precog.run();
 
 module.exports = app;
+
+
