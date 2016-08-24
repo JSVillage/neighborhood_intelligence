@@ -1,94 +1,33 @@
 // base.scss - Usage: global shared styles. Extend for specific components in component css
 
- 
-.footer {
-	@include clearfix;
-	font-size: 10px;
-	.col {
-		float: left;
-		width: 25%;
-	}
-}
-
 body, html{
-	height: 100%;
+	min-height: 100vh;
+  background: linear-gradient(#ccc, #fff);
 }
-body, html{
-        height: 100%;
-      }
-body, body .high,{
-  background: linear-gradient(0deg, #ae2860, #fab90e);
-  background-size: 100% 130%;
-  overflow: hidden;
-
-  // -webkit-animation: gradientAnimate 5s ease infinite;
-  // -moz-animation: gradientAnimate 5s ease infinite;
-  animation: gradientAnimate 5s ease infinite;
+main{
+  padding: 30px;
 }
 
-@-webkit-keyframes gradientAnimate {
-    0%{background-position:0% 0%}
-    50%{background-position:0% 100%}
-    100%{background-position:0% 0%}
+.stage{
+  position: fixed;
+  z-index: -1;
+  right: 0;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  opacity: 0;
+  background-size: 100% 100%;
+  transition: all 2s;
+  // animation: gradientAnimate 5s ease infinite;
+  &.low{background-image: linear-gradient(#bbec7b, #99de13);opacity: 1;}
+  &.medium{background-image: linear-gradient(#ebec7b, #deb513);opacity: 1;}
+  &.high{background-image: linear-gradient(#ae2860, #fab90e);opacity: 1;}
 }
-// @-moz-keyframes gradientAnimate {
-//     0%{background-position:0% 50%}
-//     50%{background-position:0% 40%}
-//     100%{background-position:0% 50%}
-// }
-// @keyframes gradientAnimate { 
-//     0%{background-position:0% 50%}
-//     50%{background-position:0% 40%}
-//     100%{background-position:0% 50%}
-// }
-body .medium{
-  background: linear-gradient(0deg, #ebec7b, #deb513);
-  background-size: 100% 130%;
-  overflow: hidden;
 
-  // -webkit-animation: gradientAnimate 5s ease infinite;
-  // -moz-animation: gradientAnimate 5s ease infinite;
-  animation: gradientAnimate 5s ease infinite;
-}
-@-webkit-keyframes gradientAnimate {
-    0%{background-position:0% 0%}
-    50%{background-position:0% 100%}
-    100%{background-position:0% 0%}
-}
-// @-moz-keyframes gradientAnimate {
-//     0%{background-position:0% 50%}
-//     50%{background-position:0% 40%}
-//     100%{background-position:0% 50%}
-// }
-// @keyframes gradientAnimate { 
-//     0%{background-position:0% 50%}
-//     50%{background-position:0% 40%}
-//     100%{background-position:0% 50%}
-// }
-body .low{
-  background: linear-gradient(0deg, #eaec7b, #99de13);
-  background-size: 100% 130%;
-  overflow: hidden;
+.recent-crime-list{
 
-  // -webkit-animation: gradientAnimate 5s ease infinite;
-  // -moz-animation: gradientAnimate 5s ease infinite;
-  animation: gradientAnimate 5s ease infinite;
 }
-@-webkit-keyframes gradientAnimate {
-    0%{background-position:0% 0%}
-    50%{background-position:0% 100%}
-    100%{background-position:0% 0%}
-}
-// @-moz-keyframes gradientAnimate {
-//     0%{background-position:0% 50%}
-//     50%{background-position:0% 40%}
-//     100%{background-position:0% 50%}
-// }
-// @keyframes gradientAnimate { 
-//     0%{background-position:0% 50%}
-//     50%{background-position:0% 40%}
-//     100%{background-position:0% 50%}
-// }
+
 .recent-crime-list p{
   margin:0 0 1px 50px;
 }
@@ -97,11 +36,10 @@ body .low{
   margin-top: 20px;
 }
 .rec-crime-box {
-  min-height: 520px;
   margin-top: 80px;
 }
 .nav-more {
-  position: absolute;
+  position: fixed;
   color: #fff;
   bottom:4%;
   right: 8%;
@@ -109,7 +47,7 @@ body .low{
   font-weight: 700;
 }
 .nav-back {
-  position: absolute;
+  position: fixed;
   color: #fff;
   bottom:4%;
   left: 8%;
@@ -125,4 +63,12 @@ body .low{
 .charts {
   margin: auto;
   width: 80%;
+}
+.footer {
+  @include clearfix;
+  font-size: 10px;
+  .col {
+    float: left;
+    width: 25%;
+  }
 }

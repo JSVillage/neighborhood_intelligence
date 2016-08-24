@@ -1,16 +1,24 @@
 div(ng-controller="NIController").font-color.fade-in
-  h2.weight-max.time
+  div.stage(ng-class="riskLevel")
+  div.loading(ng-show="loading")
+  
+  h2.weight-max.time.fade-in(ng-show="init")
     i.fa.fa-minus-square(aria-hidden="true" ng-click="setTime(-1)")
     span#time {{ niTime | date:'h:mm a'}}
     i.fa.fa-plus-square(aria-hidden="true" ng-click="setTime(1)")
-  div.address
-    p {{formattedAddress}}
-  h2.risk-label risk level
-  div.risk-level
+  
+  div.address.fade-in(ng-show="init")
+    p {{formattedAddress}}  
+  
+  div.risk-level.fade-in(ng-show="init")
+    h2.risk-label Risk level
     p {{riskText}}
-    include ./../../components/modal/_default.jade
-  div.rec-crime-box
-    h3.weight-max Most likely crime right now is:
-    h1 {{mostLikely}}
-    a(ng-href="#/more")
-      span.nav-more more >>
+    
+    //-include ./../../components/modal/_default.jade
+  
+  div.risk-level.fade-in(ng-show="init")
+    h2.risk-label.fade-in Most likely crime:
+    p.t2 {{mostLikely}}
+    
+  a(ng-href="#/more")
+    span.nav-more more >>

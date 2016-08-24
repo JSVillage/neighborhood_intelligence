@@ -35,7 +35,7 @@ h3,
 h4,
 h5,
 h6 {
-  margin: 10px 0;
+  margin: 0 0 10px;
   font-family: inherit;
   color: inherit;
   text-rendering: optimizelegibility;
@@ -163,19 +163,38 @@ li{list-style:none;}
   text-align: left;
 }
 .time {
-  margin-top: 36px;
   font-size: 22px;
+  max-width: 220px;
+  position: relative;
+  margin: 0 auto;
+  min-height: 40px;
+  line-height: 40px;
+  i{
+    position: absolute;
+    left: 0;
+    top: 0;
+    margin: 0;
+    font-size: 40px;
+    &.fa-plus-square{
+      left: auto;
+      right: 0;
+    }
+  }
 }
 .sub-title {
   margin-top: 10px;
   font-size: 19px;
   font-family: 'montserratultralight';
   font-weight: 100;
+  position: relative;
+  z-index: 1;
 }
 .title {
   margin-bottom: 0;
-  margin-top: 29px;
+  // margin-top: 29px;
   font-weight: 100;
+  position: relative;
+  z-index: 1;
 }
 .weight-max {
   font-weight: 900;
@@ -185,24 +204,26 @@ li{list-style:none;}
   font-weight: 900;
 }
 .address p {
-  margin: 4px;
+  padding: 20px;
+  line-height: 1.2;
+  margin-bottom: 30px;
 }
-.fa {
-  font-size: 40px;
-  margin: 0 14px;
-  transform: translateY(6px);
-}
+
 .risk-label{
-  margin-top: 50px;
-  font-weight: 600px;
   font-size: 23px;
 }
+.risk-level{
+  margin: 0 0 30px;
+}
+
 .risk-level p{
   font-size: 50px;
-  line-height: .3em;
-  margin: 27px 0 20px;
+  line-height: 1.2;
+  margin: 0;
   font-family: montserratregular;
-  font-weight: bolder;
+  &.t2{
+    font-size: 18px;
+  }
 }
 .how {
   font-size:10px;
