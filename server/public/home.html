@@ -1,0 +1,19 @@
+
+<div ng-controller="NIController" class="font-color fade-in">
+  <div ng-class="riskLevel" class="stage"></div>
+  <div ng-show="loading" class="loading"></div><br/>
+  <h2 ng-show="init" class="weight-max time fade-in"><i aria-hidden="true" ng-click="setTime(-1)" class="fa fa-minus-square"></i><span id="time">{{ niTime | date:'h:mm a'}}</span><i aria-hidden="true" ng-click="setTime(1)" class="fa fa-plus-square"></i></h2>
+  <div ng-show="init" class="address fade-in">
+    <p>{{user.formattedAddress}}  </p>
+  </div>
+  <div ng-show="init" class="risk-level fade-in">
+    <h2 class="risk-label">Risk level</h2>
+    <p>{{riskText}}</p>
+  </div>
+  <div ng-show="init" class="risk-level fade-in">
+    <h2 class="risk-label fade-in">Most likely crime</h2>
+    <p class="t2">{{mostLikely}}</p>
+  </div><a ng-href="#/more" class="nav nav-more">
+     
+    more  <i class="fa fa-arrow-right"></i></a>
+</div>
