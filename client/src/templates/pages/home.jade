@@ -1,7 +1,7 @@
 div(ng-controller="NIController").font-color.fade-in
   div.stage(ng-class="riskLevel")
   div.loading(ng-show="loading")
-  
+  br
   h2.weight-max.time.fade-in(ng-show="init")
     i.fa.fa-minus-square(aria-hidden="true" ng-click="setTime(-1)")
     span#time {{ niTime | date:'h:mm a'}}
