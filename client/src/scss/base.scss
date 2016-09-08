@@ -3,17 +3,17 @@
 body, html{
 	min-height: 100vh;
   background: linear-gradient(#ccc, #fff);
+  position: relative;
 }
 main{
   padding: 30px 30px 80px;
   max-width: 600px;
   margin: 0 auto;
   min-height: 100vh;
-  position: relative;
 }
 
 .stage{
-  position: fixed;
+  position: absolute;
   z-index: -1;
   right: 0;
   left: 0;
@@ -47,7 +47,7 @@ main{
   padding: 5px;
   border-radius: 5px;
   position: absolute;
-  bottom: 50px;
+  bottom: 70px;
   font-size: 17px;
   font-weight: 700;
   color:#fff;
