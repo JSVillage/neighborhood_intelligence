@@ -13,7 +13,7 @@ var gulp    = require('gulp'),
     plumber = require('gulp-plumber'),
     rename = require("gulp-rename"),
     minify = require('gulp-minifier'),
-    buildDirectory = '../build';
+    buildDirectory = '../../public';
 
 
 gulp.task('lint', function() {
