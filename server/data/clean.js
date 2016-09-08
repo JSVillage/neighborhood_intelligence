@@ -2,7 +2,7 @@ var fs = require('fs');
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
 
-var url = process.env.MONGOLAB_URI; //'mongodb://localhost:27017/server';
+var url = 'mongodb://heroku_66scqnxq:cgumfgro1nqv0tqmbbahdj1l79@ds019966.mlab.com:19966/heroku_66scqnxq'; //'mongodb://localhost:27017/server';
 
 var run = function() {
     MongoClient.connect(url, function(err, db) {

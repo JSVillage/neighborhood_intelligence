@@ -1,5 +1,5 @@
 var MongoClient = require('mongodb').MongoClient;
-var url = process.env.MONGOLAB_URI //'mongodb://localhost:27017/crime-data';
+var url = 'mongodb://heroku_66scqnxq:cgumfgro1nqv0tqmbbahdj1l79@ds019966.mlab.com:19966/heroku_66scqnxq' //'mongodb://localhost:27017/crime-data';
 var assert = require('assert');
 
 /*
@@ -216,6 +216,7 @@ function showTime(t) {
 
 
 var run = function() {
+    console.log(url);
     console.log("Connecting to Mongo");
     MongoClient.connect(url, function(err, db) {
         assert.equal(null, err);

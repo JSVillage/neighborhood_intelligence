@@ -10,7 +10,7 @@ var options = {
 };
 
 // var dburl = 'mongodb://localhost:27017/crime-data';
-var dburl = process.env.MONGOLAB_URI;
+var dburl = 'mongodb://heroku_66scqnxq:cgumfgro1nqv0tqmbbahdj1l79@ds019966.mlab.com:19966/heroku_66scqnxq';
 var geocoder = NodeGeocoder(options);
 
 // https://www.npmjs.com/package/mongodb
