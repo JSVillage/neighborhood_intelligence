@@ -112,7 +112,7 @@ var runGeoUpdate = function(db, callback){
 var getNearby = function(arg, callback){
   MongoClient.connect(dburl, function(err, db) {
     assert.equal(null, err);
-    //console.log("Connected correctly to server");
+    console.log("Connected correctly to server");
     var date;
     if (arg.datetime !== undefined) {
       date = new Date(arg.datetime);
@@ -134,6 +134,8 @@ var getNearby = function(arg, callback){
     collection.find(query,{},{}).toArray(function(err, docs){
       var count = 0;
       var info = {risk: [], guess: [], timeOfDay: [0,0,0,0,0,0], dayOfWeek: [0,0,0,0,0,0,0], types: {}};
+      console.log('In getNearby err is ');
+      console.log(err);
       //console.log("Current time: " + queryTime + ", Nearby records = " + docs.length);
       for (var doc in docs) {
         var dateTime = docs[doc].dateTime.split(/\s+/);
