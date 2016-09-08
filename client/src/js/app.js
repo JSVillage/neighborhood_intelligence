@@ -28,7 +28,7 @@ niApp.controller('NIController', function NIController($scope, $window, $http, N
   $scope.loading = false;
   $scope.init = false;
   $scope.riskLevel = '';
-  var apiUrl = $window.location.hostname + '/api/';
+  var apiUrl = $window.location.origin + '/api';
   $rootScope.user = $rootScope.user || {};
   $scope.formattedAddress = '';
 
@@ -155,7 +155,7 @@ niApp.controller('MoreController', function MoreController($scope, $window, $htt
 
   $rootScope.niTime = $rootScope.niTime || new Date();  
   
-  var apiUrl = 'https://neighborhood-intelligence.tailw.ag/api/';
+  var apiUrl = $window.location.origin + '/api';
 
   var indexOfMax = function(arr) {
     if (arr.length === 0) {return -1;}
