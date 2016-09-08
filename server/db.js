@@ -9,7 +9,8 @@ var options = {
   formatter: null         // 'gpx', 'string', ...
 };
 
-var dburl = 'mongodb://localhost:27017/crime-data';
+// var dburl = 'mongodb://localhost:27017/crime-data';
+var dburl = process.env.MONGOLAB_URI;
 var geocoder = NodeGeocoder(options);
 
 // https://www.npmjs.com/package/mongodb
