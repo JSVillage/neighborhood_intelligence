@@ -28,7 +28,7 @@ niApp.controller('NIController', function NIController($scope, $window, $http, N
   $scope.loading = false;
   $scope.init = false;
   $scope.riskLevel = '';
-  var apiUrl = 'https://neighborhood-intelligence.tailw.ag/api/';
+  var apiUrl = $window.location.hostname + '/api/';
   $rootScope.user = $rootScope.user || {};
   $scope.formattedAddress = '';
 
