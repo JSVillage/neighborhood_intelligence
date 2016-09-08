@@ -2,7 +2,7 @@ var fs = require('fs');
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
 
-var url = 'mongodb://localhost:27017/server';
+var url = process.env.MONGOLAB_URI; //'mongodb://localhost:27017/server';
 
 var run = function() {
     MongoClient.connect(url, function(err, db) {
