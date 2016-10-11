@@ -63,11 +63,12 @@ var buildHeatmap = function(db, callback){
                 pointHeatmap[hour]["crimeType"][docs[doc].crimeType] = 0;
               }
               pointHeatmap[hour]["crimeType"][docs[doc].crimeType] += 1;
-              console.log(hour + ": " + pointHeatmap[hour]["score"] + " " + docs[doc].crimeType + " " + pointHeatmap[hour]["crimeType"][docs[doc].crimeType]);
+              //console.log(hour + ": " + pointHeatmap[hour]["score"] + " " + docs[doc].crimeType + " " + pointHeatmap[hour]["crimeType"][docs[doc].crimeType]);
               insertDB = true;
             }
           });
-          if (insertDB == true) {//console.log("insertDB == true");
+          if (insertDB == true) {
+            console.log("insertDB == true");
             console.log(pointHeatmap[0]["score"]);
             try {
               for (var i = 0; i < 24; i++) {
