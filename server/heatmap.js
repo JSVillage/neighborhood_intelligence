@@ -14,16 +14,6 @@ var geocoder = NodeGeocoder(options);
 var MongoClient = require('mongodb').MongoClient,
     assert = require('assert');
 
-
-var heatinfo = function(loc, time) {
-  // score is array of values for each hour
-  this.loc = loc;
-  this.time = time;
-  this.score = 0;
-  this.crimeType = {};
-  //this.dayOfWeek = [];
-}
-
 var crimeThreshold = function() {
   this.loc = loc;
   this.lowRiskScoreThreshold = 0;
@@ -53,7 +43,7 @@ var buildHeatmap = function(db, callback){
           var pointHeatmap = [];
           var insertDB = false;
           for (var time = 0; time < 24; time++) {
-            pointHeatmap[time] = new heatinfo([lng,lat], time);
+            pointHeatmap[time] = {"loc":[lng,lat], "time":time, "score": 0, "crimeType": {});
           }
           var query =  {
             loc : { $near : [ lng, lat ], $maxDistance: dist},
@@ -78,6 +68,7 @@ var buildHeatmap = function(db, callback){
           });
           if (insertDB) {
             try {
+              console.log("Got here");
               for (var i = 0; i < 24; i++) {
                 var result = heatmap.insertOne(pointHeatmap[i]);
                 console.log(pointHeatmap[i] + " " + result);
