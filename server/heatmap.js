@@ -19,7 +19,7 @@ var heatinfo = function(loc, time) {
   // score is array of values for each hour
   this.loc = loc;
   this.time = time;
-  this.score = time;
+  this.score = 0;
   this.crimeType = {};
   //this.dayOfWeek = [];
 }
@@ -50,22 +50,21 @@ var buildHeatmap = function(db, callback){
       for (var lng = -112.1; lng <= -112.099; lng += 0.01) {
         //for (var lat = 33.29; lat < 33.920; lat += 0.01) {
           //for (var lng = -112.33; lng < -111.92; lng += 0.01) {
-              var result = [];
+          var result = [];
           var insertDB = false;
           for (var time = 0; time < 24; time++) {
-            result.push(new heatinfo([lng,lat], time));
+            result[time] = new heatinfo([lng,lat], time));
           }
           var query =  {
             loc : { $near : [ lng, lat ], $maxDistance: dist},
             dateTime: {$ne: ""}
           };
-          records.find().limit(10).toArray(function(err, docs){
-            //console.log(lat + " " + lng + ": " + docs.length + " crimes");
+          records.find().toArray(function(err, docs){
+            console.log(lat + " " + lng + ": " + docs.length + " crimes");
             for (var doc in docs) {
               var dateTime = docs[doc].dateTime.split(/\s+/);
               var time = dateTime[1].split(/:/);
               var hour = parseInt(time[0]);
-              console.log(dateTime + " " + time + " " + hour);
 
               // For now each crime in this circle is equal regardless of type or age
               result[hour].score++;
