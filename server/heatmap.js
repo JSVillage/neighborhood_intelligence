@@ -38,7 +38,7 @@ var buildHeatmap = function(db, callback){
     // Start with clean collections
     //heatmap.remove({});
     //stats.remove({});
-    for (var lat = 33.4; lat <= 33.4; lat += 0.01) {
+    for (var lat = 33.4; lat <= 33.41; lat += 0.01) {
       for (var lng = -112.1; lng <= -112.099; lng += 0.01) {
         //for (var lat = 33.29; lat < 33.920; lat += 0.01) {
           //for (var lng = -112.33; lng < -111.92; lng += 0.01) {
@@ -73,7 +73,7 @@ var buildHeatmap = function(db, callback){
             for (var i = 0; i < 24; i++) {
               console.log(pointHeatmap[i]);
               var result = heatmap.insertOne(pointHeatmap[i]);
-              console.log(result);
+              //console.log(result);
             }
             //heatmap.insertMany({result}).then(function(res) {
             //  console.log(res.insertedCount + " new records have been inserted into the database");
@@ -84,8 +84,8 @@ var buildHeatmap = function(db, callback){
       }
     }
     // Compute stats for the whole city, store in another collection
-    //var count = heatmap.find().count();
-    //console.log("count = " + count);
+    var count = heatmap.find().count();
+    console.log("count = " + count);
     //if (count > 0)
     {
       var data =  heatmap.find().sort({"score": -1}).limit(1).toArray()[0];
