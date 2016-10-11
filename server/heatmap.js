@@ -39,7 +39,8 @@ var buildHeatmap = function(db, callback){
     var heatmap = db.collection('heatmap');
     var stats = db.collection('stats');
 
-    var dist = 0.01 * Math.Pi / 180;
+    // Find all crimes within 0.7 mile of here
+    var dist = 0.7 / 3,963.2;
     var heatlist = [];
 
     // Start with clean collections
@@ -68,16 +69,21 @@ var buildHeatmap = function(db, callback){
               console.log('no doc');
             }
           });
-          heatmap.insertMany(result);
+          heatmap.insertMany(result).then(function(res) {
+              console.log(res.insertedCount + " new records have been inserted into the database");
+          });
       }
     }
     // Compute stats for the whole city, store in another collection
     var count = heatmap.count();
+    console.log("count = " + count);
+    var data =  heatmap.find().sort({"score": -1}).limit(1).toArray()[0];
+    console.log(data);
     var thresholdStats = [];
     var lowRiskScoreThreshold = heatmap.find().sort( {"score": 1}).skip(count/3).limit(1).toArray()[0].score;
     var highRiskScoreThreshold = heatmap.find().sort( {"score": -1}).skip(count/3).limit(1).toArray()[0].score;
+    var maxScore = heatmap.find().sort({"score": -1}).limit(1).toArray()[0].score;
     thresholdStats.push(new crimeThreshold([0,0], lowRiskScoreThreshold, highRiskScoreThreshold));
-    var maxScore = heatmap.find(query).sort({"score": -1}).limit(1).toArray()[0].score;
     console.log("City thresholds: low = " + lowRiskScoreThreshold + ", high = " + highRiskScoreThreshold + ", max = " + maxScore);
 
     for (var lat = 33.29; lat < 33.920; lat += 0.05) {
