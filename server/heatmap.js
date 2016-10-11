@@ -56,7 +56,7 @@ var buildHeatmap = function(db, callback){
             result.push(new heatinfo([lng,lat], time));
           }
           var query =  {
-            loc : { $near : [ parseFloat(lng), parseFloat(lat) ], $maxDistance: dist},
+            loc : { $near : [ lng, lat ], $maxDistance: dist},
             dateTime: {$ne: ""}
           };
           records.find(query).toArray(function(err, docs){
@@ -68,7 +68,7 @@ var buildHeatmap = function(db, callback){
               // For now each crime in this circle is equal regardless of type or age
               result[hour].score++;
               if (!result[hour].crimeType[doc.crimeType]) {
-                result[hour].crimeType[doc.crimeType] = 0;
+                result[hour].cribuildmeType[doc.crimeType] = 0;
               }
               result[hour].crimeType[doc.crimeType] += 1;
               insertDB = true;
@@ -84,30 +84,34 @@ var buildHeatmap = function(db, callback){
     }
     // Compute stats for the whole city, store in another collection
     var count = heatmap.count();
-    console.log("count = " + count);
-    var data =  heatmap.find().sort({"score": -1}).limit(1).toArray()[0];
-    console.log(data);
-    var thresholdStats = [];
-    var lowRiskScoreThreshold = heatmap.find().sort( {"score": 1}).skip(count/3).limit(1).toArray()[0].score;
-    var highRiskScoreThreshold = heatmap.find().sort( {"score": -1}).skip(count/3).limit(1).toArray()[0].score;
-    var maxScore = heatmap.find().sort({"score": -1}).limit(1).toArray()[0].score;
-    thresholdStats.push(new crimeThreshold([0,0], lowRiskScoreThreshold, highRiskScoreThreshold));
-    console.log("City thresholds: low = " + lowRiskScoreThreshold + ", high = " + highRiskScoreThreshold + ", max = " + maxScore);
+    //console.log("count = " + count);
+    if (count > 0)
+    {
+      var data =  heatmap.find().sort({"score": -1}).limit(1).toArray()[0];
+      console.log(data);
+      var thresholdStats = [];
+      var lowRiskScoreThreshold = heatmap.find().sort( {"score": 1}).skip(count/3).limit(1).toArray()[0].score;
+      var highRiskScoreThreshold = heatmap.find().sort( {"score": -1}).skip(count/3).limit(1).toArray()[0].score;
+      var maxScore = heatmap.find().sort({"score": -1}).limit(1).toArray()[0].score;
+      thresholdStats.push(new crimeThreshold([0,0], lowRiskScoreThreshold, highRiskScoreThreshold));
+      console.log("City thresholds: low = " + lowRiskScoreThreshold + ", high = " + highRiskScoreThreshold + ", max = " + maxScore);
 
-    for (var lat = 33.29; lat < 33.920; lat += 0.05) {
-      for (var lng = -112.33; lng < -111.92; lng += 0.05) {
-        var query = { "loc.0": {$gte: lng, $lt: lng+0.05}, "loc.1": {$gte: lat, $lt: lat+0.05}};
-        count = heatmap.find(query).count();
-        lowRiskScoreThreshold = heatmap.find(query).sort({"score": 1}).skip(count/3).limit(1).toArray()[0].score;
-        highRiskScoreThreshold = heatmap.find(query).sort({"score": -1}).skip(count/3).limit(1).toArray()[0].score;
-        thresholdStats.push(new crimeThreshold([lng,lat], lowRiskScoreThreshold, highRiskScoreThreshold));
-        maxScore = heatmap.find(query).sort({"score": -1}).limit(1).toArray()[0].score;
+      for (var lat = 33.29; lat < 33.920; lat += 0.05) {
+        for (var lng = -112.33; lng < -111.92; lng += 0.05) {
+          var query = { "loc.0": {$gte: lng, $lt: lng+0.05}, "loc.1": {$gte: lat, $lt: lat+0.05}};
+          count = heatmap.find(query).count();
+          lowRiskScoreThreshold = heatmap.find(query).sort({"score": 1}).skip(count/3).limit(1).toArray()[0].score;
+          highRiskScoreThreshold = heatmap.find(query).sort({"score": -1}).skip(count/3).limit(1).toArray()[0].score;
+          thresholdStats.push(new crimeThreshold([lng,lat], lowRiskScoreThreshold, highRiskScoreThreshold));
+          maxScore = heatmap.find(query).sort({"score": -1}).limit(1).toArray()[0].score;
+        }
       }
+      console.log("Area threshold (" + lat + "," + lng + "): low = " + lowRiskScoreThreshold + ", high = " + highRiskScoreThreshold + ", max = " + maxScore);
+      stats.insertMany(thresholdStats);
+    } else {
+      console.log("Unable to create heatmap");
     }
-    console.log("Area threshold (" + lat + "," + lng + "): low = " + lowRiskScoreThreshold + ", high = " + highRiskScoreThreshold + ", max = " + maxScore);
-    stats.insertMany(thresholdStats);
   });
-  db.close();
 
 };
 
