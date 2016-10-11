@@ -46,9 +46,12 @@ var buildHeatmap = function(db, callback){
     // Start with clean collections
     heatmap.remove({});
     stats.remove({});
-    for (var lat = 33.29; lat < 33.920; lat += 0.01) {
-      for (var lng = -112.33; lng < -111.92; lng += 0.01) {
-          var result = [];
+    for (var lat = 33.4; lat <= 33.41; lat += 0.01) {
+      for (var lng = -112.1; lng <= -112.099; lng += 0.01) {
+        //for (var lat = 33.29; lat < 33.920; lat += 0.01) {
+          //for (var lng = -112.33; lng < -111.92; lng += 0.01) {
+              var result = [];
+          var insertDB = false;
           for (var time = 0; time < 24; time++) {
             result.push(new heatinfo([lng,lat], time));
           }
@@ -56,22 +59,27 @@ var buildHeatmap = function(db, callback){
             loc : { $near : [ parseFloat(lng), parseFloat(lat) ], $maxDistance: dist},
             dateTime: {$ne: ""}
           };
-          var cursor = records.find(query);
-          cursor.each(function(err, doc){
-            if (doc) {
+          records.find(query).toArray(function(err, docs){
+            console.log(lat + " " + lng + ": " + docs.length + " crimes");
+            for (var doc in docs) {
               var dateTime = doc.dateTime.split(/\s+/);
               var time = dateTime[1].split(/:/);
               var hour = parseInt(time[0]);
               // For now each crime in this circle is equal regardless of type or age
               result[hour].score++;
-              result[hour].crimeType[doc.crimeType]++;
-            } else {
-              console.log('no doc');
+              if (!result[hour].crimeType[doc.crimeType]) {
+                result[hour].crimeType[doc.crimeType] = 0;
+              }
+              result[hour].crimeType[doc.crimeType] += 1;
+              insertDB = true;
             }
           });
-          heatmap.insertMany(result).then(function(res) {
-              console.log(res.insertedCount + " new records have been inserted into the database");
-          });
+          console.log(result);
+          if (insertDB) {
+            heatmap.insertMany(result).then(function(res) {
+                console.log(res.insertedCount + " new records have been inserted into the database");
+              })
+          }
       }
     }
     // Compute stats for the whole city, store in another collection
@@ -99,6 +107,8 @@ var buildHeatmap = function(db, callback){
     console.log("Area threshold (" + lat + "," + lng + "): low = " + lowRiskScoreThreshold + ", high = " + highRiskScoreThreshold + ", max = " + maxScore);
     stats.insertMany(thresholdStats);
   });
+  db.close();
+
 };
 
 var calcData = function(arg, callback){
