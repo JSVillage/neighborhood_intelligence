@@ -72,7 +72,7 @@ var buildHeatmap = function(db, callback){
               console.log("insertDB == true before db write");
               console.log(pointHeatmap[0]["score"]);
               try {
-                heatmap.insertMany({result}).then(function(res) {
+                heatmap.insertMany({pointHeatmap}).then(function(res) {
                   console.log(res.insertedCount + " new records have been inserted into the database");
                 });
 /*                for (var i = 0; i < 24; i++) {
