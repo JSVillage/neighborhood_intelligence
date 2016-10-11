@@ -39,6 +39,8 @@ var buildHeatmap = function(db, callback){
     // Start with clean collections
     //heatmap.remove({});
     //stats.remove({});
+    //for (var lat = 33.29; lat < 33.920; lat += 0.01)
+      //for (var lng = -112.33; lng < -111.92; lng += 0.01)
     for (var lat = 33.4; lat <= 33.41; lat += dist) {
       for (var lng = -112.1; lng <= -112.099; lng += dist) {
         var pointHeatMap = {
@@ -46,49 +48,42 @@ var buildHeatmap = function(db, callback){
           timedata : []
         };
 
-        //for (var lat = 33.29; lat < 33.920; lat += 0.01) {
-          //for (var lng = -112.33; lng < -111.92; lng += 0.01) {
-          var insertDB = false;
-          for (var hour = 0; hour < 24; hour++) {
-            pointHeatmap.timedata[hour] = {"score": 0, "crimeType": {}};
-          }
-          var query =  {
-            loc : { $near : [ lng, lat ], $maxDistance: dist},
-            dateTime: {$ne: ""}
-          };
-          records.find(query).toArray(function(err, docs){
-            console.log(lat + " " + lng + ": " + docs.length + " crimes");
-            for (var doc in docs) {
-              var dateTime = docs[doc].dateTime.split(/\s+/);
-              var time = dateTime[1].split(/:/);
-              var hour = parseInt(time[0]);
+        var insertDB = false;
+        for (var hour = 0; hour < 24; hour++) {
+          pointHeatmap.timedata[hour] = {"score": 0, "crimeType": {}};
+        }
+        var query =  {
+          loc : { $near : [ lng, lat ], $maxDistance: dist},
+          dateTime: {$ne: ""}
+        };
+        records.find(query).toArray(function(err, docs){
+          console.log(lat + " " + lng + ": " + docs.length + " crimes");
+          for (var doc in docs) {
+            var dateTime = docs[doc].dateTime.split(/\s+/);
+            var time = dateTime[1].split(/:/);
+            var hour = parseInt(time[0]);
 
-              // For now each crime in this circle is equal regardless of type or age
-              pointHeatmap.timedata[hour]["score"]++;
-              if (!pointHeatmap.timedata[hour]["crimeType"][docs[doc].crimeType]) {
-                pointHeatmap.timedata[hour]["crimeType"][docs[doc].crimeType] = 0;
-              }
-              pointHeatmap.timedata[hour]["crimeType"][docs[doc].crimeType] += 1;
-              //console.log(hour + ": " + pointHeatmap[hour]["score"] + " " + docs[doc].crimeType + " " + pointHeatmap[hour]["crimeType"][docs[doc].crimeType]);
-              insertDB = true;
-              //console.log("insertDB == true in docs");
+            // For now each crime in this circle is equal regardless of type or age
+            pointHeatmap.timedata[hour]["score"]++;
+            if (!pointHeatmap.timedata[hour]["crimeType"][docs[doc].crimeType]) {
+              pointHeatmap.timedata[hour]["crimeType"][docs[doc].crimeType] = 0;
             }
-            pointsArray.push(pointHeatmap);
-            console.log(JSON.toString(pointHeatmap));
+            pointHeatmap.timedata[hour]["crimeType"][docs[doc].crimeType] += 1;
+            //console.log(hour + ": " + pointHeatmap[hour]["score"] + " " + docs[doc].crimeType + " " + pointHeatmap[hour]["crimeType"][docs[doc].crimeType]);
+            insertDB = true;
+            //console.log("insertDB == true in docs");
+          }
+          pointsArray.push(pointHeatmap);
+          console.log(JSON.toString(pointHeatmap));
+        }
       } // for lng
     } // for lat
-    //console.log(JSON.toString(pointsArray));
 /*    if (insertDB == true) {
       console.log("insertDB == true before db write");
-      try {
         heatmap.insertMany({pointHeatmap}).then(function(res) {
           console.log(res.insertedCount + " new records have been inserted into the database");
         });
-      } catch (e) {
-        console.log(e);
-      }
     }  end if */
-  });
 
   });
 
