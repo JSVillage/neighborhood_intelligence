@@ -41,7 +41,7 @@ var buildHeatmap = function(db, callback){
         //for (var lat = 33.29; lat < 33.920; lat += 0.01) {
           //for (var lng = -112.33; lng < -111.92; lng += 0.01) {
           var pointHeatmap = [];
-          var insertDB = false;
+          //var insertDB = false;
           for (var time = 0; time < 24; time++) {
             pointHeatmap[time] = {"loc":[lng,lat], "time":time, "score": 0, "crimeType": {}};
           }
@@ -63,25 +63,21 @@ var buildHeatmap = function(db, callback){
               }
               pointHeatmap[hour].crimeType[docs[doc].crimeType] += 1;
               //console.log(hour + ": " + pointHeatmap[hour].score + " " + docs[doc].crimeType + " " + pointHeatmap[hour].crimeType[docs[doc].crimeType]);
-              insertDB = true;
+              //insertDB = true;
             }
           });
-          if (insertDB == true) {
-            console.log("insertDB == true");
-            try {
-              for (var i = 0; i < 24; i++) {
-                console.log(pointHeatmap[i]);
-                var result = heatmap.insertOne(pointHeatmap[i]);
-                console.log(result);
-              }
-              //heatmap.insertMany({result}).then(function(res) {
-              //  console.log(res.insertedCount + " new records have been inserted into the database");
-              //})
-            } catch (e) {
-              console.log(e);
+          //console.log("insertDB == true");
+          try {
+            for (var i = 0; i < 24; i++) {
+              console.log(pointHeatmap[i]);
+              var result = heatmap.insertOne(pointHeatmap[i]);
+              console.log(result);
             }
-          } else {
-            console.log("insertDB == false");
+            //heatmap.insertMany({result}).then(function(res) {
+            //  console.log(res.insertedCount + " new records have been inserted into the database");
+            //})
+          } catch (e) {
+            console.log(e);
           }
       }
     }
