@@ -160,4 +160,3 @@ var interpolateHeatmap = function(docs) {
 
 module.exports.buildHeatmap = buildHeatmap;
 module.exports.calcData = calcData;
-module.exports.runHeatmapUpdate = runHeatmapUpdate;
