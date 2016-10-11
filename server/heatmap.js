@@ -20,10 +20,12 @@ var crimeThreshold = function(object) {
       this[key] = object[key];
   }
 };
-var pointHeatmap = [];
+
 var thresholdStats = [];
 
 var buildHeatmap = function(db, callback){
+  var pointsArray = [];
+
   MongoClient.connect(dburl, function(err, db) {
     assert.equal(null, err);
     console.log("Building heatmap");
@@ -39,11 +41,16 @@ var buildHeatmap = function(db, callback){
     //stats.remove({});
     for (var lat = 33.4; lat <= 33.41; lat += dist) {
       for (var lng = -112.1; lng <= -112.099; lng += dist) {
+        var pointHeatMap = {
+          loc : [lng, lat],
+          timedata : []
+        };
+
         //for (var lat = 33.29; lat < 33.920; lat += 0.01) {
           //for (var lng = -112.33; lng < -111.92; lng += 0.01) {
           var insertDB = false;
-          for (var time = 0; time < 24; time++) {
-            pointHeatmap[time] = {"loc":[lng,lat], "time":time, "score": 0, "crimeType": {}};
+          for (var hour = 0; hour < 24; hour++) {
+            pointHeatmap.timedata[hour] = {"score": 0, "crimeType": {}};
           }
           var query =  {
             loc : { $near : [ lng, lat ], $maxDistance: dist},
@@ -57,36 +64,31 @@ var buildHeatmap = function(db, callback){
               var hour = parseInt(time[0]);
 
               // For now each crime in this circle is equal regardless of type or age
-              pointHeatmap[hour]["score"]++;
-              if (!pointHeatmap[hour]["crimeType"][docs[doc].crimeType]) {
-                pointHeatmap[hour]["crimeType"][docs[doc].crimeType] = 0;
+              pointHeatmap.timedata[hour]["score"]++;
+              if (!pointHeatmap.timedata[hour]["crimeType"][docs[doc].crimeType]) {
+                pointHeatmap.timedata[hour]["crimeType"][docs[doc].crimeType] = 0;
               }
-              pointHeatmap[hour]["crimeType"][docs[doc].crimeType] += 1;
+              pointHeatmap.timedata[hour]["crimeType"][docs[doc].crimeType] += 1;
               //console.log(hour + ": " + pointHeatmap[hour]["score"] + " " + docs[doc].crimeType + " " + pointHeatmap[hour]["crimeType"][docs[doc].crimeType]);
               insertDB = true;
               //console.log("insertDB == true in docs");
             }
-
-            console.log('Completed doc in docs and insertDB is set to ' + insertDB);
-            if (insertDB == true) {
-              console.log("insertDB == true before db write");
-              console.log(pointHeatmap[0]["score"]);
-              try {
-                heatmap.insertMany({pointHeatmap}).then(function(res) {
-                  console.log(res.insertedCount + " new records have been inserted into the database");
-                });
-/*                for (var i = 0; i < 24; i++) {
-                  console.log(pointHeatmap[i]);
-                  var result = heatmap.insertOne(pointHeatmap[i]);
-                  //console.log(result);
-                }*/
-              } catch (e) {
-                console.log(e);
-              }
-            }
-          });
+            pointsArray.push(pointHeatmap);
+            console.log(JSON.toString(pointHeatmap));
       } // for lng
     } // for lat
+    //console.log(JSON.toString(pointsArray));
+/*    if (insertDB == true) {
+      console.log("insertDB == true before db write");
+      try {
+        heatmap.insertMany({pointHeatmap}).then(function(res) {
+          console.log(res.insertedCount + " new records have been inserted into the database");
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    }  end if */
+  });
 
   });
 
