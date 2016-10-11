@@ -53,7 +53,7 @@ var buildHeatmap = function(db, callback){
           var result = [];
           var insertDB = false;
           for (var time = 0; time < 24; time++) {
-            result[time] = new heatinfo([lng,lat], time));
+            result[time] = new heatinfo([lng,lat], time);
           }
           var query =  {
             loc : { $near : [ lng, lat ], $maxDistance: dist},
