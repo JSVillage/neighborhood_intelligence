@@ -50,10 +50,10 @@ var buildHeatmap = function(db, callback){
       for (var lng = -112.1; lng <= -112.099; lng += 0.01) {
         //for (var lat = 33.29; lat < 33.920; lat += 0.01) {
           //for (var lng = -112.33; lng < -111.92; lng += 0.01) {
-          var result = [];
+          var pointHeatmap = [];
           var insertDB = false;
           for (var time = 0; time < 24; time++) {
-            result[time] = new heatinfo([lng,lat], time);
+            pointHeatmap[time] = new heatinfo([lng,lat], time);
           }
           var query =  {
             loc : { $near : [ lng, lat ], $maxDistance: dist},
@@ -67,21 +67,24 @@ var buildHeatmap = function(db, callback){
               var hour = parseInt(time[0]);
 
               // For now each crime in this circle is equal regardless of type or age
-              result[hour].score++;
-              if (!result[hour].crimeType[docs[doc].crimeType]) {
-                result[hour].crimeType[docs[doc].crimeType] = 0;
+              pointHeatmap[hour].score++;
+              if (!pointHeatmap[hour].crimeType[docs[doc].crimeType]) {
+                pointHeatmap[hour].crimeType[docs[doc].crimeType] = 0;
               }
-              result[hour].crimeType[docs[doc].crimeType] += 1;
-              console.log(hour + ": " + result[hour].score + " " + docs[doc].crimeType + " " + result[hour].crimeType[docs[doc].crimeType]);
+              pointHeatmap[hour].crimeType[docs[doc].crimeType] += 1;
+              console.log(hour + ": " + pointHeatmap[hour].score + " " + docs[doc].crimeType + " " + pointHeatmap[hour].crimeType[docs[doc].crimeType]);
               insertDB = true;
             }
           });
-          console.log(result);
           if (insertDB) {
             try {
-              heatmap.insertMany(result).then(function(res) {
-                console.log(res.insertedCount + " new records have been inserted into the database");
-              })
+              for (var i = 0; i < 24; i++) {
+                var result = heatmap.insertOne(pointHeatmap[i]);
+                console.log(pointHeatmap[i] + " " + result);
+              }
+              //heatmap.insertMany({result}).then(function(res) {
+              //  console.log(res.insertedCount + " new records have been inserted into the database");
+              //})
             } catch (e) {
               console.log(e);
             }
