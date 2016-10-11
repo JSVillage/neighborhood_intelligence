@@ -24,60 +24,60 @@ var crimeThreshold = function(object) {
 var thresholdStats = [];
 
 var buildHeatmap = function(db, callback){
-  var pointsArray = [];
-
-  MongoClient.connect(dburl, function(err, db) {
-    assert.equal(null, err);
-    console.log("Building heatmap");
-
-    var records = db.collection('records');
-    var heatmap = db.collection('heatmap');
-
-    // Find all crimes near here
-    var dist = 0.01;
-
-    // Start with clean collections
-    //heatmap.remove({});
-    //stats.remove({});
-    //for (var lat = 33.29; lat < 33.920; lat += 0.01)
-      //for (var lng = -112.33; lng < -111.92; lng += 0.01)
-    for (var lat = 33.4; lat <= 33.41; lat += dist) {
-      for (var lng = -112.1; lng <= -112.099; lng += dist) {
-        var pointHeatMap = {
-          loc : [lng, lat],
-          timedata : []
-        };
-
-        var insertDB = false;
-        for (var hour = 0; hour < 24; hour++) {
-          pointHeatmap.timedata[hour] = {"score": 0, "crimeType": {}};
-        }
-        var query =  {
-          loc : { $near : [ lng, lat ], $maxDistance: dist},
-          dateTime: {$ne: ""}
-        };
-        records.find(query).toArray(function(err, docs){
-          console.log(lat + " " + lng + ": " + docs.length + " crimes");
-          for (var doc in docs) {
-            var dateTime = docs[doc].dateTime.split(/\s+/);
-            var time = dateTime[1].split(/:/);
-            var hour = parseInt(time[0]);
-
-            // For now each crime in this circle is equal regardless of type or age
-            pointHeatmap.timedata[hour]["score"]++;
-            if (!pointHeatmap.timedata[hour]["crimeType"][docs[doc].crimeType]) {
-              pointHeatmap.timedata[hour]["crimeType"][docs[doc].crimeType] = 0;
-            }
-            pointHeatmap.timedata[hour]["crimeType"][docs[doc].crimeType] += 1;
-            //console.log(hour + ": " + pointHeatmap[hour]["score"] + " " + docs[doc].crimeType + " " + pointHeatmap[hour]["crimeType"][docs[doc].crimeType]);
-            insertDB = true;
-            //console.log("insertDB == true in docs");
-          }
-          pointsArray.push(pointHeatmap);
-          console.log(JSON.toString(pointHeatmap));
-        }
-      } // for lng
-    } // for lat
+  // var pointsArray = [];
+  //
+  // MongoClient.connect(dburl, function(err, db) {
+  //   assert.equal(null, err);
+  //   console.log("Building heatmap");
+  //
+  //   var records = db.collection('records');
+  //   var heatmap = db.collection('heatmap');
+  //
+  //   // Find all crimes near here
+  //   var dist = 0.01;
+  //
+  //   // Start with clean collections
+  //   //heatmap.remove({});
+  //   //stats.remove({});
+  //   //for (var lat = 33.29; lat < 33.920; lat += 0.01)
+  //     //for (var lng = -112.33; lng < -111.92; lng += 0.01)
+  //   for (var lat = 33.4; lat <= 33.41; lat += dist) {
+  //     for (var lng = -112.1; lng <= -112.099; lng += dist) {
+  //       var pointHeatMap = {
+  //         loc : [lng, lat],
+  //         timedata : []
+  //       };
+  //
+  //       var insertDB = false;
+  //       for (var hour = 0; hour < 24; hour++) {
+  //         pointHeatmap.timedata[hour] = {"score": 0, "crimeType": {}};
+  //       }
+  //       var query =  {
+  //         loc : { $near : [ lng, lat ], $maxDistance: dist},
+  //         dateTime: {$ne: ""}
+  //       };
+  //       records.find(query).toArray(function(err, docs){
+  //         console.log(lat + " " + lng + ": " + docs.length + " crimes");
+  //         for (var doc in docs) {
+  //           var dateTime = docs[doc].dateTime.split(/\s+/);
+  //           var time = dateTime[1].split(/:/);
+  //           var hour = parseInt(time[0]);
+  //
+  //           // For now each crime in this circle is equal regardless of type or age
+  //           pointHeatmap.timedata[hour]["score"]++;
+  //           if (!pointHeatmap.timedata[hour]["crimeType"][docs[doc].crimeType]) {
+  //             pointHeatmap.timedata[hour]["crimeType"][docs[doc].crimeType] = 0;
+  //           }
+  //           pointHeatmap.timedata[hour]["crimeType"][docs[doc].crimeType] += 1;
+  //           //console.log(hour + ": " + pointHeatmap[hour]["score"] + " " + docs[doc].crimeType + " " + pointHeatmap[hour]["crimeType"][docs[doc].crimeType]);
+  //           insertDB = true;
+  //           //console.log("insertDB == true in docs");
+  //         } //for doc in docs
+  //         pointsArray.push(pointHeatmap);
+  //         console.log(JSON.toString(pointHeatmap));
+  //       }
+  //     } // for lng
+  //   } // for lat
 /*    if (insertDB == true) {
       console.log("insertDB == true before db write");
         heatmap.insertMany({pointHeatmap}).then(function(res) {
