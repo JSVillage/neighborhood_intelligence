@@ -43,7 +43,7 @@ var buildHeatmap = function(db, callback){
           var pointHeatmap = [];
           var insertDB = false;
           for (var time = 0; time < 24; time++) {
-            pointHeatmap[time] = {"loc":[lng,lat], "time":time, "score": 0, "crimeType": {});
+            pointHeatmap[time] = {"loc":[lng,lat], "time":time, "score": 0, "crimeType": {}};
           }
           var query =  {
             loc : { $near : [ lng, lat ], $maxDistance: dist},
