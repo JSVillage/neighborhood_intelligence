@@ -59,7 +59,7 @@ var buildHeatmap = function(db, callback){
             loc : { $near : [ lng, lat ], $maxDistance: dist},
             dateTime: {$ne: ""}
           };
-          records.find(query).toArray(function(err, docs){
+          records.find().limit(10).toArray(function(err, docs){
             console.log(lat + " " + lng + ": " + docs.length + " crimes");
             for (var doc in docs) {
               var dateTime = doc.dateTime.split(/\s+/);
