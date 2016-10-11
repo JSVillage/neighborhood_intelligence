@@ -82,7 +82,7 @@ var buildHeatmap = function(db, callback){
 
     for (var lat = 33.29; lat < 33.920; lat += 0.05) {
       for (var lng = -112.33; lng < -111.92; lng += 0.05) {
-        var query = { loc[0]: {$gte: lat, $lt: lat+0.05}, loc[1]]: {$gte: lng, $lt: lng+0.05}};
+        var query = { "loc.0": {$gte: lng, $lt: lng+0.05}, "loc.1": {$gte: lat, $lt: lat+0.05}};
         count = heatmap.find(query).count();
         lowRiskScoreThreshold = heatmap.find(query).sort({"score": 1}).skip(count/3).limit(1).toArray()[0].score;
         highRiskScoreThreshold = heatmap.find(query).sort({"score": -1}).skip(count/3).limit(1).toArray()[0].score;
@@ -113,13 +113,13 @@ var calcData = function(arg, callback){
 
     // Compute data about this point
     var queryPoint =  {
-      loc : { [ parseFloat(arg.lng), parseFloat(arg.lat) ]}    };
-    heatmap.find(queryPoint,{},{}).sort({"time": 1}).toArray(function(err, docs){
+      loc : [ parseFloat(arg.lng), parseFloat(arg.lat) ]  };
+    heatmap.find(queryPoint).sort({"time": 1}).toArray(function(err, docs){
       var pointHeatmap = interpolateHeatmap(docs);
 
       // compare to thresholds
-      var cityStat = stats.find({loc[0]: {$eq: 0}, loc[1]: {$eq: 0}}).limit(1).toArray()[0];
-      var areaStat = stats.find({lat: Math.floor(arg.lat*10)/10, lng: Math.floor(arg.lng*10)/10}).limit(1).toArray()[0];
+      var cityStat = stats.find({loc : [ 0, 0]}).limit(1).toArray()[0];
+      var areaStat = stats.find({loc: [Math.floor(arg.lng*10)/10, Math.floor(arg.lng*10)/10]}).limit(1).toArray()[0];
       var info = {
         cityRisk:[],
         areaRisk: [],
