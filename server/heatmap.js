@@ -40,7 +40,7 @@ var buildHeatmap = function(db, callback){
     var stats = db.collection('stats');
 
     // Find all crimes within 0.7 mile of here
-    var dist = 0.7 / 3,963.2;
+    var dist = 0.7 / 3963.2;
     var heatlist = [];
 
     // Start with clean collections
