@@ -39,8 +39,8 @@ var buildHeatmap = function(db, callback){
     var heatmap = db.collection('heatmap');
     var stats = db.collection('stats');
 
-    // Find all crimes within 0.7 mile of here
-    var dist = 0.7 / 3963.2;
+    // Find all crimes near here
+    var dist = 0.01;
     var heatlist = [];
 
     // Start with clean collections
@@ -62,15 +62,15 @@ var buildHeatmap = function(db, callback){
           records.find().limit(10).toArray(function(err, docs){
             console.log(lat + " " + lng + ": " + docs.length + " crimes");
             for (var doc in docs) {
-              var dateTime = doc.dateTime.split(/\s+/);
+              var dateTime = docs[doc].dateTime.split(/\s+/);
               var time = dateTime[1].split(/:/);
               var hour = parseInt(time[0]);
               // For now each crime in this circle is equal regardless of type or age
               result[hour].score++;
-              if (!result[hour].crimeType[doc.crimeType]) {
-                result[hour].cribuildmeType[doc.crimeType] = 0;
+              if (!result[hour].crimeType[docs[doc].crimeType]) {
+                result[hour].crimeType[docs[doc].crimeType] = 0;
               }
-              result[hour].crimeType[doc.crimeType] += 1;
+              result[hour].crimeType[docs[doc].crimeType] += 1;
               insertDB = true;
             }
           });
