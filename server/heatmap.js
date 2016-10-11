@@ -93,7 +93,7 @@ var buildHeatmap = function(db, callback){
       var lowRiskScoreThreshold = heatmap.find().sort( {"score": 1}).skip(count/3).limit(1).toArray()[0]["score"];
       var highRiskScoreThreshold = heatmap.find().sort( {"score": -1}).skip(count/3).limit(1).toArray()[0]["score"];
       var maxScore = heatmap.find().sort({"score": -1}).limit(1).toArray()[0]["score"];
-      thresholdStats.push(new crimeThreshold({"loc":[0,0], "lowThreshold": lowRiskScoreThreshold, "highThreshold": highRiskScoreThreshold));
+      thresholdStats.push(new crimeThreshold({"loc":[0,0], "lowThreshold": lowRiskScoreThreshold, "highThreshold": highRiskScoreThreshold});
       console.log("City thresholds: low = " + lowRiskScoreThreshold + ", high = " + highRiskScoreThreshold + ", max = " + maxScore);
 
       for (var lat = 33.29; lat < 33.920; lat += 0.05) {
@@ -102,7 +102,7 @@ var buildHeatmap = function(db, callback){
           count = heatmap.find(query).count();
           lowRiskScoreThreshold = heatmap.find(query).sort({"score": 1}).skip(count/3).limit(1).toArray()[0].score;
           highRiskScoreThreshold = heatmap.find(query).sort({"score": -1}).skip(count/3).limit(1).toArray()[0].score;
-          thresholdStats.push(new crimeThreshold({"loc": [lng,lat], "lowThreshold": lowRiskScoreThreshold, "highThreshold": highRiskScoreThreshold));
+          thresholdStats.push(new crimeThreshold({"loc": [lng,lat], "lowThreshold": lowRiskScoreThreshold, "highThreshold": highRiskScoreThreshold});
           maxScore = heatmap.find(query).sort({"score": -1}).limit(1).toArray()[0].score;
         }
       }
