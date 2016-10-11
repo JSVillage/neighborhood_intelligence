@@ -62,16 +62,17 @@ var buildHeatmap = function(db, callback){
                 pointHeatmap[hour].crimeType[docs[doc].crimeType] = 0;
               }
               pointHeatmap[hour].crimeType[docs[doc].crimeType] += 1;
-              console.log(hour + ": " + pointHeatmap[hour].score + " " + docs[doc].crimeType + " " + pointHeatmap[hour].crimeType[docs[doc].crimeType]);
+              //console.log(hour + ": " + pointHeatmap[hour].score + " " + docs[doc].crimeType + " " + pointHeatmap[hour].crimeType[docs[doc].crimeType]);
               insertDB = true;
             }
           });
-          if (insertDB) {
+          if (insertDB == true) {
+            console.log("insertDB == true");
             try {
-              console.log("Got here");
               for (var i = 0; i < 24; i++) {
+                console.log(pointHeatmap[i]);
                 var result = heatmap.insertOne(pointHeatmap[i]);
-                console.log(pointHeatmap[i] + " " + result);
+                console.log(result);
               }
               //heatmap.insertMany({result}).then(function(res) {
               //  console.log(res.insertedCount + " new records have been inserted into the database");
@@ -79,6 +80,8 @@ var buildHeatmap = function(db, callback){
             } catch (e) {
               console.log(e);
             }
+          } else {
+            console.log("insertDB == false");
           }
       }
     }
