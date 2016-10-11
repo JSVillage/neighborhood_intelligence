@@ -38,11 +38,11 @@ var buildHeatmap = function(db, callback){
     // Start with clean collections
     //heatmap.remove({});
     //stats.remove({});
-    for (var lat = 33.4; lat <= 33.41; lat += 0.01) {
-      for (var lng = -112.1; lng <= -112.099; lng += 0.01) {
+    for (var lat = 33.4; lat <= 33.41; lat += dist) {
+      for (var lng = -112.1; lng <= -112.099; lng += dist) {
         //for (var lat = 33.29; lat < 33.920; lat += 0.01) {
           //for (var lng = -112.33; lng < -111.92; lng += 0.01) {
-          //var insertDB = false;
+          var insertDB = false;
           for (var time = 0; time < 24; time++) {
             pointHeatmap[time] = {"loc":[lng,lat], "time":time, "score": 0, "crimeType": {}};
           }
@@ -50,7 +50,7 @@ var buildHeatmap = function(db, callback){
             loc : { $near : [ lng, lat ], $maxDistance: dist},
             dateTime: {$ne: ""}
           };
-          records.find().limit(10).toArray(function(err, docs){
+          records.find(query).toArray(function(err, docs){
             console.log(lat + " " + lng + ": " + docs.length + " crimes");
             for (var doc in docs) {
               var dateTime = docs[doc].dateTime.split(/\s+/);
@@ -64,29 +64,30 @@ var buildHeatmap = function(db, callback){
               }
               pointHeatmap[hour]["crimeType"][docs[doc].crimeType] += 1;
               console.log(hour + ": " + pointHeatmap[hour]["score"] + " " + docs[doc].crimeType + " " + pointHeatmap[hour]["crimeType"][docs[doc].crimeType]);
-              //insertDB = true;
+              insertDB = true;
             }
           });
-          //console.log("insertDB == true");
-          console.log(pointHeatmap[0]["score"]);
-          try {
-            for (var i = 0; i < 24; i++) {
-              console.log(pointHeatmap[i]);
-              var result = heatmap.insertOne(pointHeatmap[i]);
-              //console.log(result);
+          if (insertDB == true) {//console.log("insertDB == true");
+            console.log(pointHeatmap[0]["score"]);
+            try {
+              for (var i = 0; i < 24; i++) {
+                console.log(pointHeatmap[i]);
+                var result = heatmap.insertOne(pointHeatmap[i]);
+                //console.log(result);
+              }
+              //heatmap.insertMany({result}).then(function(res) {
+              //  console.log(res.insertedCount + " new records have been inserted into the database");
+              //})
+            } catch (e) {
+              console.log(e);
             }
-            //heatmap.insertMany({result}).then(function(res) {
-            //  console.log(res.insertedCount + " new records have been inserted into the database");
-            //})
-          } catch (e) {
-            console.log(e);
           }
       }
     }
     // Compute stats for the whole city, store in another collection
     var count = heatmap.find().count();
     console.log("count = " + count);
-    //if (count > 0)
+    if (count > 0)
     {
       var data =  heatmap.find().sort({"score": -1}).limit(1).toArray()[0];
       console.log(data);
