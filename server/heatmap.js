@@ -44,9 +44,9 @@ var buildHeatmap = function(db, callback){
     var heatlist = [];
 
     // Start with clean collections
-    heatmap.remove({});
-    stats.remove({});
-    for (var lat = 33.4; lat <= 33.41; lat += 0.01) {
+    //heatmap.remove({});
+    //stats.remove({});
+    for (var lat = 33.4; lat <= 33.4; lat += 0.01) {
       for (var lng = -112.1; lng <= -112.099; lng += 0.01) {
         //for (var lat = 33.29; lat < 33.920; lat += 0.01) {
           //for (var lng = -112.33; lng < -111.92; lng += 0.01) {
@@ -59,7 +59,7 @@ var buildHeatmap = function(db, callback){
             loc : { $near : [ lng, lat ], $maxDistance: dist},
             dateTime: {$ne: ""}
           };
-          records.find().toArray(function(err, docs){
+          records.find().limit(10).toArray(function(err, docs){
             console.log(lat + " " + lng + ": " + docs.length + " crimes");
             for (var doc in docs) {
               var dateTime = docs[doc].dateTime.split(/\s+/);
@@ -68,19 +68,23 @@ var buildHeatmap = function(db, callback){
 
               // For now each crime in this circle is equal regardless of type or age
               result[hour].score++;
-              console.log(result[hour].score);
               if (!result[hour].crimeType[docs[doc].crimeType]) {
                 result[hour].crimeType[docs[doc].crimeType] = 0;
               }
               result[hour].crimeType[docs[doc].crimeType] += 1;
+              console.log(hour + ": " + result[hour].score + " " + docs[doc].crimeType + " " + result[hour].crimeType[docs[doc].crimeType]);
               insertDB = true;
             }
           });
           console.log(result);
           if (insertDB) {
-            heatmap.insertMany(result).then(function(res) {
+            try {
+              heatmap.insertMany(result).then(function(res) {
                 console.log(res.insertedCount + " new records have been inserted into the database");
               })
+            } catch (e) {
+              console.log(e);
+            }
           }
       }
     }
