@@ -98,8 +98,6 @@ var buildHeatmap = function(db, callback){
 };
 
 function addCrimeToHeatMap(idx,hour,crimeType) {
-  //var arr = [idx,idx+1,idx+lng_per_row,idx+lng_per_row+1];
-  //arr.forEach(incScoreAndCrimeType(,hour,crimeType) );
   incScoreAndCrimeType(idx,hour,crimeType);
   incScoreAndCrimeType(idx+1,hour,crimeType);
   incScoreAndCrimeType(idx+lng_per_row,hour,crimeType);
