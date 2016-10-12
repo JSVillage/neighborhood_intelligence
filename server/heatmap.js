@@ -119,27 +119,26 @@ function incScoreAndCrimeType(x,hour,crimeType){
 }
 
 var calcStats = function(db, count){
-    assert.equal(null, err);
-    console.log("Calculating stats");
-    var heatmap = db.collection('heatmap');
-    var stats = db.collection('stats');
-    // Compute stats for the whole city, store in another collection
-    var statsArray = [];
+  assert.equal(null, err);
+  console.log("Calculating stats");
+  var heatmap = db.collection('heatmap');
+  var stats = db.collection('stats');
+  // Compute stats for the whole city, store in another collection
+  var statsArray = [];
 
-    if (count > 0)
-    {
-      for (var i = 0; i < 24; i++) {
-        statsArray[i].lowThreshold = heatmap.find().sort( {"timedata.i.score": 1}).skip(count/3).limit(1).toArray()["timedata"][i]["score"];
-        statsArray[i].highThreshold = heatmap.find().sort( {"timedata.i.score": -1}).skip(count/3).limit(1).toArray()["timedata"][i]["score"];
-        statsArray[i].maxScore = heatmap.find().sort( {"timedata.i.score": -1}).limit(1).toArray()["timedata"][i]["score"];
-        console.log("Thresholds for time " +  i + ": low = " + statsArray[i].lowThreshold + ", high = " + statsArray[i].highThreshold + ", max = " + statsArray[i].maxScore);
-      }
-
-      stats.insertMany(statsArray);
-    } else {
-      console.log("Unable to create stats collection");
+  if (count > 0)
+  {
+    for (var i = 0; i < 24; i++) {
+      statsArray[i].lowThreshold = heatmap.find().sort( {"timedata.i.score": 1}).skip(count/3).limit(1).toArray()["timedata"][i]["score"];
+      statsArray[i].highThreshold = heatmap.find().sort( {"timedata.i.score": -1}).skip(count/3).limit(1).toArray()["timedata"][i]["score"];
+      statsArray[i].maxScore = heatmap.find().sort( {"timedata.i.score": -1}).limit(1).toArray()["timedata"][i]["score"];
+      console.log("Thresholds for time " +  i + ": low = " + statsArray[i].lowThreshold + ", high = " + statsArray[i].highThreshold + ", max = " + statsArray[i].maxScore);
     }
-  });
+
+    stats.insertMany(statsArray);
+  } else {
+    console.log("Unable to create stats collection");
+  }
 }
 
 var calcData = function(arg, callback){
