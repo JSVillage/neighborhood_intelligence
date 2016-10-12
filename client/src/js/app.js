@@ -39,6 +39,7 @@ niApp.service('userService', function(NavigatorGeolocation, $http) {
         }
       }, 
       function(err){
+        console.log('Error getting location');
         console.log(err);
       });
   };
