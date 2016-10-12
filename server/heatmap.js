@@ -29,9 +29,9 @@ const lng_max = -111.92;
 const delta = 0.01;
 const lng_per_row = Math.round((lng_max - lng_min)/delta);
 const lat_per_col = Math.round((lat_max - lat_min)/delta);
+var pointsArray = [];
 
 var buildHeatmap = function(db, callback){
-  var pointsArray = [];
   MongoClient.connect(dburl, function(err, db) {
     assert.equal(null, err);
     console.log("Building heatmap");
@@ -75,7 +75,7 @@ var buildHeatmap = function(db, callback){
       } //for doc in docs
 
       var pointsRemoved = 0;
-      for (var i = pointsArray.length; i >= 0; i--) {
+      for (var i = pointsArray.length-1; i >= 0; i--) {
         var removePoint = true;
         for (var j = 0; j < 24; j++) {
           if (pointsArray[i].timedata[j]["score"] > 0) {
