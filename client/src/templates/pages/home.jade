@@ -6,8 +6,9 @@ div(ng-controller="NIController").font-color.fade-in
   
   br
 
-  div.manual-location(ng-show="user.declinedLocation")
-    h2 Enter your location
+  div.manual-location.fade-in(ng-show="user.declinedLocation")
+    h2 Enter location
+    p: small The more detailed the address the better the data
     form(ng-submit="submitManualInput()")
       input(type="text" placeholder="Something Google will understand" ng-model="user.manualLocation")
       button.btn(type="submit") submit
@@ -17,20 +18,20 @@ div(ng-controller="NIController").font-color.fade-in
     span#time {{ time | date:'h:mm a'}}
     i.fa.fa-plus-square(aria-hidden="true" ng-click="setTime(1)")
   
-  div.address.fade-in(ng-show="init")
+  div.address.fade-in(ng-show="init && !user.declinedLocation" ng-click="user.declinedLocation = true")
     p {{user.formattedAddress}}  
   
-  div.risk-level.fade-in(ng-show="init")
+  div.risk-level.fade-in(ng-show="init && !user.declinedLocation")
     h2.risk-label Risk level
     p {{riskText}}
     
     //-include ./../../components/modal/_default.jade
   
-  div.risk-level.fade-in(ng-show="init")
+  div.risk-level.fade-in(ng-show="init && !user.declinedLocation")
     h2.risk-label.fade-in Most likely crime
     p.t2 {{mostLikely}}
     
-  a.nav.nav-more(ng-href="#/more") 
+  a.nav.nav-more(ng-href="#/more" ng-show="init && !user.declinedLocation") 
     | more  
     i.fa.fa-arrow-right
  

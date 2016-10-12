@@ -2,25 +2,26 @@
 <div ng-controller="NIController" class="font-color fade-in">
   <div ng-class="riskLevel" class="stage"></div>
   <div ng-show="loading" class="loading"></div><br/>
-  <div ng-show="user.declinedLocation" class="manual-location">
-    <h2>Enter your location</h2>
+  <div ng-show="user.declinedLocation" class="manual-location fade-in">
+    <h2>Enter location</h2>
+    <p><small>The more detailed the address the better the data</small></p>
     <form ng-submit="submitManualInput()">
       <input type="text" placeholder="Something Google will understand" ng-model="user.manualLocation"/>
       <button type="submit" class="btn">submit</button>
     </form>
   </div>
   <h2 ng-show="init &amp;&amp; !user.declinedLocation" class="weight-max time fade-in"><i aria-hidden="true" ng-click="setTime(-1)" class="fa fa-minus-square"></i><span id="time">{{ time | date:'h:mm a'}}</span><i aria-hidden="true" ng-click="setTime(1)" class="fa fa-plus-square"></i></h2>
-  <div ng-show="init" class="address fade-in">
+  <div ng-show="init &amp;&amp; !user.declinedLocation" ng-click="user.declinedLocation = true" class="address fade-in">
     <p>{{user.formattedAddress}}  </p>
   </div>
-  <div ng-show="init" class="risk-level fade-in">
+  <div ng-show="init &amp;&amp; !user.declinedLocation" class="risk-level fade-in">
     <h2 class="risk-label">Risk level</h2>
     <p>{{riskText}}</p>
   </div>
-  <div ng-show="init" class="risk-level fade-in">
+  <div ng-show="init &amp;&amp; !user.declinedLocation" class="risk-level fade-in">
     <h2 class="risk-label fade-in">Most likely crime</h2>
     <p class="t2">{{mostLikely}}</p>
-  </div><a ng-href="#/more" class="nav nav-more">
+  </div><a ng-href="#/more" ng-show="init &amp;&amp; !user.declinedLocation" class="nav nav-more">
      
     more  <i class="fa fa-arrow-right"></i></a>
 </div>
