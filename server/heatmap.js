@@ -88,6 +88,8 @@ var buildHeatmap = function(db, callback){
           } //for doc in docs
           if (validPoint == true) {
             pointsArray.push(pointHeatMap);
+            console.log('pointsArray');
+            console.log(JSON.stringify(pointsArray));
           }
           setTimeout(function(){
             if (loopCount == queryCount) {
