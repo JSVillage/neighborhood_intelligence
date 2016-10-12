@@ -41,14 +41,15 @@ var buildHeatmap = function(db, callback){
     //stats.remove({});
     //for (var lat = 33.29; lat < 33.920; lat += 0.01)
       //for (var lng = -112.33; lng < -111.92; lng += 0.01)
+
+    var totalDocs = 4;
     for (var lat = 33.4; lat <= 33.41; lat += dist) {
-      for (var lng = -112.1; lng <= -112.099; lng += dist) {
+      for (var lng = -112.10; lng <= -112.09; lng += dist) {
         var pointHeatMap = {
           loc : [lng, lat],
           timedata : []
         };
 
-        var insertDB = false;
         for (var hour = 0; hour < 24; hour++) {
           pointHeatMap.timedata[hour] = {"score": 0, "crimeType": {}};
         }
@@ -57,32 +58,37 @@ var buildHeatmap = function(db, callback){
           dateTime: {$ne: ""}
         };
         records.find(query).toArray(function(err, docs){
+          var validPoint = false;
           console.log(lat + " " + lng + ": " + docs.length + " crimes");
-          for (var doc in docs) {
-            var dateTime = docs[doc].dateTime.split(/\s+/);
+          for (var i = 0; i < docs.length; i++) {
+            var dateTime = docs[i].dateTime.split(/\s+/);
             var time = dateTime[1].split(/:/);
             var hour = parseInt(time[0]);
 
             // For now each crime in this circle is equal regardless of type or age
             pointHeatMap.timedata[hour]["score"]++;
-            if (!pointHeatMap.timedata[hour]["crimeType"][docs[doc].crimeType]) {
-              pointHeatMap.timedata[hour]["crimeType"][docs[doc].crimeType] = 0;
+            if (!pointHeatMap.timedata[hour]["crimeType"][docs[i].crimeType]) {
+              pointHeatMap.timedata[hour]["crimeType"][docs[i].crimeType] = 0;
             }
-            pointHeatMap.timedata[hour]["crimeType"][docs[doc].crimeType] += 1;
+            pointHeatMap.timedata[hour]["crimeType"][docs[i].crimeType] += 1;
             //console.log(hour + ": " + pointHeatmap[hour]["score"] + " " + docs[doc].crimeType + " " + pointHeatmap[hour]["crimeType"][docs[doc].crimeType]);
-            insertDB = true;
+            validPoint = true;
             //console.log("insertDB == true in docs");
           } //for doc in docs
-          //pointsArray.push(pointHeatMap);
-          //console.log(JSON.stringify(pointHeatMap));
-          if (insertDB == true) {
-              heatmap.insertOne(pointHeatMap).then(function(res) {
+          if (validPoint == true) {
+            pointsArray.push(pointHeatMap);
+          }
+          totalDocs--;
+          if (totalDocs == 0) {
+              heatmap.insertMany(pointsArray).then(function(res) {
                 console.log(res.insertedCount + " new records have been inserted into the database");
               });
           }
-
         });
       } // for lng
+        //console.log(JSON.stringify(pointHeatMap));
+
+
     } // for lat
     // if (insertDB == true) {
     //   console.log("insertDB == true before db write");
