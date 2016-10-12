@@ -14091,7 +14091,41 @@ niApp.factory('mapService', ['$http', function($http) {
         });
     }
   };
-}])
+}]);
+
+niApp.service('userService', function() {
+  var _user = {};
+
+  var getUser = function(){
+    return _user;
+  };
+
+  var setUser = function(user){
+    _user = user;
+  };
+
+  return {
+    getUser : getUser,
+    setUser : setUser
+  }
+});
+
+niApp.service('timeService', function() {
+  var _time = new Date();
+
+  var getTime = function(){
+    return _time;
+  };
+
+  var setTime = function(time){
+    _time = time;
+  };
+
+  return {
+    getTime : getTime,
+    setTime : setTime
+  }
+});
 
 niApp.config(['ChartJsProvider', function (ChartJsProvider) {
   // Configure all charts
@@ -14100,14 +14134,15 @@ niApp.config(['ChartJsProvider', function (ChartJsProvider) {
   });
 }]);
 
-niApp.controller('NIController', function NIController($scope, $window, $http, NavigatorGeolocation, $window, $rootScope) {
+niApp.controller('NIController', function NIController($scope, $window, $http, NavigatorGeolocation, $window, $rootScope, userService, timeService) {
   
-  $rootScope.niTime = $rootScope.niTime || new Date(); 
+   
   $scope.loading = false;
   $scope.init = false;
   $scope.riskLevel = '';
   var apiUrl = $window.location.origin + '/api';
-  $rootScope.user = $rootScope.user || {};
+  $scope.user = userService.getUser();
+  $scope.time = timeService.getTime();
   $scope.formattedAddress = '';
 
   // $scope.googleMapsUrl="https://maps.google.com/maps/api/js?key=AIzaSyAtvTUqW2i2tbup-B9tW-4NQ6-bb1H3I_w"
@@ -14115,11 +14150,10 @@ niApp.controller('NIController', function NIController($scope, $window, $http, N
   var getData = function(){
     $scope.loading = true;
     $http({
-      url: apiUrl + '/' + $rootScope.user.lat + '/' + $rootScope.user.lng + '/' + new Date($rootScope.niTime), 
+      url: apiUrl + '/' + $scope.user.lat + '/' + $scope.user.lng + '/' + new Date($scope.time), 
       method: "GET",
       cache: true
     }).then(function(results) {
-      //$scope.formattedAddress = results.data.records[0].formattedAddress;
       $scope.riskText = results.data.precog.risk;
       $scope.riskLevel = results.data.precog.risk.toLowerCase();
       $scope.mostLikely = results.data.precog.guess.type;
@@ -14132,32 +14166,28 @@ niApp.controller('NIController', function NIController($scope, $window, $http, N
   var getUserLocation = function(){
     $scope.loading = true;
     NavigatorGeolocation.getCurrentPosition()
-     .then(function(position) {
-        var lat = position.coords.latitude, lng = position.coords.longitude;
-        $rootScope.user.lat = position.coords.latitude;
-        $rootScope.user.lng = position.coords.longitude;
-        console.log(position);
-        $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng='+$rootScope.user.lat+','+$rootScope.user.lng+'&sensor=true').then(function(res){
-          $rootScope.user.formattedAddress = $scope.formattedAddress = res.data.results[0].formatted_address;
-          console.log($rootScope.user.formattedAddress);
+      .then(function(position) {
+        $scope.user.lat = position.coords.latitude;
+        $scope.user.lng = position.coords.longitude;
+        $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng='+$scope.user.lat+','+$scope.user.lng+'&sensor=true').then(function(res){
+          $scope.user.formattedAddress = $scope.formattedAddress = res.data.results[0].formatted_address;
+          console.log($scope.user.formattedAddress);
         });
-        // 
+        userService.setUser($scope.user); 
         $scope.loading = false;
         getData();
-
-       }, 
-       function(err){
+      }, 
+      function(err){
         console.log(err);
-       });
+      });
   };
-
 
 	$scope.riskText = '';
   $scope.mostLikely = '';
 
   $scope.setTime = function(hour){   
-    var d = new Date($rootScope.niTime); 
-    $rootScope.niTime = d.setHours(d.getHours()+hour);
+    var d = new Date($scope.time); 
+    $scope.time = d.setHours(d.getHours()+hour);
     getData();
   };
 
@@ -14184,30 +14214,21 @@ niApp.controller('NIController', function NIController($scope, $window, $http, N
 	// 	}
 	// };
 
-  if($rootScope.user && !$rootScope.user.lat){
+  if($scope.user && !$scope.user.lat){
     getUserLocation();
-  }else{
+  } else {
     getData();
   }
   
 }); 
 
+niApp.controller('MoreController', function MoreController($scope, $window, $http, $rootScope, $timeout, userService, timeService) {
 
-
-
-niApp.controller('MoreController', function MoreController($scope, $window, $http, $rootScope, $timeout) {
-
-  
   $scope.loading = false;
   $scope.init = false;
   $scope.riskLevel = '';
   $scope.charts = [];
-  $rootScope.user = $rootScope.user || {};
-  
-  // $scope.$on('chart-create', function (evt, chart) {
-  //   $scope.charts.push(chart);
-  //   console.log($scope.charts);
-  // });
+  $scope.user = userService.getUser();
 
   $scope.dataOptions = {
     scales: {
@@ -14231,7 +14252,7 @@ niApp.controller('MoreController', function MoreController($scope, $window, $htt
   $scope.todSeries = ['Time of Day'];
   $scope.dowSeries = ['Day of week'];
 
-  $rootScope.niTime = $rootScope.niTime || new Date();  
+  $scope.time = timeService.getTime();    
   
   var apiUrl = $window.location.origin + '/api';
 
@@ -14250,16 +14271,10 @@ niApp.controller('MoreController', function MoreController($scope, $window, $htt
     return maxIndex;
   };
 
-  // $scope.setTime = function(hour){   
-  //   var d = new Date($rootScope.niTime); 
-  //   $rootScope.niTime = d.setHours(d.getHours()+hour);
-  //   getData();
-  // };
-
   var getData = function(){
     $scope.loading = true;
     $http({
-      url: apiUrl + '/' + $rootScope.user.lat + '/' + $rootScope.user.lng + '/' + new Date($rootScope.niTime),  
+      url: apiUrl + '/' + $scope.user.lat + '/' + $scope.user.lng + '/' + new Date($scope.time),  
       method: "GET",
       cache: true
     }).then(function(results) {
@@ -14275,18 +14290,17 @@ niApp.controller('MoreController', function MoreController($scope, $window, $htt
     });
   };
 
-
   var getUserLocation = function(){
     $scope.loading = true;
     $window.navigator.geolocation.getCurrentPosition(
       function(pos){
         $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng='+pos.coords.latitude+','+pos.coords.longitude+'&sensor=true')
           .then(function(res){
-            console.log(res.data);
-            $rootScope.user.lat = res.data.results[0].geometry.location.lat;
-            $rootScope.user.lng = res.data.results[0].geometry.location.lng;
+            $scope.user.lat = res.data.results[0].geometry.location.lat;
+            $scope.user.lng = res.data.results[0].geometry.location.lng;
             $scope.formattedAddress = res.data.results[0].formatted_address;
             $scope.loading = false;
+            userService.setUser($scope.user); 
             getData();
           });
       }, 
@@ -14296,251 +14310,13 @@ niApp.controller('MoreController', function MoreController($scope, $window, $htt
     );
   };
 
-  // $scope.chartClick = function (points, evt) {
-  //   console.log(points, evt);
-  // };
-  if($rootScope.user && !$rootScope.user.lat){
+  if($scope.user && !$scope.user.lat){
     getUserLocation();
   }else{
     getData();
   }
 
 });
-
-// //Type Chart
-  // var ctxdo = document.getElementById("typeChart");
-  // var dayChart = new Chart(ctxdo, {
-  //     type: 'doughnut',
-  //     data: {
-  //         labels: ["MOTOR VEHICLE THEFT", "LARCENY-THEFT", "DRUG OFFENSE", "RAPE", "BURGLARY", "AGGRAVATED ASSAULT", "MURDER", "ROBBERY", "OTHER"],
-  //         datasets: [{
-  //             label: 'Crimes',
-  //             data: [12, 19, 3, 5, 2, 6, 3, 14, 20],
-  //             backgroundColor: [
-  //                 'rgba(255, 0, 255, 0.3)',
-  //                 'rgba(0, 0, 255, 0.3)',
-  //                 'rgba(255, 255, 0, 0.3)',
-  //                 'rgba(0, 255, 255, 0.3)',
-  //                 'rgba(255, 0, 0, 0.3)',
-  //                 'rgba(128, 64, 200, 0.3)',
-  //                 'rgba(200, 64, 64, 0.3)',
-  //                 'rgba(0, 255, 0, 0.3)',
-  //                 'rgba(255, 153, 51, 0.3)'
-  //             ],
-  //             borderColor: [
-  //                 'rgba(255,0,255,1)',
-  //                 'rgba(0, 0, 255, 1)',
-  //                 'rgba(255, 255, 0, 1)',
-  //                 'rgba(0, 255, 255, 1)',
-  //                 'rgba(255, 0, 0, 1)',
-  //                 'rgba(128, 64, 200, 1)',
-  //                 'rgba(200, 64, 64, 1)',
-  //                 'rgba(0, 255, 0, 1)',
-  //                 'rgba(255, 153, 51, 0.3)'
-  //             ],
-  //        borderWidth: 1
-  //          }]
-  //      },
-  //     options: {
-  //      responsive: false,
-          
-  //    title: {
-  //      display: true,
- //           text: 'History at this location',
-  //      fontSize: 20,
-  //      fontColor: "#fff"
-  //        },
-  //    legend: {
-  //             display: true,
-  //             labels: {
- //                 fontColor: 'rgb(255, 255, 132)',
- //                 fontSize: 10
-  //                }
-  //            },
-  //      }
-  //    });
-  // var scales = {
- //    xAxes: [{
- //      ticks: {
- //              fontColor: 'white',
- //              fontSize: 10
- //          },
- //      gridLines: {
- //        show: true,
- //        color: "white",
-
- //      } }] ,
- //      yAxes: [{
- //          ticks: {
- //              beginAtZero:true,
- //              fontColor: 'white',
- //              fontSize: 10
- //          },
- //          gridLines: {show: true, color: "white"}
- //              }]
- //          };
- //  var legend = {
- //        display: true,
- //        labels: {
- //          fontColor: 'rgb(255, 255, 132)',
- //          fontSize: 16
- //                }
- //            };
- //  var data = {
- //      labels: {
- //        display: true,
- //        fontColor: 'rgb(255, 255, 132)',
- //            fontSize: 12
- //        }
- //      }
- //  //Day Chart
- //  var ctxd = document.getElementById("dayChart");
- //  var dayChart = new $window.Chart(ctxd, {
- //      type: 'line',
- //      data: {
- //          labels: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
- //          datasets: [{
- //              label: 'Crimes',
- //              data: [12, 19, 3, 5, 2, 3, 6],
- //              backgroundColor: 'rgba(255, 255, 0, .1)',
- //              borderColor: 'rgba(255, 255, 0, 1)',
- //              borderWidth: 1
- //          }]
- //      },
- //      options: {
- //        responsive: false,
- //          scales: scales,
- //      title: {
- //        display: true,
- //          text: 'Risk x Day',
- //        fontSize: 20,
- //        fontColor: "#fff"
- //          },
- //      legend: legend,
- //      data: data
- //      }
- //      });
- //  //Time Chart
- //  var ctxt = document.getElementById("timeChart");
- //  var timeChart = new $window.Chart(ctxt, {
- //      type: 'line',
- //      data: {
- //          labels: ["12a-4a", "4a-8a", "8a-12p", "12p-4p", "4p-8p", "8p-12a"],
- //          datasets: [{
- //              label: 'Crimes',
- //              data: [19, 12, 3, 5, 13, 10],
- //              backgroundColor: 'rgba(255, 255, 0, .1)',
- //              borderColor: 'rgba(255, 255, 0, 1)',
- //              borderWidth: 1
- //          }]
- //      },
- //      options: {
- //        responsive: false,
- //          scales: scales,
- //      title: {
- //        display: true,
- //          text: 'Risk x Time',
- //        fontSize: 20,
- //        fontColor: "#fff"
- //          },
- //      legend: legend,
- //      data: data
- //      }
- //      });
-/*
-niApp.controller('ChartsController', function ChartsController($scope, $window){
-var scales = {
-    xAxes: [{
-      ticks: {
-              fontColor: 'white',
-              fontSize: 10
-          },
-      gridLines: {
-        show: true,
-        color: "white",
-
-      } }] ,
-      yAxes: [{
-          ticks: {
-              beginAtZero:true,
-              fontColor: 'white',
-              fontSize: 10
-          },
-          gridLines: {show: true, color: "white"}
-              }]
-          };
-var legend = {
-    display: true,
-    labels: {
-      fontColor: 'rgb(255, 255, 132)',
-      fontSize: 16
-            }
-        };
-var data = {
-  labels: {
-    display: true,
-    fontColor: 'rgb(255, 255, 132)',
-        fontSize: 12
-    }
-  }
-//Day Chart
-var ctxd = document.getElementById("dayChart");
-var dayChart = new $window.Chart(ctxd, {
-  type: 'line',
-  data: {
-      labels: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-      datasets: [{
-          label: 'Crimes',
-          data: [12, 19, 3, 5, 2, 3, 6],
-          backgroundColor: 'rgba(255, 255, 0, .1)',
-          borderColor: 'rgba(255, 255, 0, 1)',
-          borderWidth: 1
-      }]
-  },
-  options: {
-    responsive: false,
-      scales: scales,
-  title: {
-    display: true,
-      text: 'Risk x Day',
-    fontSize: 20,
-    fontColor: "#fff"
-      },
-  legend: legend,
-  data: data
-  }
-  });
-//Time Chart
-var ctxt = document.getElementById("timeChart");
-var timeChart = new $window.Chart(ctxt, {
-  type: 'line',
-  data: {
-      labels: ["12a-4a", "4a-8a", "8a-12p", "12p-4p", "4p-8p", "8p-12a"],
-      datasets: [{
-          label: 'Crimes',
-          data: [19, 12, 3, 5, 13, 10],
-          backgroundColor: 'rgba(255, 255, 0, .1)',
-          borderColor: 'rgba(255, 255, 0, 1)',
-          borderWidth: 1
-      }]
-  },
-  options: {
-    responsive: false,
-      scales: scales,
-  title: {
-    display: true,
-      text: 'Risk x Time',
-    fontSize: 20,
-    fontColor: "#fff"
-      },
-  legend: legend,
-  data: data
-  }
-  });
-
-
-});
-*/
 
 niApp.directive("home", function () {
     return {
