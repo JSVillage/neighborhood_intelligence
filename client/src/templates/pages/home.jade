@@ -5,7 +5,9 @@ div(ng-controller="NIController").font-color.fade-in
   div.loading(ng-show="loading")
   
   div(ng-show="user.declinedLocation")
-    h1 NO LOCATION!
+    h2 Enter your location
+    input(type="text" placeholder="Something Google will understand" ng-model="user.manualLocation")
+    button.btn(ng-click="submitManualInput()")
 
   br
   h2.weight-max.time.fade-in(ng-show="init && !user.declinedLocation")
