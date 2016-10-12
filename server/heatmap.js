@@ -76,7 +76,7 @@ var buildHeatmap = function(db, callback){
           //pointsArray.push(pointHeatMap);
           //console.log(JSON.stringify(pointHeatMap));
           if (insertDB == true) {
-              heatmap.insertOne(pointsArray).then(function(res) {
+              heatmap.insertOne(pointHeatMap).then(function(res) {
                 console.log(res.insertedCount + " new records have been inserted into the database");
               });
           }
