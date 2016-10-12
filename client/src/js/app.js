@@ -28,11 +28,11 @@ niApp.service('userService', function(NavigatorGeolocation, $http) {
 
   var setUserLocation = function(callback){
     NavigatorGeolocation.getCurrentPosition()
-      .then(function(position) {
-        console.log(position);
+      .then(function(position) {        
         _user.lat = position.coords.latitude;
         _user.lng = position.coords.longitude;
         $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng='+_user.lat+','+_user.lng+'&sensor=true').then(function(res){
+          console.log(res.data);
           _user.formattedAddress = res.data.results[0].formatted_address;
         });
         if(typeof callback === 'function'){
