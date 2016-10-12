@@ -50,7 +50,7 @@ var buildHeatmap = function(db, callback){
 
         var insertDB = false;
         for (var hour = 0; hour < 24; hour++) {
-          pointHeatmap.timedata[hour] = {"score": 0, "crimeType": {}};
+          pointHeatMap.timedata[hour] = {"score": 0, "crimeType": {}};
         }
         var query =  {
           loc : { $near : [ lng, lat ], $maxDistance: dist},
@@ -64,17 +64,17 @@ var buildHeatmap = function(db, callback){
             var hour = parseInt(time[0]);
 
             // For now each crime in this circle is equal regardless of type or age
-            pointHeatmap.timedata[hour]["score"]++;
-            if (!pointHeatmap.timedata[hour]["crimeType"][docs[doc].crimeType]) {
-              pointHeatmap.timedata[hour]["crimeType"][docs[doc].crimeType] = 0;
+            pointHeatMap.timedata[hour]["score"]++;
+            if (!pointHeatMap.timedata[hour]["crimeType"][docs[doc].crimeType]) {
+              pointHeatMap.timedata[hour]["crimeType"][docs[doc].crimeType] = 0;
             }
-            pointHeatmap.timedata[hour]["crimeType"][docs[doc].crimeType] += 1;
+            pointHeatMap.timedata[hour]["crimeType"][docs[doc].crimeType] += 1;
             //console.log(hour + ": " + pointHeatmap[hour]["score"] + " " + docs[doc].crimeType + " " + pointHeatmap[hour]["crimeType"][docs[doc].crimeType]);
             insertDB = true;
             //console.log("insertDB == true in docs");
           } //for doc in docs
-          pointsArray.push(pointHeatmap);
-          console.log(JSON.toString(pointHeatmap));
+          pointsArray.push(pointHeatMap);
+          console.log(JSON.toString(pointHeatMap));
         });
       } // for lng
     } // for lat
