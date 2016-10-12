@@ -73,8 +73,7 @@ var buildHeatmap = function(db, callback){
         if (idx >= 0 && idx <= lng_per_row * lat_per_col - lng_per_row - 2) {
           addCrimeToHeatMap(idx, hour, docs[i].crimeType);
         }
-      } //for doc in docs
-num
+      } //for docs
       var pointsRemoved = 0;
       for (var i = pointsArray.length-1; i >= 0; i--) {
         var removePoint = true;
