@@ -14217,7 +14217,7 @@ niApp.controller('NIController', function NIController($scope, $window, $http, N
 
   $scope.submitManualInput = function(){
     console.log($scope.user.manualLocation);
-    $http.get('https://maps.googleapis.com/maps/api/geocode/json?address='+$scope.user.manualLocation.replace(' ','+')+'&sensor=true').then(function(res){
+    $http.get('https://maps.googleapis.com/maps/api/geocode/json?address='+$scope.user.manualLocation.replace(' ','+')+'+Phoenix+AZ&sensor=true').then(function(res){
       $scope.user.lat = res.data.results[0].geometry.location.lat;
       $scope.user.lng = res.data.results[0].geometry.location.lng;
       $scope.user.formattedAddress = res.data.results[0].formatted_address;

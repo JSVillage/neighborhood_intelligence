@@ -1,12 +1,14 @@
 
 <div ng-controller="NIController" class="font-color fade-in">
   <div ng-class="riskLevel" class="stage"></div>
-  <div ng-show="loading" class="loading"></div>
-  <div ng-show="user.declinedLocation">
+  <div ng-show="loading" class="loading"></div><br/>
+  <div ng-show="user.declinedLocation" class="manual-location">
     <h2>Enter your location</h2>
-    <input type="text" placeholder="Something Google will understand" ng-model="user.manualLocation"/>
-    <button ng-click="submitManualInput()" class="btn"></button>
-  </div><br/>
+    <form ng-submit="submitManualInput()">
+      <input type="text" placeholder="Something Google will understand" ng-model="user.manualLocation"/>
+      <button type="submit" class="btn">submit</button>
+    </form>
+  </div>
   <h2 ng-show="init &amp;&amp; !user.declinedLocation" class="weight-max time fade-in"><i aria-hidden="true" ng-click="setTime(-1)" class="fa fa-minus-square"></i><span id="time">{{ time | date:'h:mm a'}}</span><i aria-hidden="true" ng-click="setTime(1)" class="fa fa-plus-square"></i></h2>
   <div ng-show="init" class="address fade-in">
     <p>{{user.formattedAddress}}  </p>
