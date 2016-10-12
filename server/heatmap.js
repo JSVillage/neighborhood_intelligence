@@ -36,15 +36,23 @@ var buildHeatmap = function(db, callback){
     // Find all crimes near here
     var dist = 0.01;
 
+    var insertRecords = function(data){
+      heatmap.insertMany(data).then(function(res) {
+        console.log(res.insertedCount + " new records have been inserted into the database");
+      });
+    };
+
     // Start with clean collections
     //heatmap.remove({});
     //stats.remove({});
     //for (var lat = 33.29; lat < 33.920; lat += 0.01)
       //for (var lng = -112.33; lng < -111.92; lng += 0.01)
 
-    var totalDocs = 4;
+    var loopCount = 0;
+    var queryCount = 0;
     for (var lat = 33.4; lat <= 33.41; lat += dist) {
       for (var lng = -112.10; lng <= -112.09; lng += dist) {
+        loopCount ++;
         var pointHeatMap = {
           loc : [lng, lat],
           timedata : []
@@ -57,7 +65,9 @@ var buildHeatmap = function(db, callback){
           loc : { $near : [ lng, lat ], $maxDistance: dist},
           dateTime: {$ne: ""}
         };
+
         records.find(query).toArray(function(err, docs){
+          queryCount ++;
           var validPoint = false;
           console.log(lat + " " + lng + ": " + docs.length + " crimes");
           for (var i = 0; i < docs.length; i++) {
@@ -78,12 +88,12 @@ var buildHeatmap = function(db, callback){
           if (validPoint == true) {
             pointsArray.push(pointHeatMap);
           }
-          totalDocs--;
-          if (totalDocs == 0) {
-              heatmap.insertMany(pointsArray).then(function(res) {
-                console.log(res.insertedCount + " new records have been inserted into the database");
-              });
-          }
+          setTimeout(function(){
+            if (loopCount == queryCount) {
+              insertRecords(pointsArray);
+            }
+          }, 100);
+          
         });
       } // for lng
         //console.log(JSON.stringify(pointHeatMap));
