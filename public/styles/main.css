@@ -685,10 +685,10 @@ select:focus:invalid:focus {
 
 .btn {
   display: inline-block;
-  padding: 4px 12px;
+  padding: 4px 32px;
   margin-bottom: 0;
-  font-size: 14px;
-  line-height: 20px;
+  font-size: 18px;
+  line-height: 40px;
   text-align: center;
   vertical-align: middle;
   cursor: pointer;
@@ -847,8 +847,9 @@ main {
   padding: 30px 0; }
   .manual-location input[type=text] {
     max-width: 350px;
-    margin: 10px auto 20px;
-    text-align: center; }
+    margin: 20px auto 30px;
+    text-align: center;
+    display: block; }
 
 /* The Modal (background) */
 .risk-level .modal {
