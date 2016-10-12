@@ -15,7 +15,7 @@ niApp.factory('mapService', ['$http', function($http) {
   };
 }]);
 
-niApp.service('userService', function() {
+niApp.service('userService', function(NavigatorGeolocation, $http) {
   var _user = {};
 
   var getUser = function(){
@@ -26,9 +26,24 @@ niApp.service('userService', function() {
     _user = user;
   };
 
+  var setUserLocation = function(callback){
+    NavigatorGeolocation.getCurrentPosition()
+      .then(function(position) {
+        _user.lat = position.coords.latitude;
+        _user.lng = position.coords.longitude;
+        $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng='+_user.lat+','+_user.lng+'&sensor=true').then(function(res){
+          _user.formattedAddress = res.data.results[0].formatted_address;
+        });
+      }, 
+      function(err){
+        console.log(err);
+      });
+  };
+
   return {
     getUser : getUser,
-    setUser : setUser
+    setUser : setUser,
+    setUserLocation : setUserLocation
   }
 });
 
@@ -58,11 +73,13 @@ niApp.config(['ChartJsProvider', function (ChartJsProvider) {
 
 niApp.controller('NIController', function NIController($scope, $window, $http, NavigatorGeolocation, $window, $rootScope, userService, timeService) {
   
-   
+  var apiUrl = $window.location.origin + '/api';
+
   $scope.loading = false;
   $scope.init = false;
   $scope.riskLevel = '';
-  var apiUrl = $window.location.origin + '/api';
+  $scope.riskText = '';
+  $scope.mostLikely = '';  
   $scope.user = userService.getUser();
   $scope.time = timeService.getTime();
   $scope.formattedAddress = '';
@@ -84,36 +101,11 @@ niApp.controller('NIController', function NIController($scope, $window, $http, N
     });
   };  
 
-
-  var getUserLocation = function(){
-    $scope.loading = true;
-    NavigatorGeolocation.getCurrentPosition()
-      .then(function(position) {
-        $scope.user.lat = position.coords.latitude;
-        $scope.user.lng = position.coords.longitude;
-        $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng='+$scope.user.lat+','+$scope.user.lng+'&sensor=true').then(function(res){
-          $scope.user.formattedAddress = $scope.formattedAddress = res.data.results[0].formatted_address;
-          console.log($scope.user.formattedAddress);
-        });
-        userService.setUser($scope.user); 
-        $scope.loading = false;
-        getData();
-      }, 
-      function(err){
-        console.log(err);
-      });
-  };
-
-	$scope.riskText = '';
-  $scope.mostLikely = '';
-
   $scope.setTime = function(hour){   
     var d = new Date($scope.time); 
     $scope.time = d.setHours(d.getHours()+hour);
     getData();
   };
-
-
 
 	// // Get the modal
 	// var modal = document.getElementById('howModal');
@@ -137,7 +129,12 @@ niApp.controller('NIController', function NIController($scope, $window, $http, N
 	// };
 
   if($scope.user && !$scope.user.lat){
-    getUserLocation();
+    $scope.loading = true;    
+    userService.setUserLocation(function(){
+      $scope.user = userService.getUser();
+      $scope.loading = false;      
+      getData();
+    });
   } else {
     getData();
   }
