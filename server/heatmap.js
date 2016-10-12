@@ -20,17 +20,18 @@ var crimeThreshold = function(object) {
       this[key] = object[key];
   }
 };
-var pointHeatmap = [];
+
 var thresholdStats = [];
 
 var buildHeatmap = function(db, callback){
+  var pointsArray = [];
+
   MongoClient.connect(dburl, function(err, db) {
     assert.equal(null, err);
     console.log("Building heatmap");
 
     var records = db.collection('records');
     var heatmap = db.collection('heatmap');
-    var stats = db.collection('stats');
 
     // Find all crimes near here
     var dist = 0.01;
@@ -38,82 +39,93 @@ var buildHeatmap = function(db, callback){
     // Start with clean collections
     //heatmap.remove({});
     //stats.remove({});
-    for (var lat = 33.4; lat <= 33.41; lat += 0.01) {
-      for (var lng = -112.1; lng <= -112.099; lng += 0.01) {
-        //for (var lat = 33.29; lat < 33.920; lat += 0.01) {
-          //for (var lng = -112.33; lng < -111.92; lng += 0.01) {
-          //var insertDB = false;
-          for (var time = 0; time < 24; time++) {
-            pointHeatmap[time] = {"loc":[lng,lat], "time":time, "score": 0, "crimeType": {}};
-          }
-          var query =  {
-            loc : { $near : [ lng, lat ], $maxDistance: dist},
-            dateTime: {$ne: ""}
-          };
-          records.find().limit(10).toArray(function(err, docs){
-            console.log(lat + " " + lng + ": " + docs.length + " crimes");
-            for (var doc in docs) {
-              var dateTime = docs[doc].dateTime.split(/\s+/);
-              var time = dateTime[1].split(/:/);
-              var hour = parseInt(time[0]);
+    //for (var lat = 33.29; lat < 33.920; lat += 0.01)
+      //for (var lng = -112.33; lng < -111.92; lng += 0.01)
+    for (var lat = 33.4; lat <= 33.41; lat += dist) {
+      for (var lng = -112.1; lng <= -112.099; lng += dist) {
+        var pointHeatMap = {
+          loc : [lng, lat],
+          timedata : []
+        };
 
-              // For now each crime in this circle is equal regardless of type or age
-              pointHeatmap[hour]["score"]++;
-              if (!pointHeatmap[hour]["crimeType"][docs[doc].crimeType]) {
-                pointHeatmap[hour]["crimeType"][docs[doc].crimeType] = 0;
-              }
-              pointHeatmap[hour]["crimeType"][docs[doc].crimeType] += 1;
-              console.log(hour + ": " + pointHeatmap[hour]["score"] + " " + docs[doc].crimeType + " " + pointHeatmap[hour]["crimeType"][docs[doc].crimeType]);
-              //insertDB = true;
-            }
-          });
-          //console.log("insertDB == true");
-          console.log(pointHeatmap[0]["score"]);
-          try {
-            for (var i = 0; i < 24; i++) {
-              console.log(pointHeatmap[i]);
-              var result = heatmap.insertOne(pointHeatmap[i]);
-              //console.log(result);
-            }
-            //heatmap.insertMany({result}).then(function(res) {
-            //  console.log(res.insertedCount + " new records have been inserted into the database");
-            //})
-          } catch (e) {
-            console.log(e);
-          }
-      }
-    }
-    // Compute stats for the whole city, store in another collection
-    var count = heatmap.find().count();
-    console.log("count = " + count);
-    //if (count > 0)
-    {
-      var data =  heatmap.find().sort({"score": -1}).limit(1).toArray()[0];
-      console.log(data);
-      var lowRiskScoreThreshold = heatmap.find().sort( {"score": 1}).skip(count/3).limit(1).toArray()[0]["score"];
-      var highRiskScoreThreshold = heatmap.find().sort( {"score": -1}).skip(count/3).limit(1).toArray()[0]["score"];
-      var maxScore = heatmap.find().sort({"score": -1}).limit(1).toArray()[0]["score"];
-      thresholdStats.push(new crimeThreshold({"loc":[0,0], "lowThreshold": lowRiskScoreThreshold, "highThreshold": highRiskScoreThreshold}));
-      console.log("City thresholds: low = " + lowRiskScoreThreshold + ", high = " + highRiskScoreThreshold + ", max = " + maxScore);
-
-      for (var lat = 33.29; lat < 33.920; lat += 0.05) {
-        for (var lng = -112.33; lng < -111.92; lng += 0.05) {
-          var query = { "loc.0": {$gte: lng, $lt: lng+0.05}, "loc.1": {$gte: lat, $lt: lat+0.05}};
-          count = heatmap.find(query).count();
-          lowRiskScoreThreshold = heatmap.find(query).sort({"score": 1}).skip(count/3).limit(1).toArray()[0].score;
-          highRiskScoreThreshold = heatmap.find(query).sort({"score": -1}).skip(count/3).limit(1).toArray()[0].score;
-          thresholdStats.push(new crimeThreshold({"loc": [lng,lat], "lowThreshold": lowRiskScoreThreshold, "highThreshold": highRiskScoreThreshold}));
-          maxScore = heatmap.find(query).sort({"score": -1}).limit(1).toArray()[0].score;
+        var insertDB = false;
+        for (var hour = 0; hour < 24; hour++) {
+          pointHeatMap.timedata[hour] = {"score": 0, "crimeType": {}};
         }
-      }
-      console.log("Area threshold (" + lat + "," + lng + "): low = " + lowRiskScoreThreshold + ", high = " + highRiskScoreThreshold + ", max = " + maxScore);
-      stats.insertMany(thresholdStats);
-    //} else {
-    //  console.log("Unable to create heatmap");
-    }
-  });
+        var query =  {
+          loc : { $near : [ lng, lat ], $maxDistance: dist},
+          dateTime: {$ne: ""}
+        };
+        records.find(query).toArray(function(err, docs){
+          console.log(lat + " " + lng + ": " + docs.length + " crimes");
+          for (var doc in docs) {
+            var dateTime = docs[doc].dateTime.split(/\s+/);
+            var time = dateTime[1].split(/:/);
+            var hour = parseInt(time[0]);
 
+            // For now each crime in this circle is equal regardless of type or age
+            pointHeatMap.timedata[hour]["score"]++;
+            if (!pointHeatMap.timedata[hour]["crimeType"][docs[doc].crimeType]) {
+              pointHeatMap.timedata[hour]["crimeType"][docs[doc].crimeType] = 0;
+            }
+            pointHeatMap.timedata[hour]["crimeType"][docs[doc].crimeType] += 1;
+            //console.log(hour + ": " + pointHeatmap[hour]["score"] + " " + docs[doc].crimeType + " " + pointHeatmap[hour]["crimeType"][docs[doc].crimeType]);
+            insertDB = true;
+            //console.log("insertDB == true in docs");
+          } //for doc in docs
+          //pointsArray.push(pointHeatMap);
+          //console.log(JSON.stringify(pointHeatMap));
+          if (insertDB == true) {
+              heatmap.insertOne(pointHeatMap).then(function(res) {
+                console.log(res.insertedCount + " new records have been inserted into the database");
+              });
+          }
+
+        });
+      } // for lng
+    } // for lat
+    // if (insertDB == true) {
+    //   console.log("insertDB == true before db write");
+    //     heatmap.insertMany(pointsArray).then(function(res) {
+    //       console.log(res.insertedCount + " new records have been inserted into the database");
+    //     });
+    // }
+
+  });
 };
+
+function computeStats(){
+  var heatmap = db.collection('heatmap');
+  var stats = db.collection('stats');
+  // Compute stats for the whole city, store in another collection
+  var count = heatmap.find().count();
+  //console.log("count = " + count);
+  if (count > 0)
+  {
+    var data =  heatmap.find().sort({"score": -1}).limit(1).toArray()[0];
+    //console.log(data);
+    var lowRiskScoreThreshold = heatmap.find().sort( {"score": 1}).skip(count/3).limit(1).toArray()[0]["score"];
+    var highRiskScoreThreshold = heatmap.find().sort( {"score": -1}).skip(count/3).limit(1).toArray()[0]["score"];
+    var maxScore = heatmap.find().sort({"score": -1}).limit(1).toArray()[0]["score"];
+    thresholdStats.push(new crimeThreshold({"loc":[0,0], "lowThreshold": lowRiskScoreThreshold, "highThreshold": highRiskScoreThreshold}));
+    //console.log("City thresholds: low = " + lowRiskScoreThreshold + ", high = " + highRiskScoreThreshold + ", max = " + maxScore);
+
+    for (var lat = 33.29; lat < 33.920; lat += 0.05) {
+      for (var lng = -112.33; lng < -111.92; lng += 0.05) {
+        var query = { "loc.0": {$gte: lng, $lt: lng+0.05}, "loc.1": {$gte: lat, $lt: lat+0.05}};
+        count = heatmap.find(query).count();
+        lowRiskScoreThreshold = heatmap.find(query).sort({"score": 1}).skip(count/3).limit(1).toArray()[0].score;
+        highRiskScoreThreshold = heatmap.find(query).sort({"score": -1}).skip(count/3).limit(1).toArray()[0].score;
+        thresholdStats.push(new crimeThreshold({"loc": [lng,lat], "lowThreshold": lowRiskScoreThreshold, "highThreshold": highRiskScoreThreshold}));
+        maxScore = heatmap.find(query).sort({"score": -1}).limit(1).toArray()[0].score;
+      }
+    }
+    //console.log("Area threshold (" + lat + "," + lng + "): low = " + lowRiskScoreThreshold + ", high = " + highRiskScoreThreshold + ", max = " + maxScore);
+    stats.insertMany(thresholdStats);
+  //} else {
+  //  console.log("Unable to create heatmap");
+  }
+}
 
 var calcData = function(arg, callback){
   // Check if we are in Phoenix
