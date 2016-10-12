@@ -11,13 +11,8 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/api/run-geo-update', function(req, res, next) {
-
-  api.runGeoUpdate(req, function(){
-
-  });
-
+  api.runGeoUpdate(req, function(){});
   res.render('index', { title: 'Geo update process running' });
-
 });
 
 router.get('/api/:lat/:lng/:datetime?', function(req, res, next) {
@@ -38,11 +33,14 @@ router.get('/api/:lat/:lng/:datetime?', function(req, res, next) {
 
 // Work with heatmap
 router.get('/hm/build', function(req, res, next) {
-
-  hm.buildHeatmap(req, function(){
-  });
+  hm.buildHeatmap(req, function(){});
   res.render('index', { title: 'Build Heatmap' });
+});
 
+// Calc stats
+router.get('/hm/stats', function(req, res, next) {
+  hm.calcStats(req, function(){});
+  res.render('index', { title: 'Calc Stats' });
 });
 
 router.get('/hm/:lat/:lng', function(req, res, next) {
