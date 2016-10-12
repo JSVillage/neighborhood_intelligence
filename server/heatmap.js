@@ -24,7 +24,7 @@ var crimeThreshold = function(object) {
 var thresholdStats = [];
 
 var buildHeatmap = function(db, callback){
-  var pointsArray = [];
+  
 
   MongoClient.connect(dburl, function(err, db) {
     assert.equal(null, err);
@@ -50,6 +50,7 @@ var buildHeatmap = function(db, callback){
 
     var loopCount = 0;
     var queryCount = 0;
+    var pointsArray = [];
     for (var lat = 33.4; lat <= 33.41; lat += dist) {
       for (var lng = -112.10; lng <= -112.09; lng += dist) {
         loopCount ++;
