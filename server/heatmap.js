@@ -59,7 +59,7 @@ var buildHeatmap = function(db, callback){
         pointsArray.push(pointHeatMap);
       }
     }
-    records.find().toArray(function(err, docs){
+    records.find({dateTime: {$ne: ""}}).toArray(function(err, docs){
       for (var i = 0; i < docs.length; i++) {
         var dateTime = docs[i].dateTime.split(/\s+/);
         var time = dateTime[1].split(/:/);
