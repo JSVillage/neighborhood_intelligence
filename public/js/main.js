@@ -14218,10 +14218,12 @@ niApp.controller('NIController', function NIController($scope, $window, $http, N
     $scope.loading = true;    
     userService.setUserLocation(function(){
       $scope.user = userService.getUser();
-      $scope.loading = false;      
-      getData();
+      $scope.loading = false;
+      if(!$scope.declinedLocation){      
+        getData();
+      }
     });
-  } else {
+  } else if (!$scope.declinedLocation) {
     getData();
   }
   
