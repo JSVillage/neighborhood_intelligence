@@ -47,11 +47,11 @@ var buildHeatmap = function(db, callback){
     // Start with clean collections
     heatmap.remove({});
 
-    for (var lng = lng_min; lng <= lng_max; lng += delta) {
-      for (var lat = lat_min; lat <= lat_max; lat += delta) {
+    for (var lat = 0; lat < lat_per_col; lat++) {
+      for (var lng = 0; lng < lng_per_row; lng++) {
         for (var hour = 0; hour < 24; hour++) {
           var pointHeatMap = {
-            loc : [lng, lat],
+            loc : [lng_min + lng*delta, lat_min + lat*delta],
             time: hour,
             score: 0,
             crimeType: {}
@@ -71,7 +71,7 @@ var buildHeatmap = function(db, callback){
         // For now each crime in this circle is equal regardless of type or age
         var lat_floor = Math.floor(docs[i].latitude * 100)/100;
         var lng_floor = Math.floor(docs[i].longitude * 100)/100;
-        var idx = Math.round((lng_per_row * (lat_floor - lat_min)/delta) + (lng_floor - lng_min)/delta - 1);
+        var idx = Math.round((lng_per_row * (lat_floor - lat_min)/delta) + (lng_floor - lng_min)/delta);
         //console.log("lat: " + docs[i].latitude + ", lng: " + docs[i].longitude + ", lat_floor: " + lat_floor + ", lng_floor: " + lng_floor + ",  idx: " + idx);
 
         if (idx >= 0 && idx <= lng_per_row * lat_per_col - lng_per_row - 2) {
@@ -105,15 +105,20 @@ var buildHeatmap = function(db, callback){
         // Compute stats for the whole city, store in another collection
         var statsObject = {};
 
-        if (num > 0)
-        {
-            statsObject.lowThreshold = heatmap.find().sort( {"score": 1}).skip(Math.round(num/3)).limit(1).toArray()[0]["score"];
-            statsObject.highThreshold = heatmap.find().sort( {"score": -1}).skip(Math.round(num/3)).limit(1).toArray()[0]["score"];
-            statsObject.maxScore = heatmap.find().sort( {"score": -1}).limit(1).toArray()[0]["score"];
-            console.log("Thresholds: low = " + statsObject.lowThreshold + ", high = " +
-                          statsObject.highThreshold + ", max = " + statsObject.maxScore);
+        if (num > 0) {
+          heatmap.find().sort( {"score": 1}).skip(Math.round(num/3)).limit(1).toArray(function(err, docs){
+            statsObject.lowThreshold = docs[0]["score"];
+            heatmap.find().sort( {"score": -1}).skip(Math.round(num/3)).limit(1).toArray(function(err, docs){
+              statsObject.highThreshold = docs[0]["score"];
+              heatmap.find().sort( {"score": -1}).limit(1).toArray(function(err,docs){
+                statsObject.maxScore = docs[0]["score"];
+                console.log("Thresholds: low = " + statsObject.lowThreshold + ", high = " +
+                        statsObject.highThreshold + ", max = " + statsObject.maxScore);
 
-            stats.insertOne(statsObject);
+                stats.insertOne(statsObject);
+              });
+            });
+          });
         } else {
           console.log("Unable to create stats collection");
         }
