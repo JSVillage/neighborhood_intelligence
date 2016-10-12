@@ -59,6 +59,7 @@ var buildHeatmap = function(db, callback){
         pointsArray.push(pointHeatMap);
       }
     }
+    console.log("lng_per_row = " + lng_per_row + ", lat_per_col = " + lat_per_col + ", max idx = " + lng_per_row * lat_per_col);
     records.find({dateTime: {$ne: ""}}).limit(3).toArray(function(err, docs){
       for (var i = 0; i < docs.length; i++) {
         var dateTime = docs[i].dateTime.split(/\s+/);
@@ -70,6 +71,7 @@ var buildHeatmap = function(db, callback){
         var lng_floor = Math.floor(docs[i].longitude * 100)/100;
         var idx = Math.round(lng_per_row * (lat_floor - lat_min)/delta) + (lng_floor - lng_min)/delta - 1;
         console.log("lat: " + docs[i].latitude + ", lng: " + docs[i].longitude + ", lat_floor: " + lat_floor + ", lng_floor: " + lng_floor + ",  idx: " + idx);
+
         addCrimeToHeatMap(idx, hour, docs[i].crimeType);
       } //for doc in docs
 
@@ -96,19 +98,25 @@ var buildHeatmap = function(db, callback){
 };
 
 function addCrimeToHeatMap(idx,hour,crimeType) {
-  var arr = [idx,idx+1,idx+lng_per_row,idx+lng_per_row+1];
-  arr.forEach(incScoreAndCrimeType(idx,hour,crimeType) );
+  //var arr = [idx,idx+1,idx+lng_per_row,idx+lng_per_row+1];
+  //arr.forEach(incScoreAndCrimeType(,hour,crimeType) );
+  incScoreAndCrimeType(idx,hour,crimeType);
+  incScoreAndCrimeType(idx+1,hour,crimeType);
+  incScoreAndCrimeType(idx+lng_per_row,hour,crimeType);
+  incScoreAndCrimeType(idx+lng_per_row+1,hour,crimeType);
 }
 
 function incScoreAndCrimeType(x,hour,crimeType){
-  pointsArray[x].timedata[hour]["score"]++;
+  console.log("Index " + x + "at time " + hour);
+/*  pointsArray[x].timedata[hour]["score"]++;
+
   if (!pointsArray[x].timedata[hour]["crimeType"][crimeType]) {
     pointsArray[x].timedata[hour]["crimeType"][crimeType] = 0;
   }
   pointsArray[x].timedata[hour]["crimeType"][crimeType] += 1;
-  console.log("Index " + x + "at time " + hour + ": score = " +
-    pointsArray[x].timedata[hour]["score"] + ", crimeType " + crimeType + " = " +
-    pointsArray[x].timedata[hour]["crimeType"][crimeType]);
+
+  console.log("score = " + pointsArray[x].timedata[hour]["score"] +
+    ", crimeType " + crimeType + " = " + pointsArray[x].timedata[hour]["crimeType"][crimeType]);*/
 }
 
 
