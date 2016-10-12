@@ -125,7 +125,7 @@ var calcStats = function(arg, callback){
     var heatmap = db.collection('heatmap');
     var stats = db.collection('stats');
     // Compute stats for the whole city, store in another collection
-    var count = heatmap.find().count();
+    var count = heatmap.count();
     var statsArray = [];
     console.log("count = " + count);
 
