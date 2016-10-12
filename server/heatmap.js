@@ -105,7 +105,7 @@ function addCrimeToHeatMap(idx,hour,crimeType) {
 
 function incScoreAndCrimeType(x,hour,crimeType){
   console.log("Index " + x + " at time " + hour);
-/*  pointsArray[x].timedata[hour]["score"]++;
+  pointsArray[x].timedata[hour]["score"]++;
 
   if (!pointsArray[x].timedata[hour]["crimeType"][crimeType]) {
     pointsArray[x].timedata[hour]["crimeType"][crimeType] = 0;
@@ -113,7 +113,7 @@ function incScoreAndCrimeType(x,hour,crimeType){
   pointsArray[x].timedata[hour]["crimeType"][crimeType] += 1;
 
   console.log("score = " + pointsArray[x].timedata[hour]["score"] +
-    ", crimeType " + crimeType + " = " + pointsArray[x].timedata[hour]["crimeType"][crimeType]);*/
+    ", crimeType " + crimeType + " = " + pointsArray[x].timedata[hour]["crimeType"][crimeType]);
 }
 
 
