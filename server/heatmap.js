@@ -118,7 +118,7 @@ function incScoreAndCrimeType(x,hour,crimeType){
   //  ", crimeType " + crimeType + " = " + pointsArray[x].timedata[hour]["crimeType"][crimeType]);
 }
 
-function calcStats(db, callback){
+var calcStats = function(arg, callback){
   MongoClient.connect(dburl, function(err, db) {
     assert.equal(null, err);
     console.log("Calculating stats");
@@ -142,7 +142,7 @@ function calcStats(db, callback){
     } else {
       console.log("Unable to create stats collection");
     }
-  }
+  });
 }
 
 var calcData = function(arg, callback){
