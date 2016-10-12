@@ -27,12 +27,11 @@ const lat_max = 33.92;
 const lng_min = -112.33;
 const lng_max = -111.92;
 const delta = 0.01;
-const lng_per_row = (lng_max - lng_min)/delta;
-const lat_per_col = (lat_max - lat_min)/delta;
+const lng_per_row = Math.round((lng_max - lng_min)/delta);
+const lat_per_col = Math.round((lat_max - lat_min)/delta);
 var pointsArray = [];
 
 var buildHeatmap = function(db, callback){
-
   MongoClient.connect(dburl, function(err, db) {
     assert.equal(null, err);
     console.log("Building heatmap");
@@ -59,7 +58,7 @@ var buildHeatmap = function(db, callback){
         pointsArray.push(pointHeatMap);
       }
     }
-    console.log("lng_per_row = " + lng_per_row + ", lat_per_col = " + lat_per_col + ", max idx = " + lng_per_row * lat_per_col);
+    console.log("lng_per_row = " + lng_per_row + ", lat_per_col = " + lat_per_col + ", pointsArray.length = " + lng_per_row * lat_per_col);
     records.find({dateTime: {$ne: ""}}).limit(3).toArray(function(err, docs){
       for (var i = 0; i < docs.length; i++) {
         var dateTime = docs[i].dateTime.split(/\s+/);
@@ -69,18 +68,18 @@ var buildHeatmap = function(db, callback){
         // For now each crime in this circle is equal regardless of type or age
         var lat_floor = Math.floor(docs[i].latitude * 100)/100;
         var lng_floor = Math.floor(docs[i].longitude * 100)/100;
-        var idx = Math.round(lng_per_row * (lat_floor - lat_min)/delta) + (lng_floor - lng_min)/delta - 1;
+        var idx = Math.round((lng_per_row * (lat_floor - lat_min)/delta) + (lng_floor - lng_min)/delta - 1);
         console.log("lat: " + docs[i].latitude + ", lng: " + docs[i].longitude + ", lat_floor: " + lat_floor + ", lng_floor: " + lng_floor + ",  idx: " + idx);
 
         addCrimeToHeatMap(idx, hour, docs[i].crimeType);
       } //for doc in docs
 
       var pointsRemoved = 0;
-      for (var i = pointsArray.length; i >= 0; i--) {
-        var removePoint = false;
+      for (var i = pointsArray.length-1; i >= 0; i--) {
+        var removePoint = true;
         for (var j = 0; j < 24; j++) {
-          if (pointsArray[i].timedata[j].score > 0) {
-            removePoint = true;
+          if (pointsArray[i].timedata[j]["score"] > 0) {
+            removePoint = false;
             break;
           }
         }
@@ -98,8 +97,6 @@ var buildHeatmap = function(db, callback){
 };
 
 function addCrimeToHeatMap(idx,hour,crimeType) {
-  //var arr = [idx,idx+1,idx+lng_per_row,idx+lng_per_row+1];
-  //arr.forEach(incScoreAndCrimeType(,hour,crimeType) );
   incScoreAndCrimeType(idx,hour,crimeType);
   incScoreAndCrimeType(idx+1,hour,crimeType);
   incScoreAndCrimeType(idx+lng_per_row,hour,crimeType);
@@ -107,8 +104,8 @@ function addCrimeToHeatMap(idx,hour,crimeType) {
 }
 
 function incScoreAndCrimeType(x,hour,crimeType){
-  console.log("Index " + x + "at time " + hour);
-/*  pointsArray[x].timedata[hour]["score"]++;
+  console.log("Index " + x + " at time " + hour);
+  pointsArray[x].timedata[hour]["score"]++;
 
   if (!pointsArray[x].timedata[hour]["crimeType"][crimeType]) {
     pointsArray[x].timedata[hour]["crimeType"][crimeType] = 0;
@@ -116,7 +113,7 @@ function incScoreAndCrimeType(x,hour,crimeType){
   pointsArray[x].timedata[hour]["crimeType"][crimeType] += 1;
 
   console.log("score = " + pointsArray[x].timedata[hour]["score"] +
-    ", crimeType " + crimeType + " = " + pointsArray[x].timedata[hour]["crimeType"][crimeType]);*/
+    ", crimeType " + crimeType + " = " + pointsArray[x].timedata[hour]["crimeType"][crimeType]);
 }
 
 
