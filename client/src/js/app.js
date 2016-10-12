@@ -34,6 +34,9 @@ niApp.service('userService', function(NavigatorGeolocation, $http) {
         $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng='+_user.lat+','+_user.lng+'&sensor=true').then(function(res){
           _user.formattedAddress = res.data.results[0].formatted_address;
         });
+        if(typeof callback === 'function'){
+          callback();
+        }
       }, 
       function(err){
         console.log(err);
