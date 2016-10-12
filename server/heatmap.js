@@ -135,9 +135,9 @@ function incScoreAndCrimeType(x,hour,crimeType){
   pointsArray[y]["score"]++;
 
   if (!pointsArray[y]["crimeType"][crimeType]) {
-    pointsArray[y].timedata[hour]["crimeType"][crimeType] = 0;
+    pointsArray[y]["crimeType"][crimeType] = 0;
   }
-  pointsArray[y].timedata[hour]["crimeType"][crimeType] += 1;
+  pointsArray[y]["crimeType"][crimeType] += 1;
 
   //console.log("score = " + pointsArray[x].timedata[hour]["score"] +
   //  ", crimeType " + crimeType + " = " + pointsArray[x].timedata[hour]["crimeType"][crimeType]);
