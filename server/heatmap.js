@@ -85,7 +85,7 @@ var buildHeatmap = function(db, callback){
         });
     }  end if */
 
-  });
+  // });
 
 };
 
