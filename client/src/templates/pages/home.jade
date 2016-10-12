@@ -6,7 +6,7 @@ div(ng-controller="NIController").font-color.fade-in
   
   br
 
-  div.manual-location(ng-show="user.declinedLocation")
+  div.manual-location.fade-in(ng-show="user.declinedLocation")
     h2 Enter your location
     form(ng-submit="submitManualInput()")
       input(type="text" placeholder="Something Google will understand" ng-model="user.manualLocation")
@@ -17,7 +17,7 @@ div(ng-controller="NIController").font-color.fade-in
     span#time {{ time | date:'h:mm a'}}
     i.fa.fa-plus-square(aria-hidden="true" ng-click="setTime(1)")
   
-  div.address.fade-in(ng-show="init")
+  div.address.fade-in(ng-show="init" ng-click="user.declinedLocation = true")
     p {{user.formattedAddress}}  
   
   div.risk-level.fade-in(ng-show="init")
