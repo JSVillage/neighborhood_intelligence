@@ -28,6 +28,8 @@ const lng_max = -111.92;
 const delta = 0.01;
 const lng_per_row = Math.round((lng_max - lng_min)/delta);
 const lat_per_col = Math.round((lat_max - lat_min)/delta);
+const matrix_points = lng_per_row * lat_per_col;
+
 var pointsArray = [];
 
 var buildHeatmap = function(db, callback){
@@ -47,17 +49,18 @@ var buildHeatmap = function(db, callback){
 
     for (var lng = lng_min; lng <= lng_max; lng += delta) {
       for (var lat = lat_min; lat <= lat_max; lat += delta) {
-        var pointHeatMap = {
-          loc : [lng, lat],
-          timedata : []
-        };
         for (var hour = 0; hour < 24; hour++) {
-          pointHeatMap.timedata[hour] = {"score": 0, "crimeType": {}};
-        }
+          var pointHeatMap = {
+            loc : [lng, lat],
+            time: hour,
+            score: 0,
+            crimeType: {}
+          };
         pointsArray.push(pointHeatMap);
       }
     }
-    console.log("lng_per_row = " + lng_per_row + ", lat_per_col = " + lat_per_col + ", pointsArray.length = " + lng_per_row * lat_per_col);
+
+    console.log("lng_per_row = " + lng_per_row + ", lat_per_col = " + lat_per_col + ", matrix points = " + matrix_points);
     records.find({dateTime: {$ne: ""}}).toArray(function(err, docs){
       for (var i = 0; i < docs.length; i++) {
         var dateTime = docs[i].dateTime.split(/\s+/);
@@ -75,20 +78,22 @@ var buildHeatmap = function(db, callback){
         }
       } //for docs
       var pointsRemoved = 0;
-      for (var i = pointsArray.length-1; i >= 0; i--) {
+      for (var i = matrix_points - 1; i >= 0; i--) {
         var removePoint = true;
+        var idxArray = i * 24; // index constant for each point
+        var idxPoint = idxArray; // index checks all hours for each point
         for (var j = 0; j < 24; j++) {
-          if (pointsArray[i].timedata[j]["score"] > 0) {
+          if (pointsArray[idxPoint++]["score"] > 0) {
             removePoint = false;
             break;
           }
         }
         if (removePoint == true) {
-          pointsArray.splice(i, 1);
+          pointsArray.splice(idxArray, 24);
           pointsRemoved++;
         }
       }
-      console.log("Removed " + pointsRemoved + " empty points, remaining: " + pointsArray.length);
+      console.log("Removed " + pointsRemoved + " empty points, remaining points: " + pointsArray.length/24);
       heatmap.insertMany(pointsArray).then(function(res) {
         console.log(res.insertedCount + " new records have been inserted into the database");
         assert.equal(null, err);
@@ -97,19 +102,17 @@ var buildHeatmap = function(db, callback){
         stats.remove({});
         var num = res.insertedCount;
         // Compute stats for the whole city, store in another collection
-        var statsArray = [];
+        var statsObject = {};
 
         if (num > 0)
         {
-          for (var i = 0; i < 24; i++) {
-            statsArray[i].lowThreshold = heatmap.find().sort( {"timedata.i.score": 1}).skip(num/3).limit(1).toArray()["timedata"][i]["score"];
-            statsArray[i].highThreshold = heatmap.find().sort( {"timedata.i.score": -1}).skip(num/3).limit(1).toArray()["timedata"][i]["score"];
-            statsArray[i].maxScore = heatmap.find().sort( {"timedata.i.score": -1}).limit(1).toArray()["timedata"][i]["score"];
-            console.log("Thresholds for time " +  i + ": low = " + statsArray[i].lowThreshold + ", high = " +
-                          statsArray[i].highThreshold + ", max = " + statsArray[i].maxScore);
-          }
+            statsObject.lowThreshold = heatmap.find().sort( {"score": 1}).skip(Math.round(num/3)).limit(1).toArray()[0]["score"];
+            statsObject.highThreshold = heatmap.find().sort( {"score": -1}).skip(Math.round(num/3)).limit(1).toArray()[0]["score"];
+            statsObject.maxScore = heatmap.find().sort( {"score": -1}).limit(1).toArray()[0]["score"];
+            console.log("Thresholds: low = " + statsObject.lowThreshold + ", high = " +
+                          statsObject.highThreshold + ", max = " + statsObject.maxScore);
 
-          stats.insertMany(statsArray);
+            stats.insertOne(statsObject);
         } else {
           console.log("Unable to create stats collection");
         }
@@ -127,12 +130,13 @@ function addCrimeToHeatMap(idx,hour,crimeType) {
 
 function incScoreAndCrimeType(x,hour,crimeType){
   //console.log("Index " + x + " at time " + hour);
-  pointsArray[x].timedata[hour]["score"]++;
+  var y = x*24+hour;
+  pointsArray[y]["score"]++;
 
-  if (!pointsArray[x].timedata[hour]["crimeType"][crimeType]) {
-    pointsArray[x].timedata[hour]["crimeType"][crimeType] = 0;
+  if (!pointsArray[y]["crimeType"][crimeType]) {
+    pointsArray[y].timedata[hour]["crimeType"][crimeType] = 0;
   }
-  pointsArray[x].timedata[hour]["crimeType"][crimeType] += 1;
+  pointsArray[y].timedata[hour]["crimeType"][crimeType] += 1;
 
   //console.log("score = " + pointsArray[x].timedata[hour]["score"] +
   //  ", crimeType " + crimeType + " = " + pointsArray[x].timedata[hour]["crimeType"][crimeType]);
@@ -186,10 +190,10 @@ var calcData = function(arg, callback){
 
       // compare to thresholds
       var cityStat = stats.find({loc : [ 0, 0]}).limit(1).toArray()[0];
-      var areaStat = stats.find({loc: [Math.floor(arg.lng*10)/10, Math.floor(arg.lng*10)/10]}).limit(1).toArray()[0];
+      //var areaStat = stats.find({loc: [Math.floor(arg.lng*10)/10, Math.floor(arg.lng*10)/10]}).limit(1).toArray()[0];
       var info = {
         cityRisk:[],
-        areaRisk: [],
+        //areaRisk: [],
         crimeGuess:[]
       };
 
@@ -201,7 +205,7 @@ var calcData = function(arg, callback){
           info.cityRisk[i] = "MEDIUM";
         else
           info.cityRisk[i] = "HIGH";
-
+/*
         // Compare location to this area of the city
         if (pointHeatmap[i]["score"]< areaStat.lowRiskScoreThreshold)
           info.areaRisk[i] = "LOW";
@@ -209,7 +213,7 @@ var calcData = function(arg, callback){
           info.areaRisk[i] = "MEDIUM";
         else
           info.areaRisk[i] = "HIGH";
-
+*/
         // Predict crime for each hour
         var maxX = Array.max(pointHeatmap[i]["crimeType"]);
         info.crimeGuess[i]  = pointHeatmap[i]["crimeType"].indexOf(maxX);
