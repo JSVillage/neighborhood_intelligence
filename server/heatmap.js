@@ -29,10 +29,10 @@ const lng_max = -112.0; //-111.92
 const delta = 0.01;
 const lng_per_row = (lng_max - lng_min)/delta;
 const lat_per_col = (lat_max - lat_min)/delta;
+var pointsArray = [];
 
 
 var buildHeatmap = function(db, callback){
-  var pointsArray = [];
 
   MongoClient.connect(dburl, function(err, db) {
     assert.equal(null, err);
@@ -101,14 +101,14 @@ function addCrimeToHeatMap(idx,hour,crimeType) {
 }
 
 function incScoreAndCrimeType(x,hour,crimeType){
-  pointHeatMap[x].timedata[hour]["score"]++;
-  if (!pointHeatMap[x].timedata[hour]["crimeType"][crimeType]) {
-    pointHeatMap[x].timedata[hour]["crimeType"][crimeType] = 0;
+  pointsArray[x].timedata[hour]["score"]++;
+  if (!pointsArray[x].timedata[hour]["crimeType"][crimeType]) {
+    pointsArray[x].timedata[hour]["crimeType"][crimeType] = 0;
   }
-  pointHeatMap[x].timedata[hour]["crimeType"][crimeType] += 1;
+  pointsArray[x].timedata[hour]["crimeType"][crimeType] += 1;
   console.log("Index " + x + "at time " + hour + ": score = " +
-    pointHeatMap[x].timedata[hour]["score"] + ", crimeType " + crimeType + " = " +
-    pointHeatMap[x].timedata[hour]["crimeType"][crimeType]);
+    pointsArray[x].timedata[hour]["score"] + ", crimeType " + crimeType + " = " +
+    pointsArray[x].timedata[hour]["crimeType"][crimeType]);
 }
 
 
