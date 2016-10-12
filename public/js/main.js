@@ -14173,6 +14173,7 @@ niApp.controller('NIController', function NIController($scope, $window, $http, N
   // $scope.googleMapsUrl="https://maps.google.com/maps/api/js?key=AIzaSyAtvTUqW2i2tbup-B9tW-4NQ6-bb1H3I_w"
 
   var getData = function(){
+    if($scope.declinedLocation){return;}
     $scope.loading = true;
     $http({
       url: apiUrl + '/' + $scope.user.lat + '/' + $scope.user.lng + '/' + new Date($scope.time), 
@@ -14219,11 +14220,9 @@ niApp.controller('NIController', function NIController($scope, $window, $http, N
     userService.setUserLocation(function(){
       $scope.user = userService.getUser();
       $scope.loading = false;
-      if(!$scope.declinedLocation){      
-        getData();
-      }
+      getData();
     });
-  } else if (!$scope.declinedLocation) {
+  } else {
     getData();
   }
   
