@@ -36,13 +36,13 @@ router.get('/hm/build', function(req, res, next) {
   hm.buildHeatmap(req, function(){});
   res.render('index', { title: 'Build Heatmap' });
 });
-
+/*
 // Calc stats
 router.get('/hm/stats', function(req, res, next) {
   hm.calcStats(req, function(){});
   res.render('index', { title: 'Calc Stats' });
 });
-
+*/
 router.get('/hm/:lat/:lng', function(req, res, next) {
   console.log("Heatmap calcData Params are " + JSON.stringify(req.params));
   if( isNaN(parseFloat(req.params.lat)) || isNaN(parseFloat(req.params.lng)) ){

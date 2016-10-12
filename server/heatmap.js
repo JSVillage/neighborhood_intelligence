@@ -42,8 +42,8 @@ var buildHeatmap = function(db, callback){
     var dist = 0.01;
 
     // Start with clean collections
-    //heatmap.remove({});
-    //stats.remove({});
+    heatmap.remove({});
+    stats.remove({});
 
     for (var lng = lng_min; lng <= lng_max; lng += delta) {
       for (var lat = lat_min; lat <= lat_max; lat += delta) {
@@ -92,9 +92,9 @@ var buildHeatmap = function(db, callback){
       console.log("Removed " + pointsRemoved + " empty points, remaining: " + pointsArray.length);
       heatmap.insertMany(pointsArray).then(function(res) {
         console.log(res.insertedCount + " new records have been inserted into the database");
+        calcStats(db, res.insertedCount);
       });
     });
-    //computeStats(db);
   });
 };
 
@@ -118,16 +118,13 @@ function incScoreAndCrimeType(x,hour,crimeType){
   //  ", crimeType " + crimeType + " = " + pointsArray[x].timedata[hour]["crimeType"][crimeType]);
 }
 
-var calcStats = function(arg, callback){
-  MongoClient.connect(dburl, function(err, db) {
+var calcStats = function(db, count){
     assert.equal(null, err);
     console.log("Calculating stats");
     var heatmap = db.collection('heatmap');
     var stats = db.collection('stats');
     // Compute stats for the whole city, store in another collection
-    var count = heatmap.count();
     var statsArray = [];
-    console.log("count = " + count);
 
     if (count > 0)
     {
@@ -203,7 +200,10 @@ var calcData = function(arg, callback){
     });
   });
  };
-
+var interpolateHeatmap = function(docs) {
+  return docs[0];
+};
+/*
 function generateHeatMapFusion(){
   for (var lat = lat_min; lat < lat_max; lat += delta*5) {
     for (var lng = lng_min; lng < lng_max; lng += delta*5) {
@@ -217,11 +217,8 @@ function generateHeatMapFusion(){
   }
   //console.log("Area threshold (" + lat + "," + lng + "): low = " + lowRiskScoreThreshold + ", high = " + highRiskScoreThreshold + ", max = " + maxScore);
 }
-
-var interpolateHeatmap = function(docs) {
-  return docs[0];
-};
+*/
 
 module.exports.buildHeatmap = buildHeatmap;
 module.exports.calcData = calcData;
-module.exports.calcStats = calcStats;
+//module.exports.calcStats = calcStats;
