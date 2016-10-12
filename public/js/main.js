@@ -14091,7 +14091,24 @@ niApp.factory('mapService', ['$http', function($http) {
         });
     }
   };
-}])
+}]);
+
+niApp.service('userService', function() {
+  var _user = {};
+
+  var getUser = function(){
+    return _user;
+  };
+
+  var setUser = function(user){
+    _user = user;
+  };
+
+  return {
+    getUser : getUser,
+    updateUser : updateUser
+  }
+});
 
 niApp.config(['ChartJsProvider', function (ChartJsProvider) {
   // Configure all charts
@@ -14100,14 +14117,15 @@ niApp.config(['ChartJsProvider', function (ChartJsProvider) {
   });
 }]);
 
-niApp.controller('NIController', function NIController($scope, $window, $http, NavigatorGeolocation, $window, $rootScope) {
+niApp.controller('NIController', function NIController($scope, $window, $http, NavigatorGeolocation, $window, $rootScope, userService) {
   
   $rootScope.niTime = $rootScope.niTime || new Date(); 
   $scope.loading = false;
   $scope.init = false;
   $scope.riskLevel = '';
   var apiUrl = $window.location.origin + '/api';
-  $rootScope.user = $rootScope.user || {};
+  //$scope.user = $scope.user || {};
+  $scope.user = userService.getUser();
   $scope.formattedAddress = '';
 
   // $scope.googleMapsUrl="https://maps.google.com/maps/api/js?key=AIzaSyAtvTUqW2i2tbup-B9tW-4NQ6-bb1H3I_w"
@@ -14115,7 +14133,7 @@ niApp.controller('NIController', function NIController($scope, $window, $http, N
   var getData = function(){
     $scope.loading = true;
     $http({
-      url: apiUrl + '/' + $rootScope.user.lat + '/' + $rootScope.user.lng + '/' + new Date($rootScope.niTime), 
+      url: apiUrl + '/' + $scope.user.lat + '/' + $scope.user.lng + '/' + new Date($rootScope.niTime), 
       method: "GET",
       cache: true
     }).then(function(results) {
@@ -14134,12 +14152,12 @@ niApp.controller('NIController', function NIController($scope, $window, $http, N
     NavigatorGeolocation.getCurrentPosition()
      .then(function(position) {
         var lat = position.coords.latitude, lng = position.coords.longitude;
-        $rootScope.user.lat = position.coords.latitude;
-        $rootScope.user.lng = position.coords.longitude;
+        $scope.user.lat = position.coords.latitude;
+        $scope.user.lng = position.coords.longitude;
         console.log(position);
-        $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng='+$rootScope.user.lat+','+$rootScope.user.lng+'&sensor=true').then(function(res){
-          $rootScope.user.formattedAddress = $scope.formattedAddress = res.data.results[0].formatted_address;
-          console.log($rootScope.user.formattedAddress);
+        $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng='+$scope.user.lat+','+$scope.user.lng+'&sensor=true').then(function(res){
+          $scope.user.formattedAddress = $scope.formattedAddress = res.data.results[0].formatted_address;
+          console.log($scope.user.formattedAddress);
         });
         // 
         $scope.loading = false;
@@ -14184,7 +14202,7 @@ niApp.controller('NIController', function NIController($scope, $window, $http, N
 	// 	}
 	// };
 
-  if($rootScope.user && !$rootScope.user.lat){
+  if($scope.user && !$scope.user.lat){
     getUserLocation();
   }else{
     getData();
@@ -14195,14 +14213,15 @@ niApp.controller('NIController', function NIController($scope, $window, $http, N
 
 
 
-niApp.controller('MoreController', function MoreController($scope, $window, $http, $rootScope, $timeout) {
+niApp.controller('MoreController', function MoreController($scope, $window, $http, $rootScope, $timeout, userService) {
 
   
   $scope.loading = false;
   $scope.init = false;
   $scope.riskLevel = '';
   $scope.charts = [];
-  $rootScope.user = $rootScope.user || {};
+  $scope.user = userService.getUser();
+  //$scope.user = $scope.user || {};
   
   // $scope.$on('chart-create', function (evt, chart) {
   //   $scope.charts.push(chart);
@@ -14259,7 +14278,7 @@ niApp.controller('MoreController', function MoreController($scope, $window, $htt
   var getData = function(){
     $scope.loading = true;
     $http({
-      url: apiUrl + '/' + $rootScope.user.lat + '/' + $rootScope.user.lng + '/' + new Date($rootScope.niTime),  
+      url: apiUrl + '/' + $scope.user.lat + '/' + $scope.user.lng + '/' + new Date($rootScope.niTime),  
       method: "GET",
       cache: true
     }).then(function(results) {
@@ -14283,8 +14302,8 @@ niApp.controller('MoreController', function MoreController($scope, $window, $htt
         $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng='+pos.coords.latitude+','+pos.coords.longitude+'&sensor=true')
           .then(function(res){
             console.log(res.data);
-            $rootScope.user.lat = res.data.results[0].geometry.location.lat;
-            $rootScope.user.lng = res.data.results[0].geometry.location.lng;
+            $scope.user.lat = res.data.results[0].geometry.location.lat;
+            $scope.user.lng = res.data.results[0].geometry.location.lng;
             $scope.formattedAddress = res.data.results[0].formatted_address;
             $scope.loading = false;
             getData();
@@ -14299,7 +14318,7 @@ niApp.controller('MoreController', function MoreController($scope, $window, $htt
   // $scope.chartClick = function (points, evt) {
   //   console.log(points, evt);
   // };
-  if($rootScope.user && !$rootScope.user.lat){
+  if($scope.user && !$scope.user.lat){
     getUserLocation();
   }else{
     getData();

@@ -1,4 +1,4 @@
-div(ng-controller="NIController").font-color.fade-in
+div(ng-controller="NIController" ng-class="{loading : loading}").font-color.fade-in
   div.stage(ng-class="riskLevel")
   div.loading(ng-show="loading")
   br
