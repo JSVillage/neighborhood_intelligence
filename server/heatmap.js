@@ -73,17 +73,23 @@ var buildHeatmap = function(db, callback){
             insertDB = true;
             //console.log("insertDB == true in docs");
           } //for doc in docs
-          pointsArray.push(pointHeatMap);
-          console.log(JSON.stringify(pointHeatMap));
+          //pointsArray.push(pointHeatMap);
+          //console.log(JSON.stringify(pointHeatMap));
+          if (insertDB == true) {
+              heatmap.insertOne(pointsArray).then(function(res) {
+                console.log(res.insertedCount + " new records have been inserted into the database");
+              });
+          }
+
         });
       } // for lng
     } // for lat
-/*    if (insertDB == true) {
-      console.log("insertDB == true before db write");
-        heatmap.insertMany({pointHeatmap}).then(function(res) {
-          console.log(res.insertedCount + " new records have been inserted into the database");
-        });
-    }  end if */
+    // if (insertDB == true) {
+    //   console.log("insertDB == true before db write");
+    //     heatmap.insertMany(pointsArray).then(function(res) {
+    //       console.log(res.insertedCount + " new records have been inserted into the database");
+    //     });
+    // }
 
   });
 };
