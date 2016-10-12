@@ -70,7 +70,9 @@ var buildHeatmap = function(db, callback){
         var idx = Math.round((lng_per_row * (lat_floor - lat_min)/delta) + (lng_floor - lng_min)/delta - 1);
         console.log("lat: " + docs[i].latitude + ", lng: " + docs[i].longitude + ", lat_floor: " + lat_floor + ", lng_floor: " + lng_floor + ",  idx: " + idx);
 
-        addCrimeToHeatMap(idx, hour, docs[i].crimeType);
+        if (idx >= 0 && idx <= lng_per_row * lat_per_col - lng_per_row - 2) {
+          addCrimeToHeatMap(idx, hour, docs[i].crimeType);
+        }
       } //for doc in docs
 
       var pointsRemoved = 0;
@@ -104,7 +106,7 @@ function addCrimeToHeatMap(idx,hour,crimeType) {
 }
 
 function incScoreAndCrimeType(x,hour,crimeType){
-  //console.log("Index " + x + " at time " + hour);
+  console.log("Index " + x + " at time " + hour);
   pointsArray[x].timedata[hour]["score"]++;
 
   if (!pointsArray[x].timedata[hour]["crimeType"][crimeType]) {
