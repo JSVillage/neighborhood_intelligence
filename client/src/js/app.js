@@ -28,7 +28,7 @@ niApp.service('userService', function() {
 
   return {
     getUser : getUser,
-    updateUser : updateUser
+    setUser : setUser
   }
 });
 
