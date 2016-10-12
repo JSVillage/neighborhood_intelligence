@@ -43,7 +43,6 @@ var buildHeatmap = function(db, callback){
 
     // Start with clean collections
     heatmap.remove({});
-    stats.remove({});
 
     for (var lng = lng_min; lng <= lng_max; lng += delta) {
       for (var lat = lat_min; lat <= lat_max; lat += delta) {
@@ -123,6 +122,7 @@ var calcStats = function(db, count){
   console.log("Calculating stats");
   var heatmap = db.collection('heatmap');
   var stats = db.collection('stats');
+  stats.remove({});
   // Compute stats for the whole city, store in another collection
   var statsArray = [];
 
