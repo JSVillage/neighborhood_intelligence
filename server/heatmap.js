@@ -56,7 +56,8 @@ var buildHeatmap = function(db, callback){
             score: 0,
             crimeType: {}
           };
-        pointsArray.push(pointHeatMap);
+          pointsArray.push(pointHeatMap);
+        }
       }
     }
 
