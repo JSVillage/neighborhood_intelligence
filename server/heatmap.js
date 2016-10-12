@@ -31,6 +31,7 @@ const lat_per_col = Math.round((lat_max - lat_min)/delta);
 var pointsArray = [];
 
 var buildHeatmap = function(db, callback){
+  pointsArray = [];
   MongoClient.connect(dburl, function(err, db) {
     assert.equal(null, err);
     console.log("Building heatmap");
@@ -73,7 +74,7 @@ var buildHeatmap = function(db, callback){
           addCrimeToHeatMap(idx, hour, docs[i].crimeType);
         }
       } //for doc in docs
-
+num
       var pointsRemoved = 0;
       for (var i = pointsArray.length-1; i >= 0; i--) {
         var removePoint = true;
@@ -91,7 +92,28 @@ var buildHeatmap = function(db, callback){
       console.log("Removed " + pointsRemoved + " empty points, remaining: " + pointsArray.length);
       heatmap.insertMany(pointsArray).then(function(res) {
         console.log(res.insertedCount + " new records have been inserted into the database");
-        calcStats(db, res.insertedCount);
+        assert.equal(null, err);
+        console.log("Calculating stats");
+        var stats = db.collection('stats');
+        stats.remove({});
+        var num = res.insertedCount;
+        // Compute stats for the whole city, store in another collection
+        var statsArray = [];
+
+        if (num > 0)
+        {
+          for (var i = 0; i < 24; i++) {
+            statsArray[i].lowThreshold = heatmap.find().sort( {"timedata.i.score": 1}).skip(num/3).limit(1).toArray()["timedata"][i]["score"];
+            statsArray[i].highThreshold = heatmap.find().sort( {"timedata.i.score": -1}).skip(num/3).limit(1).toArray()["timedata"][i]["score"];
+            statsArray[i].maxScore = heatmap.find().sort( {"timedata.i.score": -1}).limit(1).toArray()["timedata"][i]["score"];
+            console.log("Thresholds for time " +  i + ": low = " + statsArray[i].lowThreshold + ", high = " +
+                          statsArray[i].highThreshold + ", max = " + statsArray[i].maxScore);
+          }
+
+          stats.insertMany(statsArray);
+        } else {
+          console.log("Unable to create stats collection");
+        }
       });
     });
   });
@@ -116,7 +138,7 @@ function incScoreAndCrimeType(x,hour,crimeType){
   //console.log("score = " + pointsArray[x].timedata[hour]["score"] +
   //  ", crimeType " + crimeType + " = " + pointsArray[x].timedata[hour]["crimeType"][crimeType]);
 }
-
+/*
 var calcStats = function(db, count){
   assert.equal(null, err);
   console.log("Calculating stats");
@@ -140,7 +162,7 @@ var calcStats = function(db, count){
     console.log("Unable to create stats collection");
   }
 }
-
+*/
 var calcData = function(arg, callback){
   // Check if we are in Phoenix
   geocoder.reverse({lat:arg.lat, lon:arg.lng}, function(err, res) {
