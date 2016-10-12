@@ -74,7 +74,7 @@ var buildHeatmap = function(db, callback){
             //console.log("insertDB == true in docs");
           } //for doc in docs
           pointsArray.push(pointHeatMap);
-          console.log(JSON.toString(pointHeatMap));
+          console.log(JSON.stringify(pointHeatMap));
         });
       } // for lng
     } // for lat
