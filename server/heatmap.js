@@ -195,9 +195,12 @@ var calcData = function(arg, callback){
     var stats = db.collection('stats');
 
     // Compute data about this point
-    var queryPoint =  {loc : { $near : [ parseFloat(arg.lng), parseFloat(arg.lat) ], $maxDistance: 0.02 }};
+    //var queryPoint =  {loc : { $near : [ parseFloat(arg.lng), parseFloat(arg.lat) ], $maxDistance: 0.02 }};
+    var queryPoint =  {"loc.0" : {$gt: arg.lng-delta*2, $lt: arg.lng+delta*2}, "loc.1" : {$gt: arg.lat-delta*2, $lt: arg.lat+delta*2}};
     heatmap.find(queryPoint,{},{}).toArray(function(err, docs){
       //var pointHeatmap = interpolateHeatmap(docs);
+      var info = { risk:[], crimeGuess:[] };
+
       if (docs === undefined){
         // no crimes reported nearby
         console.log("No crimes reported nearby");
@@ -210,29 +213,15 @@ var calcData = function(arg, callback){
         // compare to thresholds
         stats.find().toArray(function(err,crimeStats){
           //var areaStat = stats.find({loc: [Math.floor(arg.lng*10)/10, Math.floor(arg.lng*10)/10]}).limit(1).toArray()[0];
-          var info = {
-            risk:[],
-            crimeGuess:[]
-          };
 
-          // The 24 closest points should be at the same location (all different times)
-          for (var i = 0; i < 24; i++) {
-            if (docs[i].score < crimeStats[0].lowThreshold)
-              info.risk[docs[i].time] = "LOW";
-            else if (docs[i].score < crimeStats[0].highThreshold)
-              info.risk[docs[i].time] = "MEDIUM";
-            else
-              info.risk[docs[i].time] = "HIGH";
-          }
-          for (var i = 0; i < 24; i++) {
-            if (info.risk[i] === undefined) {
-              console.log("Time point missing: " + i)
-              info.risk[i] = "LOW";
-            }
-          }
-
+          var crimeScoreArray = [];
           var crimeTypeTimeArray = [];
+
           for (var i = 0; i < docs.length; i++) {
+            // add to score
+            crimeScoreArray[docs[i].time] += docs[i].score;
+
+            // add to crime type
             for (var inst in docs[doc].crimeType){
             if ( ! crimeTypeTimeArray[docs[doc].time][inst] )
             {
@@ -242,21 +231,30 @@ var calcData = function(arg, callback){
             }
           }
           for (var i = 0; i < 24; i++){
+            // compute risk based on score
+            if (crimeScoreArray[i] === undefined || crimeScoreArray[i] < crimeStats[0].lowThreshold)
+              info[i].risk = "LOW";
+            else if (crimeScoreArray[i]  < crimeStats[0].highThreshold)
+              info[i].risk = "MEDIUM";
+            else
+              info[i].risk = "HIGH";
+
+            // compute guess based on crimeType weighting
             var max = 0;
             for (var inst in crimeTypeTimeArray[i]){
               if (crimeTypeTimeArray[i][inst] > max) {
                 max = crimeTypeTimeArray[i][inst];
-                info.guess[i] = inst;
+                info[i].guess = inst;
               }
             }
-            if (info.guess[i] === undefined) {
-              info.guess[i] = "NONE";
+            if (info[i].guess === undefined) {
+              info[i].guess = "NONE";
             }
           }
-          console.log(info);
-          callback({heatmap: info});
         });
       }
+      console.log(info);
+      callback({heatmap: info});
     });
   });
 };
