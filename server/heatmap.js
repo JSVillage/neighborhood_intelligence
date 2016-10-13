@@ -142,8 +142,9 @@ var buildHeatmap = function(db, callback){
               stream.once('open', function(fd) {
                 stream.write("lat,lng,time,score\n");
                 var idx = i;
+                console.log(pointsArray[0]);
                 for (var j = 0; j < pointsArray.length/24; j++) {
-                  stream.write(pointsArray[idx].loc[1] + "," + pointsArray[idx].loc[0] + "," + i + "," + pointsArray[idx].score + "\n");
+                  //stream.write(pointsArray[idx].loc[1] + "," + pointsArray[idx].loc[0] + "," + i + "," + pointsArray[idx].score + "\n");
                   idx += 24;
                 }
                 stream.end();
