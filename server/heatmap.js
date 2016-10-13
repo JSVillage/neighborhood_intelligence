@@ -179,6 +179,7 @@ var calcStats = function(db, count){
 */
 var calcData = function(arg, callback){
   // Check if we are in Phoenix
+/*
   geocoder.reverse({lat:arg.lat, lon:arg.lng}, function(err, res) {
     console.log(res);
     if(res.indexOf("Phoenix") === -1) {
@@ -186,7 +187,7 @@ var calcData = function(arg, callback){
       callback("Error");
     }
   });
-
+*/
   MongoClient.connect(dburl, function(err, db) {
     assert.equal(null, err);
     console.log("Connected correctly to server");
@@ -194,10 +195,9 @@ var calcData = function(arg, callback){
     var stats = db.collection('stats');
 
     // Compute data about this point
-    var queryPoint =  {loc : { $near : [ parseFloat(arg.lng), parseFloat(arg.lat) ], $maxDistance: 0.05 }};
-    heatmap.find(queryPoint).sort({"time": 1}).toArray(function(err, docs){
+    var queryPoint =  {loc : { $near : [ parseFloat(arg.lng), parseFloat(arg.lat) ], $maxDistance: 0.02 }};
+    heatmap.find(queryPoint,{},{}).toArray(function(err, docs){
       //var pointHeatmap = interpolateHeatmap(docs);
-      console.log(docs.length + " records accessed within 0.1 for risk assessment");
       if (docs === undefined){
         // no crimes reported nearby
         console.log("No crimes reported nearby");
@@ -206,6 +206,7 @@ var calcData = function(arg, callback){
             info.crimeGuess[i] = "NONE";
         }
       } else {
+        console.log(docs.length + " records accessed within 0.1 for risk assessment");
         // compare to thresholds
         stats.find().toArray(function(err,crimeStats){
           //var areaStat = stats.find({loc: [Math.floor(arg.lng*10)/10, Math.floor(arg.lng*10)/10]}).limit(1).toArray()[0];
@@ -214,8 +215,8 @@ var calcData = function(arg, callback){
             crimeGuess:[]
           };
 
+          // The 24 closest points should be at the same location (all different times)
           for (var i = 0; i < 24; i++) {
-            // Compare location to the entire city
             if (docs[i].score < crimeStats[0].lowThreshold)
               info.risk[docs[i].time] = "LOW";
             else if (docs[i].score < crimeStats[0].highThreshold)
@@ -247,6 +248,9 @@ var calcData = function(arg, callback){
                 max = crimeTypeTimeArray[i][inst];
                 info.guess[i] = inst;
               }
+            }
+            if (info.guess[i] === undefined) {
+              info.guess[i] = "NONE";
             }
           }
           console.log(info);
