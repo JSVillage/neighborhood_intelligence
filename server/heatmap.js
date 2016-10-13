@@ -146,7 +146,7 @@ var buildHeatmap = function(db, callback){
                   stream.write(pointsArray[idx].loc[1] + "," + pointsArray[idx].loc[0] + "," + i + "," + pointsArray[idx].score + "\n");
                   idx += 24;
                 }
-              }
+              });
               stream.end();
             } // end for making 24 csv files
           });
