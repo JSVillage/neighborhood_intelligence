@@ -199,14 +199,14 @@ var calcData = function(arg, callback){
     var queryPoint =  {"loc.0" : {$gt: arg.lng-delta*2, $lt: arg.lng+delta*2}, "loc.1" : {$gt: arg.lat-delta*2, $lt: arg.lat+delta*2}};
     heatmap.find(queryPoint,{},{}).toArray(function(err, docs){
       //var pointHeatmap = interpolateHeatmap(docs);
-      var info = { risk:[], crimeGuess:[] };
+      var info = [];
 
       if (docs === undefined){
         // no crimes reported nearby
         console.log("No crimes reported nearby");
         for (var i = 0; i < 24; i++) {
-            info.risk[i] = "LOW";
-            info.crimeGuess[i] = "NONE";
+            info[i].risk = "LOW";
+            info[i].guess = "NONE";
         }
       } else {
         console.log(docs.length + " records accessed within 0.1 for risk assessment");
