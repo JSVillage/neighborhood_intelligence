@@ -113,7 +113,7 @@ var buildHeatmap = function(db, callback){
         file.open("w");
         file.writeln("lat,lng,time,score");
         var idx = i;
-        for (var j = 0; j < pointsArray.length/24) {
+        for (var j = 0; j < pointsArray.length/24; j++) {
           file.writeln(pointsArray[idx].loc[1] + "," + pointsArray[idx].loc[0] + "," + i + "," + pointsArray[idx].score);
           idx += 24;
         }
