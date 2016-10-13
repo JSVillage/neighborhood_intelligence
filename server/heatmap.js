@@ -255,8 +255,8 @@ var calcData = function(arg, callback){
       }
     });
   });
- };
-}
+};
+
 
 /*
 function generateHeatMapFusion(){
