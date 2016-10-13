@@ -54,17 +54,28 @@ var buildHeatmap = function(db, callback){
             loc : [lng_min + lng*delta, lat_min + lat*delta],
             time: hour,
             score: 0,
-            crimeType: {}
+            crimeType: {},
+            dayOfWeek: [0,0,0,0,0,0,0]
           };
           pointsArray.push(pointHeatMap);
         }
       }
     }
 
+    var datemin = new Date();
+    var datemax = new Date("1/1/1971");
     console.log("lng_per_row = " + lng_per_row + ", lat_per_col = " + lat_per_col + ", matrix points = " + matrix_points);
     records.find({dateTime: {$ne: ""}}).toArray(function(err, docs){
       for (var i = 0; i < docs.length; i++) {
         var dateTime = docs[i].dateTime.split(/\s+/);
+        var date = dateTime[0].split(/\//);
+        var day = new Date(dateTime[0]);
+
+        if (datemin > day)
+          datemin = day;
+        if (datemax < day)
+          datemax = day;
+
         var time = dateTime[1].split(/:/);
         var hour = parseInt(time[0]);
 
@@ -75,7 +86,7 @@ var buildHeatmap = function(db, callback){
         //console.log("lat: " + docs[i].latitude + ", lng: " + docs[i].longitude + ", lat_floor: " + lat_floor + ", lng_floor: " + lng_floor + ",  idx: " + idx);
 
         if (idx >= 0 && idx <= lng_per_row * lat_per_col - lng_per_row - 2) {
-          addCrimeToHeatMap(idx, hour, docs[i].crimeType);
+          addCrimeToHeatMap(idx, hour, docs[i].crimeType, day.getUTCDay());
         }
       } //for docs
       var pointsRemoved = 0;
@@ -108,8 +119,17 @@ var buildHeatmap = function(db, callback){
         if (num > 0) {
           heatmap.find().sort( {"score": -1}).limit(1).toArray(function(err,docs){
             statsObject.maxScore = docs[0]["score"];
-            statsObject.highThreshold = statsObject.maxScore/10;
-            statsObject.lowThreshold = statsObject.maxScore/30;
+
+            // Store info about how many days are included in records & heatmap
+            var start = Math.floor( datemin.getTime() / (3600*24*1000)); //days as integer from..
+            var end = Math.floor( datemax.getTime() / (3600*24*1000)); //days as integer from..
+            statsObject.datasetNumDays = end - start;
+            // Define high crime as more than 0.5 crime for this hour per ~square mile per day
+            statsObject.highThreshold = statsObject.datasetNumDays/2;
+            // Define low crime as less than 0.1 crime for this hour per ~square mile per day
+            statsObject.lowThreshold = statsObject.datasetNumDays/10;
+            console.log("Dataset number of days = " + statsObject.datasetNumDays + ", Max score = " statsObject.maxScore +
+                              ", High threshold = " + statsObject.highThreshold + ", low threshold = " + statsObject.lowThreshold);
 
             stats.insertOne(statsObject);
           });
@@ -121,62 +141,28 @@ var buildHeatmap = function(db, callback){
   });
 };
 
-/*            heatmap.find().sort( {"score": 1}).skip(Math.round(num/3)).limit(1).toArray(function(err, docs){
-              statsObject.lowThreshold = docs[0]["score"];
-              heatmap.find().sort( {"score": -1}).skip(Math.round(num/3)).limit(1).toArray(function(err, docs){
-                statsObject.highThreshold = docs[0]["score"];
-                  console.log("Thresholds: low = " + statsObject.lowThreshold + ", high = " +
-                          statsObject.highThreshold + ", max = " + statsObject.maxScore);
-                        });
-                      });
-
-*/
-
-function addCrimeToHeatMap(idx,hour,crimeType) {
-  incScoreAndCrimeType(idx,hour,crimeType);
-  incScoreAndCrimeType(idx+1,hour,crimeType);
-  incScoreAndCrimeType(idx+lng_per_row,hour,crimeType);
-  incScoreAndCrimeType(idx+lng_per_row+1,hour,crimeType);
+function addCrimeToHeatMap(idx,hour,crimeType,dayOfWeek) {
+  incScoreAndCrimeType(idx,hour,crimeType,dayOfWeek);
+  incScoreAndCrimeType(idx+1,hour,crimeType,dayOfWeek);
+  incScoreAndCrimeType(idx+lng_per_row,hour,crimeType,dayOfWeek);
+  incScoreAndCrimeType(idx+lng_per_row+1,hour,crimeType,dayOfWeek);
 }
 
 function incScoreAndCrimeType(x,hour,crimeType){
   //console.log("Index " + x + " at time " + hour);
   var y = x*24+hour;
-  pointsArray[y]["score"]++;
+  pointsArray[y].score++;
 
   if (!pointsArray[y]["crimeType"][crimeType]) {
     pointsArray[y]["crimeType"][crimeType] = 0;
   }
   pointsArray[y]["crimeType"][crimeType] += 1;
+  pointsArray[y].dayOfWeek[dayOfWeek]++;
 
   //console.log("score = " + pointsArray[x].timedata[hour]["score"] +
   //  ", crimeType " + crimeType + " = " + pointsArray[x].timedata[hour]["crimeType"][crimeType]);
 }
-/*
-var calcStats = function(db, count){
-  assert.equal(null, err);
-  console.log("Calculating stats");
-  var heatmap = db.collection('heatmap');
-  var stats = db.collection('stats');
-  stats.remove({});
-  // Compute stats for the whole city, store in another collection
-  var statsArray = [];
 
-  if (count > 0)
-  {
-    for (var i = 0; i < 24; i++) {
-      statsArray[i].lowThreshold = heatmap.find().sort( {"timedata.i.score": 1}).skip(count/3).limit(1).toArray()["timedata"][i]["score"];
-      statsArray[i].highThreshold = heatmap.find().sort( {"timedata.i.score": -1}).skip(count/3).limit(1).toArray()["timedata"][i]["score"];
-      statsArray[i].maxScore = heatmap.find().sort( {"timedata.i.score": -1}).limit(1).toArray()["timedata"][i]["score"];
-      console.log("Thresholds for time " +  i + ": low = " + statsArray[i].lowThreshold + ", high = " + statsArray[i].highThreshold + ", max = " + statsArray[i].maxScore);
-    }
-
-    stats.insertMany(statsArray);
-  } else {
-    console.log("Unable to create stats collection");
-  }
-}
-*/
 var calcData = function(arg, callback){
   // Check if we are in Phoenix
 /*
@@ -197,15 +183,15 @@ var calcData = function(arg, callback){
     // Compute data about this point
     //var query =  {loc : { $near : [ parseFloat(arg.lng), parseFloat(arg.lat) ], $maxDistance: 0.02 }};
     //console.log(query);
-    var lnglo = parseFloat(arg.lng) - delta;
-    var lnghi = parseFloat(arg.lng) + delta;
-    var latlo = parseFloat(arg.lat) - delta;
-    var lathi = parseFloat(arg.lat) + delta;
+    var lnglo = parseFloat(arg.lng) - delta * 0.71
+    var lnghi = parseFloat(arg.lng) + delta * 0.71;
+    var latlo = parseFloat(arg.lat) - delta * 0.71;
+    var lathi = parseFloat(arg.lat) + delta * 0.71;
     var queryPoint =  {"loc.0" : {$gt: lnglo, $lt: lnghi}, "loc.1" : {$gt: latlo, $lt: lathi}};
     console.log(queryPoint);
     heatmap.find(queryPoint,{},{}).toArray(function(err, docs){
       //var pointHeatmap = interpolateHeatmap(docs);
-      var info = {time: [], timeOfDay: [0,0,0,0,0,0], types: {}};
+      var info = {time: [], timeOfDay: [0,0,0,0,0,0], dayOfWeek: [0,0,0,0,0,0,0], types: {}};
       for (var i = 0; i < 24; i++){
         info.time[i] = {score: 0, risk: "LOW", guess: "NONE"};
       }
@@ -215,10 +201,11 @@ var calcData = function(arg, callback){
         console.log(info);
         callback({heatmap: info});
       } else {
-        console.log(docs.length + " records accessed within 0.1 for risk assessment");
+        console.log(docs.length + " records accessed for risk assessment");
         // compare to thresholds
         stats.find().toArray(function(err,crimeStats){
-          //var areaStat = stats.find({loc: [Math.floor(arg.lng*10)/10, Math.floor(arg.lng*10)/10]}).limit(1).toArray()[0];
+          console.log("Dataset number of days = " + crimeStats[0].datasetNumDays + ", Max score = " crimeStats[0].maxScore +
+                  ", High threshold = " + crimeStats[0].highThreshold + ", low threshold = " + crimeStats[0].lowThreshold);
 
           var crimeTypeArray = [];
 
@@ -228,7 +215,8 @@ var calcData = function(arg, callback){
           for (var i = 0; i < docs.length; i++) {
             // add to score
             info.time[docs[i].time].score += docs[i].score;
-            info.timeOfDay[docs[i].time/4] += docs[i].score;
+            info.timeOfDay[parseInt(docs[i].time/4)] += docs[i].score;
+            info.dayOfWeek[docs[i].dayOfWeek]++;
 
             // add to crime type
             for (var inst in docs[i].crimeType){
