@@ -205,11 +205,9 @@ var calcData = function(arg, callback){
     console.log(queryPoint);
     heatmap.find(queryPoint,{},{}).toArray(function(err, docs){
       //var pointHeatmap = interpolateHeatmap(docs);
-      var info = [];
+      var info = {time: [], timeOfDay: [0,0,0,0,0,0], types: {}};
       for (var i = 0; i < 24; i++){
         info.time[i] = {risk: "LOW", guess: "NONE"};
-        info.timeOfDay = [0,0,0,0,0,0];
-        info.types = {};
       }
       if (docs === undefined || docs.length == 0){
         // no crimes reported nearby
