@@ -206,7 +206,9 @@ var calcData = function(arg, callback){
     heatmap.find(queryPoint,{},{}).toArray(function(err, docs){
       //var pointHeatmap = interpolateHeatmap(docs);
       var info = [];
-
+      for (var i = 0; i < 24; i++){
+        info[i] = {};
+      }
       if (docs === undefined || docs.length == 0){
         // no crimes reported nearby
         console.log("No crimes reported nearby");
@@ -235,11 +237,11 @@ var calcData = function(arg, callback){
 
             // add to crime type
             for (var inst in docs[i].crimeType){
-            if ( crimeTypeArray[docs[i].time][inst] === undefined )
-            {
-                crimeTypeArray[docs[i].time][inst] = 0;
-            }
-            crimeTypeArray[docs[i].time][inst] += docs[i].crimeType[inst];
+              if ( crimeTypeArray[docs[i].time][inst] === undefined )
+              {
+                  crimeTypeArray[docs[i].time][inst] = 0;
+              }
+              crimeTypeArray[docs[i].time][inst] += docs[i].crimeType[inst];
             }
           }
           for (var i = 0; i < 24; i++){
