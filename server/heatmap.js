@@ -148,7 +148,7 @@ function addCrimeToHeatMap(idx,hour,crimeType,dayOfWeek) {
   incScoreAndCrimeType(idx+lng_per_row+1,hour,crimeType,dayOfWeek);
 }
 
-function incScoreAndCrimeType(x,hour,crimeType){
+function incScoreAndCrimeType(x,hour,crimeType,weekday){
   //console.log("Index " + x + " at time " + hour);
   var y = x*24+hour;
   pointsArray[y].score++;
@@ -157,7 +157,7 @@ function incScoreAndCrimeType(x,hour,crimeType){
     pointsArray[y]["crimeType"][crimeType] = 0;
   }
   pointsArray[y]["crimeType"][crimeType] += 1;
-  pointsArray[y].dayOfWeek[dayOfWeek]++;
+  pointsArray[y].dayOfWeek[weekday]++;
 
   //console.log("score = " + pointsArray[x].timedata[hour]["score"] +
   //  ", crimeType " + crimeType + " = " + pointsArray[x].timedata[hour]["crimeType"][crimeType]);
