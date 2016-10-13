@@ -195,8 +195,13 @@ var calcData = function(arg, callback){
     var stats = db.collection('stats');
 
     // Compute data about this point
-    //var queryPoint =  {loc : { $near : [ parseFloat(arg.lng), parseFloat(arg.lat) ], $maxDistance: 0.02 }};
-    var queryPoint =  {"loc.0" : {$gt: arg.lng-delta*2, $lt: arg.lng+delta*2}, "loc.1" : {$gt: arg.lat-delta*2, $lt: arg.lat+delta*2}};
+    var query =  {loc : { $near : [ parseFloat(arg.lng), parseFloat(arg.lat) ], $maxDistance: 0.02 }};
+    console.log(query);
+    var lnglo = arg.lng-delta*2;
+    var lnghi = arg.lng+delta*2;
+    var latlo = arg.lat-delta*2;
+    var lathi = arg.lat+delta*2;
+    var queryPoint =  {"loc.0" : {$gt: lnglo, $lt: lnghi}, "loc.1" : {$gt: latlo, $lt: lathi}};
     console.log(queryPoint);
     heatmap.find(queryPoint,{},{}).toArray(function(err, docs){
       //var pointHeatmap = interpolateHeatmap(docs);
