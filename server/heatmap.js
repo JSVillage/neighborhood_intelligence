@@ -128,7 +128,7 @@ var buildHeatmap = function(db, callback){
             statsObject.highThreshold = statsObject.datasetNumDays/2;
             // Define low crime as less than 0.1 crime for this hour per ~square mile per day
             statsObject.lowThreshold = statsObject.datasetNumDays/10;
-            console.log("Dataset number of days = " + statsObject.datasetNumDays + ", Max score = " statsObject.maxScore +
+            console.log("Dataset number of days = " + statsObject.datasetNumDays + ", Max score = " + statsObject.maxScore +
                               ", High threshold = " + statsObject.highThreshold + ", low threshold = " + statsObject.lowThreshold);
 
             stats.insertOne(statsObject);
@@ -204,7 +204,7 @@ var calcData = function(arg, callback){
         console.log(docs.length + " records accessed for risk assessment");
         // compare to thresholds
         stats.find().toArray(function(err,crimeStats){
-          console.log("Dataset number of days = " + crimeStats[0].datasetNumDays + ", Max score = " crimeStats[0].maxScore +
+          console.log("Dataset number of days = " + crimeStats[0].datasetNumDays + ", Max score = " + crimeStats[0].maxScore +
                   ", High threshold = " + crimeStats[0].highThreshold + ", low threshold = " + crimeStats[0].lowThreshold);
 
           var crimeTypeArray = [];
