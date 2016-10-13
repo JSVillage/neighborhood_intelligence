@@ -108,7 +108,7 @@ var buildHeatmap = function(db, callback){
       console.log("Removed " + pointsRemoved + " empty points, remaining points: " + pointsArray.length/24);
       // Produce csv files of heatmaps
       for (var i = 0; i < 24; i++) {
-        var csvFile = "heatmap" + (i < 10? "0"| "") + i + ".csv";
+        var csvFile = "heatmap" + ((i < 10)? "0" : "") + i + ".csv";
         var file = new File(csvFile);
         file.open("w");
         file.writeln("lat,lng,time,score");
@@ -124,7 +124,7 @@ var buildHeatmap = function(db, callback){
       var str = file.readln();
       file.close();
       console.log(str);
-      
+
       heatmap.insertMany(pointsArray).then(function(res) {
         console.log(res.insertedCount + " new records have been inserted into the database");
         assert.equal(null, err);
