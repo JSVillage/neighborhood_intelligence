@@ -111,16 +111,7 @@ var buildHeatmap = function(db, callback){
             statsObject.highThreshold = statsObject.maxScore/10;
             statsObject.lowThreshold = statsObject.maxScore/30;
 
-/*            heatmap.find().sort( {"score": 1}).skip(Math.round(num/3)).limit(1).toArray(function(err, docs){
-              statsObject.lowThreshold = docs[0]["score"];
-              heatmap.find().sort( {"score": -1}).skip(Math.round(num/3)).limit(1).toArray(function(err, docs){
-                statsObject.highThreshold = docs[0]["score"];
-                  console.log("Thresholds: low = " + statsObject.lowThreshold + ", high = " +
-                          statsObject.highThreshold + ", max = " + statsObject.maxScore);
-*/
-                stats.insertOne(statsObject);
-              });
-            });
+            stats.insertOne(statsObject);
           });
         } else {
           console.log("Unable to create stats collection");
@@ -129,6 +120,17 @@ var buildHeatmap = function(db, callback){
     });
   });
 };
+
+/*            heatmap.find().sort( {"score": 1}).skip(Math.round(num/3)).limit(1).toArray(function(err, docs){
+              statsObject.lowThreshold = docs[0]["score"];
+              heatmap.find().sort( {"score": -1}).skip(Math.round(num/3)).limit(1).toArray(function(err, docs){
+                statsObject.highThreshold = docs[0]["score"];
+                  console.log("Thresholds: low = " + statsObject.lowThreshold + ", high = " +
+                          statsObject.highThreshold + ", max = " + statsObject.maxScore);
+                        });
+                      });
+
+*/
 
 function addCrimeToHeatMap(idx,hour,crimeType) {
   incScoreAndCrimeType(idx,hour,crimeType);
