@@ -124,10 +124,10 @@ var buildHeatmap = function(db, callback){
             var start = Math.floor( datemin.getTime() / (3600*24*1000)); //days as integer from..
             var end = Math.floor( datemax.getTime() / (3600*24*1000)); //days as integer from..
             statsObject.datasetNumDays = end - start;
-            // Define high crime as more than 0.5 crime for this hour per ~square mile per day
-            statsObject.highThreshold = statsObject.datasetNumDays/2;
-            // Define low crime as less than 0.1 crime for this hour per ~square mile per day
-            statsObject.lowThreshold = statsObject.datasetNumDays/10;
+            // Define high crime as more than 1 crime for this hour per ~square mile per 10 days
+            statsObject.highThreshold = statsObject.datasetNumDays/10;
+            // Define low crime as less than 1 crime for this hour per ~square mile per 20 days
+            statsObject.lowThreshold = statsObject.datasetNumDays/20;
             console.log("Dataset number of days = " + statsObject.datasetNumDays + ", Max score = " + statsObject.maxScore +
                               ", High threshold = " + statsObject.highThreshold + ", low threshold = " + statsObject.lowThreshold);
 
@@ -216,7 +216,9 @@ var calcData = function(arg, callback){
             // add to score
             info.time[docs[i].time].score += docs[i].score;
             info.timeOfDay[parseInt(docs[i].time/4)] += docs[i].score;
-            info.dayOfWeek[docs[i].dayOfWeek]++;
+            for (var j = 0; j < 7; j++) {
+              info.dayOfWeek[j] += docs[i].dayOfWeek[j];
+            }
 
             // add to crime type
             for (var inst in docs[i].crimeType){
