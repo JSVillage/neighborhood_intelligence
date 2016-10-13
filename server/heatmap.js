@@ -207,18 +207,15 @@ var calcData = function(arg, callback){
       //var pointHeatmap = interpolateHeatmap(docs);
       var info = [];
       for (var i = 0; i < 24; i++){
-        info[i] = {};
+        info.time[i] = {risk: "LOW", guess: "NONE"};
+        info.timeOfDay = [0,0,0,0,0,0];
+        info.types = {};
       }
       if (docs === undefined || docs.length == 0){
         // no crimes reported nearby
         console.log("No crimes reported nearby");
-        for (var i = 0; i < 24; i++) {
-            info[i].risk = "LOW";
-            info[i].guess = "NONE";
-        }
         console.log(info);
         callback({heatmap: info});
-
       } else {
         console.log(docs.length + " records accessed within 0.1 for risk assessment");
         // compare to thresholds
@@ -227,6 +224,7 @@ var calcData = function(arg, callback){
 
           var crimeScoreArray = [];
           var crimeTypeArray = [];
+
           for (var i = 0; i < 24; i++){
             crimeScoreArray[i] = 0;
             crimeTypeArray[i] = {};
@@ -234,6 +232,7 @@ var calcData = function(arg, callback){
           for (var i = 0; i < docs.length; i++) {
             // add to score
             crimeScoreArray[docs[i].time] += docs[i].score;
+            info.timeOfDay[docs[i].time/4] += docs[i].score;
 
             // add to crime type
             for (var inst in docs[i].crimeType){
@@ -246,27 +245,33 @@ var calcData = function(arg, callback){
           }
           for (var i = 0; i < 24; i++){
             // compute risk based on score
-            if (crimeScoreArray[i] < crimeStats[0].lowThreshold)
-              info[i].risk = "LOW";
-            else if (crimeScoreArray[i]  < crimeStats[0].highThreshold)
-              info[i].risk = "MEDIUM";
+            if (crimeScoreArray[i] < crimeStats[0].lowThreshold * docs.length/24)
+              info.time[i].risk = "LOW";
+            else if (crimeScoreArray[i]  < crimeStats[0].highThreshold * docs.length/24)
+              info.time[i].risk = "MEDIUM";
             else
-              info[i].risk = "HIGH";
+              info.time[i].risk = "HIGH";
 
             // compute guess based on crimeType weighting
             var max = 0;
             for (var inst in crimeTypeArray[i]){
               if (crimeTypeArray[i][inst] > max) {
                 max = crimeTypeArray[i][inst];
-                info[i].guess = inst;
+                info.time[i].guess = inst;
               }
+              if ( info.types[inst] === undefined )
+              {
+                  info.types[inst] = 0;
+              }
+              info.types[inst] += crimeTypeArray[i][inst];
             }
-            if (info[i].guess === undefined) {
-              info[i].guess = "NONE";
+
+            if (info.time[i].guess === undefined) {
+              info.time[i].guess = "NONE";
             }
           }
           console.log(info);
-          callback({heatmap: info});
+          callback({precog: info});
         });
       }
     });
