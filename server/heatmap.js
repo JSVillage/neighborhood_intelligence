@@ -224,9 +224,10 @@ var calcData = function(arg, callback){
           //var areaStat = stats.find({loc: [Math.floor(arg.lng*10)/10, Math.floor(arg.lng*10)/10]}).limit(1).toArray()[0];
 
           var crimeScoreArray = [];
-          var crimeTypeTimeArray = [];
+          var crimeTypeArray = [];
           for (var i = 0; i < 24; i++){
-            crimeTypeTimeArray[i].types = {};
+            crimeScoreArray[i] = 0;
+            crimeTypeArray[i] = {};
           }
           for (var i = 0; i < docs.length; i++) {
             // add to score
@@ -234,16 +235,16 @@ var calcData = function(arg, callback){
 
             // add to crime type
             for (var inst in docs[i].crimeType){
-            if ( crimeTypeTimeArray[docs[i].time].types[inst] === undefined )
+            if ( crimeTypeArray[docs[i].time][inst] === undefined )
             {
-                crimeTypeTimeArray[docs[i].time].types[inst] = 0;
+                crimeTypeArray[docs[i].time][inst] = 0;
             }
-            crimeTypeTimeArray[docs[i].time].types[inst] += docs[i].crimeType[inst];
+            crimeTypeArray[docs[i].time][inst] += docs[i].crimeType[inst];
             }
           }
           for (var i = 0; i < 24; i++){
             // compute risk based on score
-            if (crimeScoreArray[i] === undefined || crimeScoreArray[i] < crimeStats[0].lowThreshold)
+            if (crimeScoreArray[i] < crimeStats[0].lowThreshold)
               info[i].risk = "LOW";
             else if (crimeScoreArray[i]  < crimeStats[0].highThreshold)
               info[i].risk = "MEDIUM";
@@ -252,9 +253,9 @@ var calcData = function(arg, callback){
 
             // compute guess based on crimeType weighting
             var max = 0;
-            for (var inst in crimeTypeTimeArray[i].types){
-              if (crimeTypeTimeArray[i].types[inst] > max) {
-                max = crimeTypeTimeArray[i].types[inst];
+            for (var inst in crimeTypeArray[i]){
+              if (crimeTypeArray[i][inst] > max) {
+                max = crimeTypeArray[i][inst];
                 info[i].guess = inst;
               }
             }
