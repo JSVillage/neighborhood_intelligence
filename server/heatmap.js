@@ -1,5 +1,5 @@
 var NodeGeocoder = require('node-geocoder');
-var fs = require('fs');
+//var fs = require('fs');
 
 var options = {
   provider: 'google',
@@ -134,7 +134,7 @@ var buildHeatmap = function(db, callback){
                               ", High threshold = " + statsObject.highThreshold + ", low threshold = " + statsObject.lowThreshold);
 
             stats.insertOne(statsObject);
-
+/*
             // Produce csv files of heatmaps
             for (var i = 0; i < 24; i++) {
               var csvFile = "/tmp/heatmap" + ((i < 10)? "0" : "") + i + ".csv";
@@ -150,6 +150,9 @@ var buildHeatmap = function(db, callback){
                 stream.end();
               });
             } // end for making 24 csv files
+            */
+            callback({heatmap: pointsArray});
+
           });
         } else {
           console.log("Unable to create stats collection");
@@ -283,22 +286,6 @@ var calcData = function(arg, callback){
   });
 };
 
-
-/*
-function generateHeatMapFusion(){
-  for (var lat = lat_min; lat < lat_max; lat += delta*5) {
-    for (var lng = lng_min; lng < lng_max; lng += delta*5) {
-      var query = { "loc.0": {$gte: lng, $lt: lng+delta*5}, "loc.1": {$gte: lat, $lt: lat+delta*5}};
-      count = heatmap.find(query).count();
-      lowRiskScoreThreshold = heatmap.find(query).sort({"score": 1}).skip(count/3).limit(1).toArray()[0].score;
-      highRiskScoreThreshold = heatmap.find(query).sort({"score": -1}).skip(count/3).limit(1).toArray()[0].score;
-      thresholdStats.push(new crimeThreshold({"loc": [lng,lat], "lowThreshold": lowRiskScoreThreshold, "highThreshold": highRiskScoreThreshold}));
-      maxScore = heatmap.find(query).sort({"score": -1}).limit(1).toArray()[0].score;
-    }
-  }
-  //console.log("Area threshold (" + lat + "," + lng + "): low = " + lowRiskScoreThreshold + ", high = " + highRiskScoreThreshold + ", max = " + maxScore);
-}
-*/
 
 module.exports.buildHeatmap = buildHeatmap;
 module.exports.calcData = calcData;

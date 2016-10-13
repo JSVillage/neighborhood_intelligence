@@ -33,8 +33,9 @@ router.get('/api/:lat/:lng/:datetime?', function(req, res, next) {
 
 // Work with heatmap
 router.get('/hm/build', function(req, res, next) {
-  hm.buildHeatmap(req, function(){});
-  res.render('index', { title: 'Build Heatmap' });
+  hm.buildHeatmap(req, function(result){
+    res.json(result);    
+  });
 });
 /*
 // Calc stats
