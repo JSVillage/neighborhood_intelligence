@@ -231,12 +231,12 @@ var calcData = function(arg, callback){
             crimeScoreArray[docs[i].time] += docs[i].score;
 
             // add to crime type
-            for (var inst in docs[doc].crimeType){
-            if ( ! crimeTypeTimeArray[docs[doc].time][inst] )
+            for (var inst in docs[i].crimeType){
+            if ( ! crimeTypeTimeArray[docs[i].time][inst] )
             {
-                crimeTypeTimeArray[docs[doc].time][inst] = 0;
+                crimeTypeTimeArray[docs[i].time][inst] = 0;
             }
-            crimeTypeTimeArray[docs[doc].time][inst] += docs[doc].crimeType[inst];
+            crimeTypeTimeArray[docs[i].time][inst] += docs[i].crimeType[inst];
             }
           }
           for (var i = 0; i < 24; i++){
