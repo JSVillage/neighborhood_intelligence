@@ -106,15 +106,18 @@ var buildHeatmap = function(db, callback){
         var statsObject = {};
 
         if (num > 0) {
-          heatmap.find().sort( {"score": 1}).skip(Math.round(num/3)).limit(1).toArray(function(err, docs){
-            statsObject.lowThreshold = docs[0]["score"];
-            heatmap.find().sort( {"score": -1}).skip(Math.round(num/3)).limit(1).toArray(function(err, docs){
-              statsObject.highThreshold = docs[0]["score"];
-              heatmap.find().sort( {"score": -1}).limit(1).toArray(function(err,docs){
-                statsObject.maxScore = docs[0]["score"];
-                console.log("Thresholds: low = " + statsObject.lowThreshold + ", high = " +
-                        statsObject.highThreshold + ", max = " + statsObject.maxScore);
+          heatmap.find().sort( {"score": -1}).limit(1).toArray(function(err,docs){
+            statsObject.maxScore = docs[0]["score"];
+            statsObject.highThreshold = statsObject.maxScore/10;
+            statsObject.lowThreshold = statsObject.maxScore/30;
 
+/*            heatmap.find().sort( {"score": 1}).skip(Math.round(num/3)).limit(1).toArray(function(err, docs){
+              statsObject.lowThreshold = docs[0]["score"];
+              heatmap.find().sort( {"score": -1}).skip(Math.round(num/3)).limit(1).toArray(function(err, docs){
+                statsObject.highThreshold = docs[0]["score"];
+                  console.log("Thresholds: low = " + statsObject.lowThreshold + ", high = " +
+                          statsObject.highThreshold + ", max = " + statsObject.maxScore);
+*/
                 stats.insertOne(statsObject);
               });
             });
@@ -189,50 +192,69 @@ var calcData = function(arg, callback){
     var stats = db.collection('stats');
 
     // Compute data about this point
-    var queryPoint =  {
-      loc : [ parseFloat(arg.lng), parseFloat(arg.lat) ]  };
+    var queryPoint =  {loc : { $near : [ parseFloat(arg.lng), parseFloat(arg.lat) ], $maxDistance: 0.05 }};
     heatmap.find(queryPoint).sort({"time": 1}).toArray(function(err, docs){
-      var pointHeatmap = interpolateHeatmap(docs);
+      //var pointHeatmap = interpolateHeatmap(docs);
+      console.log(docs.length + " records accessed within 0.1 for risk assessment");
+      if (docs === undefined){
+        // no crimes reported nearby
+        console.log("No crimes reported nearby");
+        for (var i = 0; i < 24; i++) {
+            info.risk[i] = "LOW";
+            info.crimeGuess[i] = "NONE";
+        }
+      } else {
+        // compare to thresholds
+        stats.find().toArray(function(err,crimeStats){
+          //var areaStat = stats.find({loc: [Math.floor(arg.lng*10)/10, Math.floor(arg.lng*10)/10]}).limit(1).toArray()[0];
+          var info = {
+            risk:[],
+            crimeGuess:[]
+          };
 
-      // compare to thresholds
-      var cityStat = stats.find({loc : [ 0, 0]}).limit(1).toArray()[0];
-      //var areaStat = stats.find({loc: [Math.floor(arg.lng*10)/10, Math.floor(arg.lng*10)/10]}).limit(1).toArray()[0];
-      var info = {
-        cityRisk:[],
-        //areaRisk: [],
-        crimeGuess:[]
-      };
+          for (var i = 0; i < 24; i++) {
+            // Compare location to the entire city
+            if (docs[i].score < crimeStats[0].lowThreshold)
+              info.risk[docs[i].time] = "LOW";
+            else if (docs[i].score < crimeStats[0].highThreshold)
+              info.risk[docs[i].time] = "MEDIUM";
+            else
+              info.risk[docs[i].time] = "HIGH";
+          }
+          for (var i = 0; i < 24; i++) {
+            if (info.risk[i] === undefined) {
+              console.log("Time point missing: " + i)
+              info.risk[i] = "LOW";
+            }
+          }
 
-      for (var i = 0; i < 24; i++) {
-        // Compare location to the entire city
-        if (pointHeatmap[i]["score"] < cityStat.lowRiskScoreThreshold)
-          info.cityRisk[i] = "LOW";
-        else if (pointHeatmap[i]["score"] < cityStat.highRiskScoreThreshold)
-          info.cityRisk[i] = "MEDIUM";
-        else
-          info.cityRisk[i] = "HIGH";
-/*
-        // Compare location to this area of the city
-        if (pointHeatmap[i]["score"]< areaStat.lowRiskScoreThreshold)
-          info.areaRisk[i] = "LOW";
-        else if (pointHeatmap[i]["score"] < areaStat.highRiskScoreThreshold)
-          info.areaRisk[i] = "MEDIUM";
-        else
-          info.areaRisk[i] = "HIGH";
-*/
-        // Predict crime for each hour
-        var maxX = Array.max(pointHeatmap[i]["crimeType"]);
-        info.crimeGuess[i]  = pointHeatmap[i]["crimeType"].indexOf(maxX);
-      }
-      console.log(info);
-      callback({heatmap: info});
-      db.close();
+          var crimeTypeTimeArray = [];
+          for (var i = 0; i < docs.length; i++) {
+            for (var inst in docs[doc].crimeType){
+            if ( ! crimeTypeTimeArray[docs[doc].time][inst] )
+            {
+                crimeTypeTimeArray[docs[doc].time][inst] = 0;
+            }
+            crimeTypeTimeArray[docs[doc].time][inst] += docs[doc].crimeType[inst];
+            }
+          }
+          for (var i = 0; i < 24; i++){
+            var max = 0;
+            for (var inst in crimeTypeTimeArray[i]){
+              if (crimeTypeTimeArray[i][inst] > max) {
+                max = crimeTypeTimeArray[i][inst];
+                info.guess[i] = inst;
+              }
+            }
+          }
+        }
+        console.log(info);
+        callback({heatmap: info});
     });
   });
  };
-var interpolateHeatmap = function(docs) {
-  return docs[0];
 };
+
 /*
 function generateHeatMapFusion(){
   for (var lat = lat_min; lat < lat_max; lat += delta*5) {
