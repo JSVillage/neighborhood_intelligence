@@ -1,4 +1,5 @@
 var NodeGeocoder = require('node-geocoder');
+var fs = require('fs');
 
 var options = {
   provider: 'google',
@@ -106,24 +107,6 @@ var buildHeatmap = function(db, callback){
         }
       }
       console.log("Removed " + pointsRemoved + " empty points, remaining points: " + pointsArray.length/24);
-      // Produce csv files of heatmaps
-      for (var i = 0; i < 24; i++) {
-        var csvFile = "heatmap" + ((i < 10)? "0" : "") + i + ".csv";
-        var file = new File(csvFile);
-        file.open("w");
-        file.writeln("lat,lng,time,score");
-        var idx = i;
-        for (var j = 0; j < pointsArray.length/24; j++) {
-          file.writeln(pointsArray[idx].loc[1] + "," + pointsArray[idx].loc[0] + "," + i + "," + pointsArray[idx].score);
-          idx += 24;
-        }
-        file.close();
-      }
-      var file = new File("heatmap00.csv");
-      file.open("r");
-      var str = file.readln();
-      file.close();
-      console.log(str);
 
       heatmap.insertMany(pointsArray).then(function(res) {
         console.log(res.insertedCount + " new records have been inserted into the database");
@@ -151,6 +134,21 @@ var buildHeatmap = function(db, callback){
                               ", High threshold = " + statsObject.highThreshold + ", low threshold = " + statsObject.lowThreshold);
 
             stats.insertOne(statsObject);
+
+            // Produce csv files of heatmaps
+            for (var i = 0; i < 24; i++) {
+              var csvFile = "/tmp/heatmap" + ((i < 10)? "0" : "") + i + ".csv";
+              var stream = fs.createWriteStream(csvFile);
+              stream.once('open', function(fd) {
+                stream.write("lat,lng,time,score\n");
+                var idx = i;
+                for (var j = 0; j < pointsArray.length/24; j++) {
+                  stream.write(pointsArray[idx].loc[1] + "," + pointsArray[idx].loc[0] + "," + i + "," + pointsArray[idx].score + "\n");
+                  idx += 24;
+                }
+              }
+              stream.end();
+            } // end for making 24 csv files
           });
         } else {
           console.log("Unable to create stats collection");
