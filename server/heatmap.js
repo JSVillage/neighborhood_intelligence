@@ -232,11 +232,11 @@ var calcData = function(arg, callback){
 
             // add to crime type
             for (var inst in docs[i].crimeType){
-            if ( ! crimeTypeTimeArray[docs[i].time][inst] )
+            if ( crimeTypeTimeArray[docs[i].time].types[inst] === undefined )
             {
-                crimeTypeTimeArray[docs[i].time][inst] = 0;
+                crimeTypeTimeArray[docs[i].time].types[inst] = 0;
             }
-            crimeTypeTimeArray[docs[i].time][inst] += docs[i].crimeType[inst];
+            crimeTypeTimeArray[docs[i].time].types[inst] += docs[i].crimeType[inst];
             }
           }
           for (var i = 0; i < 24; i++){
@@ -250,9 +250,9 @@ var calcData = function(arg, callback){
 
             // compute guess based on crimeType weighting
             var max = 0;
-            for (var inst in crimeTypeTimeArray[i]){
-              if (crimeTypeTimeArray[i][inst] > max) {
-                max = crimeTypeTimeArray[i][inst];
+            for (var inst in crimeTypeTimeArray[i].types){
+              if (crimeTypeTimeArray[i].types[inst] > max) {
+                max = crimeTypeTimeArray[i].types[inst];
                 info[i].guess = inst;
               }
             }
