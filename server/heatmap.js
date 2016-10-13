@@ -197,17 +197,17 @@ var calcData = function(arg, callback){
     // Compute data about this point
     //var query =  {loc : { $near : [ parseFloat(arg.lng), parseFloat(arg.lat) ], $maxDistance: 0.02 }};
     //console.log(query);
-    var lnglo = parseFloat(arg.lng) - (2 * delta);
-    var lnghi = parseFloat(arg.lng) + (2 * delta);
-    var latlo = parseFloat(arg.lat) - (2 * delta);
-    var lathi = parseFloat(arg.lat) + (2 * delta);
+    var lnglo = parseFloat(arg.lng) - delta;
+    var lnghi = parseFloat(arg.lng) + delta;
+    var latlo = parseFloat(arg.lat) - delta;
+    var lathi = parseFloat(arg.lat) + delta;
     var queryPoint =  {"loc.0" : {$gt: lnglo, $lt: lnghi}, "loc.1" : {$gt: latlo, $lt: lathi}};
     console.log(queryPoint);
     heatmap.find(queryPoint,{},{}).toArray(function(err, docs){
       //var pointHeatmap = interpolateHeatmap(docs);
       var info = {time: [], timeOfDay: [0,0,0,0,0,0], types: {}};
       for (var i = 0; i < 24; i++){
-        info.time[i] = {risk: "LOW", guess: "NONE"};
+        info.time[i] = {score: 0, risk: "LOW", guess: "NONE"};
       }
       if (docs === undefined || docs.length == 0){
         // no crimes reported nearby
@@ -220,16 +220,14 @@ var calcData = function(arg, callback){
         stats.find().toArray(function(err,crimeStats){
           //var areaStat = stats.find({loc: [Math.floor(arg.lng*10)/10, Math.floor(arg.lng*10)/10]}).limit(1).toArray()[0];
 
-          var crimeScoreArray = [];
           var crimeTypeArray = [];
 
           for (var i = 0; i < 24; i++){
-            crimeScoreArray[i] = 0;
             crimeTypeArray[i] = {};
           }
           for (var i = 0; i < docs.length; i++) {
             // add to score
-            crimeScoreArray[docs[i].time] += docs[i].score;
+            info.time[docs[i].time].score += docs[i].score;
             info.timeOfDay[docs[i].time/4] += docs[i].score;
 
             // add to crime type
@@ -243,9 +241,10 @@ var calcData = function(arg, callback){
           }
           for (var i = 0; i < 24; i++){
             // compute risk based on score
-            if (crimeScoreArray[i] < crimeStats[0].lowThreshold * docs.length/24)
+            info.time[i].score /=  docs.length/24;
+            if (info.time[i].score < crimeStats[0].lowThreshold)
               info.time[i].risk = "LOW";
-            else if (crimeScoreArray[i]  < crimeStats[0].highThreshold * docs.length/24)
+            else if (info.time[i].score  < crimeStats[0].highThreshold)
               info.time[i].risk = "MEDIUM";
             else
               info.time[i].risk = "HIGH";
