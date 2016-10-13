@@ -195,12 +195,12 @@ var calcData = function(arg, callback){
     var stats = db.collection('stats');
 
     // Compute data about this point
-    var query =  {loc : { $near : [ parseFloat(arg.lng), parseFloat(arg.lat) ], $maxDistance: 0.02 }};
-    console.log(query);
-    var lnglo = arg.lng-delta*2;
-    var lnghi = arg.lng+delta*2;
-    var latlo = arg.lat-delta*2;
-    var lathi = arg.lat+delta*2;
+    //var query =  {loc : { $near : [ parseFloat(arg.lng), parseFloat(arg.lat) ], $maxDistance: 0.02 }};
+    //console.log(query);
+    var lnglo = arg.lng - 2 * delta;
+    var lnghi = arg.lng + 2 * delta;
+    var latlo = arg.lat - 2 * delta;
+    var lathi = arg.lat + 2 * delta;
     var queryPoint =  {"loc.0" : {$gt: lnglo, $lt: lnghi}, "loc.1" : {$gt: latlo, $lt: lathi}};
     console.log(queryPoint);
     heatmap.find(queryPoint,{},{}).toArray(function(err, docs){
