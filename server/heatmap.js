@@ -225,6 +225,7 @@ var calcData = function(arg, callback){
 
           var crimeScoreArray = [];
           var crimeTypeTimeArray = [];
+          var types = {};
 
           for (var i = 0; i < docs.length; i++) {
             // add to score
