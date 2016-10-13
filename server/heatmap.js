@@ -251,7 +251,7 @@ var calcData = function(arg, callback){
           }
           console.log(info);
           callback({heatmap: info});
-        }
+        });
       }
     });
   });
