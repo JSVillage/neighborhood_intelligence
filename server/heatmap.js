@@ -74,7 +74,7 @@ var buildHeatmap = function(db, callback){
         var day = new Date(dateTime[0]);
 
         // Basis for date: 2010 = 14600 in days since 1970
-        var dateValue = Math.floor( day.getTime() / (3600*24*1000) - 14600;
+        var dateValue = Math.floor( day.getTime() / (3600*24*1000) - 14600);
 
         if (datemin > day)
           datemin = day;
