@@ -7,7 +7,7 @@ div(ng-controller="NIController").font-color.fade-in
   br
 
   div.manual-location.fade-in(ng-show="user.declinedLocation")
-    h2 Enter location
+    h2 Enter Phoenix location
     p: small The more detailed the address the better the data
     form(ng-submit="submitManualInput()")
       input(type="text" placeholder="Something Google will understand" ng-model="user.manualLocation")
