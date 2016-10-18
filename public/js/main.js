@@ -14261,7 +14261,7 @@ niApp.controller('MoreController', function MoreController($scope, $window, $htt
     }
   };
   
-  $scope.timesOfDay = ['12-4am', '4-8am','8am-12','12-4pm','4-8pm','8pm-12'];
+  $scope.timesOfDay = ['12-4am', '4-8am', '8am-12', '12-4pm', '4-8pm', '8pm-12'];
   $scope.daysOfWeek = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
   $scope.highestDay = '';
   $scope.highestDayData = [0,0,0,0,0,0];
