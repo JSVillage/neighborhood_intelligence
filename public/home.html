@@ -16,7 +16,15 @@
   </div>
   <div ng-show="init &amp;&amp; !user.declinedLocation" class="risk-level fade-in">
     <h2 class="risk-label">Risk level</h2>
-    <p>{{riskText}}</p>
+    <p>{{riskText}}<!-- The Modal --><a id="how" ng-click="howModal" class="how"><i class="fa fa-question-circle"></i></a>
+      <div id="howModal" ng-class="{'show-modal': howModal }" class="modal"><!-- Modal content -->
+        <div class="modal-content"><span ng-click="!howModal" class="close">X</span>
+          <p>Some text in the Modal..</p>
+          <p>Some text in the Modal..</p>
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fuga iusto deleniti magnam totam amet laudantium, voluptatibus qui odio quia nulla incidunt quas cum, autem harum fugiat voluptatum. Facilis repellendus, eum.</p>
+        </div>
+      </div>
+    </p>
   </div>
   <div ng-show="init &amp;&amp; !user.declinedLocation" class="risk-level fade-in">
     <h2 class="risk-label fade-in">Most likely crime</h2>
