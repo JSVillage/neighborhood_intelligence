@@ -33,7 +33,7 @@ niApp.service('userService', function(NavigatorGeolocation, $http) {
         _user.lng = position.coords.longitude;
         $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng='+_user.lat+','+_user.lng+'&sensor=true').then(function(res){
           console.log(res.data);
-          angular.each(res.data.results[0].address_components, function(){
+          angular.forEach(res.data.results[0].address_components, function(){
             console.log(this);
           });
           
