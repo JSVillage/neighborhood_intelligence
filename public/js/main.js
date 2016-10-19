@@ -14353,7 +14353,6 @@ niApp.service('userService', function(NavigatorGeolocation, $http) {
           isPhoenix = true;
         }
       });
-      console.log(isPhoenix);
       _user.isPhoenix = isPhoenix;          
       _user.formattedAddress = res.data.results[0].formatted_address;
 
