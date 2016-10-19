@@ -37,9 +37,10 @@ niApp.service('userService', function(NavigatorGeolocation, $http) {
       });
       _user.isPhoenix = isPhoenix;
       _user.formattedAddress = res.data.results[0].formatted_address;
-
+      console.log("getGeoData: isPhoenix = " + isPhoenix);
     });
     if(typeof callback === 'function'){
+      console.log("getGeoData: Calling callback");
       callback();
     }
 
@@ -109,6 +110,7 @@ niApp.controller('NIController', function NIController($scope, $window, $http, N
   // $scope.googleMapsUrl="https://maps.google.com/maps/api/js?key=AIzaSyAtvTUqW2i2tbup-B9tW-4NQ6-bb1H3I_w"
 
   var getData = function(){
+    console.log("Entered getData" );
     if($scope.user.declinedLocation){return;}
     $scope.loading = true;
     console.log("sending hm request for " + $scope.user.lat + "," + $scope.user.lng );
