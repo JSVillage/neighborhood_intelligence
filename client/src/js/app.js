@@ -37,12 +37,15 @@ niApp.service('userService', function(NavigatorGeolocation, $http) {
       });
       _user.isPhoenix = isPhoenix;
       _user.formattedAddress = res.data.results[0].formatted_address;
+      _user.lat = res.data.results.results[0].geometry.location.lat;
+      _user.lng = res.data.results.results[0].geometry.location.lng;
+
       console.log("getGeoData: isPhoenix = " + isPhoenix);
+      if(typeof callback === 'function' && isPhoenix){
+        console.log("getGeoData: Calling callback");
+        callback();
+      }
     });
-    if(typeof callback === 'function'){
-      console.log("getGeoData: Calling callback");
-      callback();
-    }
 
   };
 
