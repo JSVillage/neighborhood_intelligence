@@ -361,6 +361,9 @@ ul {
 li {
   list-style: none; }
 
+.underline {
+  text-decoration: underline; }
+
 .font-color, .font-color hr {
   color: white;
   border-color: rgba(255, 255, 255, 0.2); }
@@ -900,9 +903,9 @@ main {
   border-radius: 10px;
   z-index: 100000; }
 
-.modal-content h1 {
-  color: black;
-  font-size: 44px;
+.modal-content h2 {
+  color: white;
+  font-size: 22px;
   line-height: 1em;
   font-weight: bolder;
   font-family: montserratregular; }

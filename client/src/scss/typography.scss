@@ -154,7 +154,9 @@ nav {
 }
 ul{padding:0;margin:0;}
 li{list-style:none;}
-
+.underline {
+  text-decoration: underline;
+}
 .font-color, .font-color hr {
   color: white;
   border-color: rgba(255, 255, 255, .2);
