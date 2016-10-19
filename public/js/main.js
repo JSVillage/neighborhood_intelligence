@@ -14351,8 +14351,8 @@ niApp.service('userService', function(NavigatorGeolocation, $http) {
         _user.lng = position.coords.longitude;
         $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng='+_user.lat+','+_user.lng+'&sensor=true').then(function(res){
           console.log(res.data);
-          angular.forEach(res.data.results[0].address_components, function(){
-            console.log(this);
+          angular.forEach(res.data.results[0].address_components, function(item){
+            console.log(item);
           });
           
           
