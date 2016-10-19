@@ -223,7 +223,7 @@ var calcData = function(arg, callback){
       //var pointHeatmap = interpolateHeatmap(docs);
       var info = {time: [], timeOfDay: [0,0,0,0,0,0], dayOfWeek: [0,0,0,0,0,0,0], types: {}};
       for (var i = 0; i < 24; i++){
-        info.time[i] = {score: 0, risk: "LOW", guess: "NONE"};
+        info.time[i] = {score: 0, risk: "HIGH", guess: "BURGLARY"};
       }
       if (docs === undefined || docs.length == 0){
         // no crimes reported nearby
