@@ -24,7 +24,7 @@ div(ng-controller="NIController").font-color.fade-in
     i.fa.fa-plus-square(aria-hidden="true" ng-click="setTime(1)")
   
   div.address.fade-in(ng-show="init && !user.declinedLocation && user.isPhoenix!==false" ng-click="user.declinedLocation = true")
-    p {{user.formattedAddress}}  
+    p.underline {{user.formattedAddress}}  
   
   div.risk-level.fade-in(ng-show="init && !user.declinedLocation && user.isPhoenix!==false")
     h2.risk-label Risk level

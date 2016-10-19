@@ -18,7 +18,7 @@
   </div>
   <h2 ng-show="init &amp;&amp; !user.declinedLocation &amp;&amp; user.isPhoenix!==false" class="weight-max time fade-in"><i aria-hidden="true" ng-click="setTime(-1)" class="fa fa-minus-square"></i><span id="time">{{ time | date:'h:mm a'}}</span><i aria-hidden="true" ng-click="setTime(1)" class="fa fa-plus-square"></i></h2>
   <div ng-show="init &amp;&amp; !user.declinedLocation &amp;&amp; user.isPhoenix!==false" ng-click="user.declinedLocation = true" class="address fade-in">
-    <p>{{user.formattedAddress}}  </p>
+    <p class="underline">{{user.formattedAddress}}  </p>
   </div>
   <div ng-show="init &amp;&amp; !user.declinedLocation &amp;&amp; user.isPhoenix!==false" class="risk-level fade-in">
     <h2 class="risk-label">Risk level</h2>
