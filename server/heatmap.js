@@ -303,7 +303,7 @@ var calcData = function(arg, callback){
         for (var inst in info.types){
           var tmp = info.types[inst];
           info.types[inst] = Math.round(info.types[inst] * 100 / typeSum);
-          console.log("Type " + inst + " converted from " + tmp " to " + info.types[inst]);
+          console.log("Type " + inst + " converted from " + tmp + " to " + info.types[inst]);
         }
         console.log(info);
         callback({precog: info});
