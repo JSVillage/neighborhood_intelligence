@@ -160,7 +160,7 @@ var buildHeatmap = function(db, callback){
                               ", High threshold = " + statsObject.highThreshold + ", low threshold = " + statsObject.lowThreshold);
 
             stats.insertOne(statsObject);
-//            callback({heatmap: pointsArray});
+            callback({heatmap: pointsArray});
 
           });
         } else {
@@ -245,6 +245,7 @@ var calcData = function(arg, callback){
           info.time[docs[i].time].score += docs[i].score;
           info.timeOfDay[parseInt(docs[i].time/4)] += docs[i].score;
           timeSum =+ docs[i].score;
+
           for (var j = 0; j < 7; j++) {
             daySum += docs[i].dayOfWeek[j];
             info.dayOfWeek[j] += docs[i].dayOfWeek[j];
@@ -260,10 +261,12 @@ var calcData = function(arg, callback){
           }
         }
         for (var j = 0; j < 6; j++) {
-          info.timeOfDay[j] /= (timeSum / 100);
+          console.log("Time of day converts from " + info.timeOfDay[j]);
+          info.timeOfDay[j] = Math.round(info.timeOfDay[j] * 100 / timeSum);
+          console.log("To " + info.timeOfDay[j]);
         }
         for (var j = 0; j < 7; j++) {
-          info.dayOfWeek[j] /= (daySum / 100);
+          info.dayOfWeek[j] = Math.round(info.dayOfWeek[j] * 100 / daySum)
         }
         var sum = 0;
         for (var i = 0; i < 24; i++){
@@ -294,8 +297,10 @@ var calcData = function(arg, callback){
             info.time[i].guess = "NONE";
           }
         }
-        for (var inst in crimeTypeArray[i]){
+        for (var inst in info.types){
+          console.log("Time of day converts from " + info.types[inst]);
           info.types[inst] /= (sum / 100);
+          console.log("To " + info.types[inst]);
         }
         console.log(info);
         callback({precog: info});
