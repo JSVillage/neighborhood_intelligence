@@ -872,8 +872,9 @@ main {
   background-color: rgba(0, 0, 0, 0.4);
   /* Black w/ opacity */ }
 
-.show-modal .modal {
-  display: inline-block; }
+.modal + .show-modal {
+  display: inline-block;
+  font-size: 20px; }
 
 /* Modal Content/Box */
 .risk-level .modal-content {
