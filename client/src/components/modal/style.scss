@@ -11,7 +11,14 @@
     background-color: rgb(0,0,0); /* Fallback color */
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
-
+.modal.show-modal  {
+    display: block;
+}
+.how .fa-question-circle {
+    font-size: 30px;
+    padding-left: 5px;
+    color: #27a9e1;
+}
 /* Modal Content/Box */
 .risk-level .modal-content {
 	position: relative;
@@ -25,6 +32,7 @@
     height: auto;
     border: 2px solid black;
     border-radius: 10px;
+    z-index: 100000;
 }
 .modal-content h1 {
 	color: black;

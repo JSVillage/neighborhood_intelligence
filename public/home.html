@@ -2,7 +2,11 @@
 <div ng-controller="NIController" class="font-color fade-in">
   <div ng-class="riskLevel" class="stage"></div>
   <div ng-show="loading" class="loading"></div><br/>
-  <div ng-show="user.declinedLocation" class="manual-location fade-in">
+  <div ng-show="user.isPhoenix===false" class="non-local fade-in">
+    <h2>Sorry, but we only have data for Phoenix, AZ at this time</h2>
+    <p>Please check back as we are planning to add more locations! Thanks</p>
+  </div>
+  <div ng-show="user.declinedLocation || user.isPhoenix===false" class="manual-location fade-in">
     <h2>Enter location</h2>
     <p><small>The more detailed the address the better the data</small></p>
     <form ng-submit="submitManualInput()">
@@ -10,18 +14,26 @@
       <button type="submit" class="btn">submit</button>
     </form>
   </div>
-  <h2 ng-show="init &amp;&amp; !user.declinedLocation" class="weight-max time fade-in"><i aria-hidden="true" ng-click="setTime(-1)" class="fa fa-minus-square"></i><span id="time">{{ time | date:'h:mm a'}}</span><i aria-hidden="true" ng-click="setTime(1)" class="fa fa-plus-square"></i></h2>
-  <div ng-show="init &amp;&amp; !user.declinedLocation" ng-click="user.declinedLocation = true" class="address fade-in">
+  <h2 ng-show="init &amp;&amp; !user.declinedLocation &amp;&amp; user.isPhoenix!==false" class="weight-max time fade-in"><i aria-hidden="true" ng-click="setTime(-1)" class="fa fa-minus-square"></i><span id="time">{{ time | date:'h:mm a'}}</span><i aria-hidden="true" ng-click="setTime(1)" class="fa fa-plus-square"></i></h2>
+  <div ng-show="init &amp;&amp; !user.declinedLocation &amp;&amp; user.isPhoenix!==false" ng-click="user.declinedLocation = true" class="address fade-in">
     <p>{{user.formattedAddress}}  </p>
   </div>
-  <div ng-show="init &amp;&amp; !user.declinedLocation" class="risk-level fade-in">
+  <div ng-show="init &amp;&amp; !user.declinedLocation &amp;&amp; user.isPhoenix!==false" class="risk-level fade-in">
     <h2 class="risk-label">Risk level</h2>
-    <p>{{riskText}}</p>
+    <p>{{riskText}}<a id="how" href="" ng-click="howModal=true" class="how"><i class="fa fa-question-circle"></i></a></p>
   </div>
-  <div ng-show="init &amp;&amp; !user.declinedLocation" class="risk-level fade-in">
+  <div ng-show="init &amp;&amp; !user.declinedLocation &amp;&amp; user.isPhoenix!==false" class="risk-level fade-in">
     <h2 class="risk-label fade-in">Most likely crime</h2>
     <p class="t2">{{mostLikely}}</p>
-  </div><a ng-href="#/more" ng-show="init &amp;&amp; !user.declinedLocation" class="nav nav-more">
+  </div><a ng-href="#/more" ng-show="init &amp;&amp; !user.declinedLocation &amp;&amp; user.isPhoenix!==false" class="nav nav-more">
      
     more  <i class="fa fa-chevron-right"></i><i class="fa fa-chevron-right"></i></a>
+</div>
+<div class="risk-level"><!-- The Modal -->
+  <div id="howModal" ng-class="{'show-modal': howModal }" class="modal"><!-- Modal content -->
+    <div class="modal-content"><span ng-click="howModal=false" class="close">X</span>
+      <h3>How does the crime prediction work?</h3>
+      <p>The best predictor of future crime is previous crime activity. Our crime data is taken from the freely available Phoenix Open Data Portal, which includes offenses starting November 2015. By statistically analyzing the location and time of each of the crimes as a whole, crime risk and most likely crimes are computed for discrete locations and times throughout the city, This data is then used to respond to requests from users at arbitrary locations and times in Phoenix, as well as to generate heat maps of the crime risk for times throughout the day.</p>
+    </div>
+  </div>
 </div>

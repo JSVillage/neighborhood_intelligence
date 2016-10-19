@@ -26,11 +26,31 @@ niApp.service('userService', function(NavigatorGeolocation, $http) {
     _user = user;
   };
 
+  var getGeoData = function(callback, q){
+
+    $http.get('https://maps.googleapis.com/maps/api/geocode/json?' + q + '&sensor=true').then(function(res){
+      var isPhoenix = false;
+      angular.forEach(res.data.results[0].address_components, function(item){
+        if(item.short_name == 'Phoenix'){
+          isPhoenix = true;
+        }
+      });
+      _user.isPhoenix = isPhoenix;          
+      _user.formattedAddress = res.data.results[0].formatted_address;
+
+    });
+    if(typeof callback === 'function'){
+      callback();
+    }
+
+  };
+
   var setUserLocation = function(callback){
     NavigatorGeolocation.getCurrentPosition()
       .then(function(position) {
         _user.lat = position.coords.latitude;
         _user.lng = position.coords.longitude;
+<<<<<<< HEAD
         $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng='+_user.lat+','+_user.lng+'&sensor=true').then(function(res){
           console.log(res.data);
           angular.forEach(res.data.results[0].address_components, function(item){
@@ -49,6 +69,10 @@ niApp.service('userService', function(NavigatorGeolocation, $http) {
           callback();
         }
       },
+=======
+        getGeoData(callback, 'latlng=' + _user.lat + ',' + _user.lng);
+      }, 
+>>>>>>> aed8479a70ec0d941a09a23d99599c3c88ce1896
       function(err){
         console.log('Error getting location ...');
         console.log(err);
@@ -62,7 +86,8 @@ niApp.service('userService', function(NavigatorGeolocation, $http) {
   return {
     getUser : getUser,
     setUser : setUser,
-    setUserLocation : setUserLocation
+    setUserLocation : setUserLocation,
+    getGeoData : getGeoData
   }
 });
 
@@ -91,8 +116,15 @@ niApp.config(['ChartJsProvider', function (ChartJsProvider) {
 }]);
 
 niApp.controller('NIController', function NIController($scope, $window, $http, NavigatorGeolocation, $window, $rootScope, userService, timeService) {
+<<<<<<< HEAD
 
   var apiUrl = $window.location.origin + '/hm';
+=======
+  
+  $scope.howModal = false;
+
+  var apiUrl = $window.location.origin + '/api';
+>>>>>>> aed8479a70ec0d941a09a23d99599c3c88ce1896
 
   $scope.loading = false;
   $scope.init = false;
@@ -151,14 +183,17 @@ niApp.controller('NIController', function NIController($scope, $window, $http, N
 	// };
 
   $scope.submitManualInput = function(){
-    console.log($scope.user.manualLocation);
-    $http.get('https://maps.googleapis.com/maps/api/geocode/json?address='+$scope.user.manualLocation.replace(' ','+')+'+Phoenix+AZ&sensor=true').then(function(res){
-      $scope.user.lat = res.data.results[0].geometry.location.lat;
-      $scope.user.lng = res.data.results[0].geometry.location.lng;
-      $scope.user.formattedAddress = res.data.results[0].formatted_address;
-      $scope.user.declinedLocation = false;
-      getData();
-    });
+
+    $scope.user.declinedLocation = false;
+    userService.getGeoData(getData(), 'address='+$scope.user.manualLocation.replace(' ','+')+'+Phoenix+AZ');
+
+    // $http.get('https://maps.googleapis.com/maps/api/geocode/json?address='+$scope.user.manualLocation.replace(' ','+')+'+Phoenix+AZ&sensor=true').then(function(res){
+    //   $scope.user.lat = res.data.results[0].geometry.location.lat;
+    //   $scope.user.lng = res.data.results[0].geometry.location.lng;
+    //   $scope.user.formattedAddress = res.data.results[0].formatted_address;
+    //   $scope.user.declinedLocation = false;
+    //   getData();
+    // });
   };
 
   if($scope.user && !$scope.user.lat){

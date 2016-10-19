@@ -1,9 +1,7 @@
 <!-- The Modal -->
-a#how.how how did we come up with this risk level?
-div#howModal.modal
+div#howModal.modal(ng-class="{'show-modal': howModal }")
   <!-- Modal content -->
   div.modal-content
-    span.close X
-    p Some text in the Modal..
-    p Some text in the Modal..
-    p Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fuga iusto deleniti magnam totam amet laudantium, voluptatibus qui odio quia nulla incidunt quas cum, autem harum fugiat voluptatum. Facilis repellendus, eum.
+    span.close(ng-click="howModal=false") X
+    h3 How does the crime prediction work?
+    p The best predictor of future crime is previous crime activity. Our crime data is taken from the freely available Phoenix Open Data Portal, which includes offenses starting November 2015. By statistically analyzing the location and time of each of the crimes as a whole, crime risk and most likely crimes are computed for discrete locations and times throughout the city, This data is then used to respond to requests from users at arbitrary locations and times in Phoenix, as well as to generate heat maps of the crime risk for times throughout the day.
