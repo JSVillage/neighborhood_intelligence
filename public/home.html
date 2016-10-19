@@ -1,5 +1,7 @@
 
 <div ng-controller="NIController" class="font-color fade-in">
+  <h1 class="title fade-in">Precog</h1>
+  <h2 class="sub-title fade-in">neighborhood intelligence</h2>
   <div ng-class="riskLevel" class="stage"></div>
   <div ng-show="loading" class="loading"></div><br/>
   <div ng-show="user.isPhoenix===false" class="non-local fade-in">
@@ -10,7 +12,7 @@
     <h2>Enter location</h2>
     <p><small>The more detailed the address the better the data</small></p>
     <form ng-submit="submitManualInput()">
-      <input type="text" placeholder="Something Google will understand" ng-model="user.manualLocation"/>
+      <input type="text" placeholder="Enter a Phoenix address" ng-model="user.manualLocation"/>
       <button type="submit" class="btn">submit</button>
     </form>
   </div>

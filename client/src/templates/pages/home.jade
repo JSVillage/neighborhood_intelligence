@@ -1,5 +1,6 @@
 div(ng-controller="NIController").font-color.fade-in
-  
+  h1.title.fade-in Precog
+  h2.sub-title.fade-in neighborhood intelligence
   div.stage(ng-class="riskLevel")
   
   div.loading(ng-show="loading")
@@ -14,7 +15,7 @@ div(ng-controller="NIController").font-color.fade-in
     h2 Enter location
     p: small The more detailed the address the better the data
     form(ng-submit="submitManualInput()")
-      input(type="text" placeholder="Something Google will understand" ng-model="user.manualLocation")
+      input(type="text" placeholder="Enter a Phoenix address" ng-model="user.manualLocation")
       button.btn(type="submit") submit
   
   h2.weight-max.time.fade-in(ng-show="init && !user.declinedLocation && user.isPhoenix!==false")
