@@ -874,7 +874,7 @@ main {
 
 .modal.show-modal {
   display: block;
-  font-size: 20px; }
+  font-size: 50px; }
 
 /* Modal Content/Box */
 .risk-level .modal-content {
