@@ -387,6 +387,7 @@ li {
       right: 0; }
 
 .sub-title {
+  color: #000;
   margin-top: 10px;
   font-size: 19px;
   font-family: 'montserratultralight';
@@ -395,6 +396,7 @@ li {
   z-index: 1; }
 
 .title {
+  color: #000;
   margin-bottom: 0;
   font-weight: 100;
   position: relative;
@@ -876,7 +878,7 @@ main {
   display: block; }
 
 .how .fa-question-circle {
-  font-size: 30px;
+  font-size: 20px;
   padding-left: 5px;
   color: #27a9e1; }
 
