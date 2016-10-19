@@ -872,8 +872,8 @@ main {
   background-color: rgba(0, 0, 0, 0.4);
   /* Black w/ opacity */ }
 
-.modal + .show-modal {
-  display: inline-block;
+.modal.show-modal {
+  display: block;
   font-size: 20px; }
 
 /* Modal Content/Box */
