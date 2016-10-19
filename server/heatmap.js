@@ -65,12 +65,16 @@ var buildHeatmap = function(db, callback){
 
     var datemin = new Date();
     var datemax = new Date("1/1/1971");
+
     console.log("lng_per_row = " + lng_per_row + ", lat_per_col = " + lat_per_col + ", matrix points = " + matrix_points);
     records.find({dateTime: {$ne: ""}}).toArray(function(err, docs){
       for (var i = 0; i < docs.length; i++) {
         var dateTime = docs[i].dateTime.split(/\s+/);
         var date = dateTime[0].split(/\//);
         var day = new Date(dateTime[0]);
+
+        // Basis for date: 2010 = 14600 in days since 1970
+        var dateValue = Math.floor( day.getTime() / (3600*24*1000) - 14600);
 
         if (datemin > day)
           datemin = day;
@@ -87,18 +91,30 @@ var buildHeatmap = function(db, callback){
         //console.log("lat: " + docs[i].latitude + ", lng: " + docs[i].longitude + ", lat_floor: " + lat_floor + ", lng_floor: " + lng_floor + ",  idx: " + idx);
 
         if (idx >= 0 && idx <= lng_per_row * lat_per_col - lng_per_row - 2) {
-          addCrimeToHeatMap(idx, hour, docs[i].crimeType, day.getUTCDay());
+          addCrimeToHeatMap(idx, hour, docs[i].crimeType, day.getUTCDay(), dateValue);
         }
       } //for docs
+
+      // Calculate duration of data
+      var start = Math.floor( datemin.getTime() / (3600*24*1000)); //days as integer from..
+      var end = Math.floor( datemax.getTime() / (3600*24*1000)); //days as integer from..
+      var datasetNumDays = end - start;
+
+      // Remove extra records
       var pointsRemoved = 0;
+      //var maxScore = 0;
       for (var i = matrix_points - 1; i >= 0; i--) {
         var removePoint = true;
         var idxArray = i * 24; // index constant for each point
         var idxPoint = idxArray; // index checks all hours for each point
+
         for (var j = 0; j < 24; j++) {
-          if (pointsArray[idxPoint++]["score"] > 0) {
+          var score = pointsArray[idxPoint++]["score"];
+          if (score > 0) {
             removePoint = false;
-            break;
+            //if (score > maxScore) {
+            //  maxScore = score;
+            //}
           }
         }
         if (removePoint == true) {
@@ -106,6 +122,16 @@ var buildHeatmap = function(db, callback){
           pointsRemoved++;
         }
       }
+
+      // Scale scores from 1-100
+      var divisor = datasetNumDays / 100;
+      for (var i = 0; i < pointsArray.length; i++) {
+        pointsArray[i].score /= divisor;
+        if (pointsArray[i].score > 100)
+          pointsArray[i].score = 100;
+
+      }
+
       console.log("Removed " + pointsRemoved + " empty points, remaining points: " + pointsArray.length/24);
 
       heatmap.insertMany(pointsArray).then(function(res) {
@@ -134,24 +160,7 @@ var buildHeatmap = function(db, callback){
                               ", High threshold = " + statsObject.highThreshold + ", low threshold = " + statsObject.lowThreshold);
 
             stats.insertOne(statsObject);
-/*
-            // Produce csv files of heatmaps
-            for (var i = 0; i < 24; i++) {
-              var csvFile = "/tmp/heatmap" + ((i < 10)? "0" : "") + i + ".csv";
-              var stream = fs.createWriteStream(csvFile);
-              stream.once('open', function(fd) {
-                stream.write("lat,lng,time,score\n");
-                var idx = i;
-                console.log(pointsArray[0]);
-                for (var j = 0; j < pointsArray.length/24; j++) {
-                  //stream.write(pointsArray[idx].loc[1] + "," + pointsArray[idx].loc[0] + "," + i + "," + pointsArray[idx].score + "\n");
-                  idx += 24;
-                }
-                stream.end();
-              });
-            } // end for making 24 csv files
-            */
-            callback({heatmap: pointsArray});
+//            callback({heatmap: pointsArray});
 
           });
         } else {
@@ -162,17 +171,17 @@ var buildHeatmap = function(db, callback){
   });
 };
 
-function addCrimeToHeatMap(idx,hour,crimeType,dayOfWeek) {
-  incScoreAndCrimeType(idx,hour,crimeType,dayOfWeek);
-  incScoreAndCrimeType(idx+1,hour,crimeType,dayOfWeek);
-  incScoreAndCrimeType(idx+lng_per_row,hour,crimeType,dayOfWeek);
-  incScoreAndCrimeType(idx+lng_per_row+1,hour,crimeType,dayOfWeek);
+function addCrimeToHeatMap(idx,hour,crimeType,dayOfWeek,dateValue) {
+  incScoreAndCrimeType(idx,hour,crimeType,dayOfWeek,dateValue);
+  incScoreAndCrimeType(idx+1,hour,crimeType,dayOfWeek,dateValue);
+  incScoreAndCrimeType(idx+lng_per_row,hour,crimeType,dayOfWeek,dateValue);
+  incScoreAndCrimeType(idx+lng_per_row+1,hour,crimeType,dayOfWeek,dateValue);
 }
 
-function incScoreAndCrimeType(x,hour,crimeType,weekday){
+function incScoreAndCrimeType(x,hour,crimeType,weekday,dateValue){
   //console.log("Index " + x + " at time " + hour);
   var y = x*24+hour;
-  pointsArray[y].score++;
+  pointsArray[y].score += 1;
 
   if (!pointsArray[y]["crimeType"][crimeType]) {
     pointsArray[y]["crimeType"][crimeType] = 0;
@@ -224,65 +233,75 @@ var calcData = function(arg, callback){
       } else {
         console.log(docs.length + " records accessed for risk assessment");
         // compare to thresholds
-        stats.find().toArray(function(err,crimeStats){
-          console.log("Dataset number of days = " + crimeStats[0].datasetNumDays + ", Max score = " + crimeStats[0].maxScore +
-                  ", High threshold = " + crimeStats[0].highThreshold + ", low threshold = " + crimeStats[0].lowThreshold);
+        var crimeTypeArray = [];
 
-          var crimeTypeArray = [];
-
-          for (var i = 0; i < 24; i++){
-            crimeTypeArray[i] = {};
+        for (var i = 0; i < 24; i++){
+          crimeTypeArray[i] = {};
+        }
+        var daySum = 0;
+        var timeSum = 0;
+        for (var i = 0; i < docs.length; i++) {
+          // add to score
+          info.time[docs[i].time].score += docs[i].score;
+          info.timeOfDay[parseInt(docs[i].time/4)] += docs[i].score;
+          timeSum =+ docs[i].score;
+          for (var j = 0; j < 7; j++) {
+            daySum += docs[i].dayOfWeek[j];
+            info.dayOfWeek[j] += docs[i].dayOfWeek[j];
           }
-          for (var i = 0; i < docs.length; i++) {
-            // add to score
-            info.time[docs[i].time].score += docs[i].score;
-            info.timeOfDay[parseInt(docs[i].time/4)] += docs[i].score;
-            for (var j = 0; j < 7; j++) {
-              info.dayOfWeek[j] += docs[i].dayOfWeek[j];
-            }
 
-            // add to crime type
-            for (var inst in docs[i].crimeType){
-              if ( crimeTypeArray[docs[i].time][inst] === undefined )
-              {
-                  crimeTypeArray[docs[i].time][inst] = 0;
-              }
-              crimeTypeArray[docs[i].time][inst] += docs[i].crimeType[inst];
+          // add to crime type
+          for (var inst in docs[i].crimeType){
+            if ( crimeTypeArray[docs[i].time][inst] === undefined )
+            {
+                crimeTypeArray[docs[i].time][inst] = 0;
             }
+            crimeTypeArray[docs[i].time][inst] += docs[i].crimeType[inst];
           }
-          for (var i = 0; i < 24; i++){
-            // compute risk based on score
-            info.time[i].score /=  docs.length/24;
-            if (info.time[i].score < crimeStats[0].lowThreshold)
-              info.time[i].risk = "LOW";
-            else if (info.time[i].score  < crimeStats[0].highThreshold)
-              info.time[i].risk = "MEDIUM";
-            else
-              info.time[i].risk = "HIGH";
+        }
+        for (var j = 0; j < 6; j++) {
+          info.timeOfDay[j] /= (timeSum / 100);
+        }
+        for (var j = 0; j < 7; j++) {
+          info.dayOfWeek[j] /= (daySum / 100);
+        }
+        var sum = 0;
+        for (var i = 0; i < 24; i++){
+          // compute risk based on score
+          info.time[i].score /=  docs.length/24;
+          if (info.time[i].score < 5)
+            info.time[i].risk = "LOW";
+          else if (info.time[i].score  < 10)
+            info.time[i].risk = "MEDIUM";
+          else
+            info.time[i].risk = "HIGH";
 
-            // compute guess based on crimeType weighting
-            var max = 0;
-            for (var inst in crimeTypeArray[i]){
-              if (crimeTypeArray[i][inst] > max) {
-                max = crimeTypeArray[i][inst];
-                info.time[i].guess = inst;
-              }
-              if ( info.types[inst] === undefined )
-              {
-                  info.types[inst] = 0;
-              }
-              info.types[inst] += crimeTypeArray[i][inst];
+          // compute guess based on crimeType weighting
+          var max = 0;
+          for (var inst in crimeTypeArray[i]){
+            if (crimeTypeArray[i][inst] > max) {
+              max = crimeTypeArray[i][inst];
+              sum += crimeTypeArray[i][inst];
+              info.time[i].guess = inst;
             }
-
-            if (info.time[i].guess === undefined) {
-              info.time[i].guess = "NONE";
+            if ( info.types[inst] === undefined )
+            {
+                info.types[inst] = 0;
             }
+            info.types[inst] += crimeTypeArray[i][inst];
           }
-          console.log(info);
-          callback({precog: info});
-        });
+          if (info.time[i].guess === undefined) {
+            info.time[i].guess = "NONE";
+          }
+        }
+        for (var inst in crimeTypeArray[i]){
+          info.types[inst] /= (sum / 100);
+        }
+        console.log(info);
+        callback({precog: info});
+
       }
-    });
+    }); // heatmap db access
   });
 };
 
@@ -290,3 +309,21 @@ var calcData = function(arg, callback){
 module.exports.buildHeatmap = buildHeatmap;
 module.exports.calcData = calcData;
 //module.exports.calcStats = calcStats;
+
+/*
+            // Produce csv files of heatmaps
+            for (var i = 0; i < 24; i++) {
+              var csvFile = "/tmp/heatmap" + ((i < 10)? "0" : "") + i + ".csv";
+              var stream = fs.createWriteStream(csvFile);
+              stream.once('open', function(fd) {
+                stream.write("lat,lng,time,score\n");
+                var idx = i;
+                console.log(pointsArray[0]);
+                for (var j = 0; j < pointsArray.length/24; j++) {
+                  //stream.write(pointsArray[idx].loc[1] + "," + pointsArray[idx].loc[0] + "," + i + "," + pointsArray[idx].score + "\n");
+                  idx += 24;
+                }
+                stream.end();
+              });
+            } // end for making 24 csv files
+            */
