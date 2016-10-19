@@ -111,6 +111,7 @@ niApp.controller('NIController', function NIController($scope, $window, $http, N
   var getData = function(){
     if($scope.user.declinedLocation){return;}
     $scope.loading = true;
+    console.log("sending hm request for " + $scope.user.lat + "," + $scope.user.lng );
     $http({
       url: apiUrl + '/' + $scope.user.lat + '/' + $scope.user.lng,
       method: "GET",
@@ -121,6 +122,7 @@ niApp.controller('NIController', function NIController($scope, $window, $http, N
       $scope.riskText = results.data.precog.time[hour].risk;
       $scope.riskLevel = results.data.precog.time[hour].risk.toLowerCase();
       $scope.mostLikely = results.data.precog.time[hour].guess;
+      console.log("result: " + $scope.riskLevel + "," + $scope.mostlikely );
       $scope.loading = false;
       $scope.init = true;
     });
@@ -231,6 +233,7 @@ niApp.controller('MoreController', function MoreController($scope, $window, $htt
 
   var getData = function(){
     $scope.loading = true;
+    console.log("sending hm request for " + $scope.user.lat + "," + $scope.user.lng );
     $http({
       url: apiUrl + '/' + $scope.user.lat + '/' + $scope.user.lng,
       method: "GET",
@@ -247,6 +250,7 @@ niApp.controller('MoreController', function MoreController($scope, $window, $htt
       $scope.highestTime = $scope.timesOfDay[indexOfMax(results.data.precog.timeOfDay)];
       $scope.highestDayData = results.data.precog.dayOfWeek;
       $scope.highestDay = $scope.daysOfWeek[indexOfMax(results.data.precog.dayOfWeek)];
+      console.log("result: " + $scope.highestTime + "," + $scope.highestDay );
     });
   };
 
