@@ -11,6 +11,9 @@
     background-color: rgb(0,0,0); /* Fallback color */
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
+.show-modal .modal {
+    display: inline-block;
+}
 
 /* Modal Content/Box */
 .risk-level .modal-content {

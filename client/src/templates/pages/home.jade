@@ -24,8 +24,7 @@ div(ng-controller="NIController").font-color.fade-in
   div.risk-level.fade-in(ng-show="init && !user.declinedLocation")
     h2.risk-label Risk level
     p {{riskText}}
-    
-    //-include ./../../components/modal/_default.jade
+      include ./../../components/modal/_default.jade
   
   div.risk-level.fade-in(ng-show="init && !user.declinedLocation")
     h2.risk-label.fade-in Most likely crime
