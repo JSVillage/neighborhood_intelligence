@@ -260,18 +260,20 @@ var calcData = function(arg, callback){
             crimeTypeArray[docs[i].time][inst] += docs[i].crimeType[inst];
           }
         }
+        console.log("timeSum = " + timeSum);
         for (var j = 0; j < 6; j++) {
-          console.log("Time of day converts from " + info.timeOfDay[j]);
+          var tmp = info.timeOfDay[j];
           info.timeOfDay[j] = Math.round(info.timeOfDay[j] * 100 / timeSum);
-          console.log("To " + info.timeOfDay[j]);
+          console.log("Time of day converts from " + tmp + " to " + info.timeOfDay[j]);
         }
         for (var j = 0; j < 7; j++) {
           info.dayOfWeek[j] = Math.round(info.dayOfWeek[j] * 100 / daySum)
         }
-        var sum = 0;
+        var typeSum = 0;
         for (var i = 0; i < 24; i++){
           // compute risk based on score
-          info.time[i].score /=  docs.length/24;
+          info.time[i].score =  Math.round(info.time[i].score * 24 / docs.length);
+
           if (info.time[i].score < 5)
             info.time[i].risk = "LOW";
           else if (info.time[i].score  < 10)
@@ -282,9 +284,9 @@ var calcData = function(arg, callback){
           // compute guess based on crimeType weighting
           var max = 0;
           for (var inst in crimeTypeArray[i]){
+            typeSum += crimeTypeArray[i][inst];
             if (crimeTypeArray[i][inst] > max) {
               max = crimeTypeArray[i][inst];
-              sum += crimeTypeArray[i][inst];
               info.time[i].guess = inst;
             }
             if ( info.types[inst] === undefined )
@@ -297,10 +299,11 @@ var calcData = function(arg, callback){
             info.time[i].guess = "NONE";
           }
         }
+        console.log("typeSum = " + typeSum);
         for (var inst in info.types){
-          console.log("Time of day converts from " + info.types[inst]);
-          info.types[inst] /= (sum / 100);
-          console.log("To " + info.types[inst]);
+          var tmp = info.types[inst];
+          info.types[inst] = Math.round(info.types[inst] * 100 / typeSum);
+          console.log("Type " + inst + " converted from " + tmp " to " + info.types[inst]);
         }
         console.log(info);
         callback({precog: info});
