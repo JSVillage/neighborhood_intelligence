@@ -14369,7 +14369,7 @@ niApp.service('userService', function(NavigatorGeolocation, $http) {
       .then(function(position) {        
         _user.lat = position.coords.latitude;
         _user.lng = position.coords.longitude;
-        getGeoData('latlng=' + _user.lat + ',' + _user.lng);
+        getGeoData(callback, 'latlng=' + _user.lat + ',' + _user.lng);
       }, 
       function(err){
         console.log('Error getting location ...');
