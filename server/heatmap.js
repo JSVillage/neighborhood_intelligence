@@ -280,12 +280,12 @@ var calcData = function(arg, callback){
             }
             info.types[inst] += crimeTypeArray[i][inst];
           }
-          for (var inst in crimeTypeArray[i]){
-            info.types[inst] /= (sum / 100);
-          }
           if (info.time[i].guess === undefined) {
             info.time[i].guess = "NONE";
           }
+        }
+        for (var inst in crimeTypeArray[i]){
+          info.types[inst] /= (sum / 100);
         }
         console.log(info);
         callback({precog: info});
