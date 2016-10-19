@@ -876,10 +876,10 @@ main {
   display: block; }
 
 .how .fa-question-circle {
-  font-size: 20px; }
+  font-size: 30px; }
 
 #howModal {
-  z-index: 10000; }
+  z-index: 100000; }
 
 /* Modal Content/Box */
 .risk-level .modal-content {
