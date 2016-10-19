@@ -852,7 +852,7 @@ main {
     display: block; }
 
 /* The Modal (background) */
-.modal {
+.risk-level .modal {
   display: none;
   /* Hidden by default */
   position: fixed;

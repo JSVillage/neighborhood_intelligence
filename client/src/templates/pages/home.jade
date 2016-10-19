@@ -30,7 +30,7 @@ div(ng-controller="NIController").font-color.fade-in
     p {{riskText}}
       a#how.how(href="" ng-click="howModal=true")
         i.fa.fa-question-circle
-  include ./../../components/modal/_default.jade
+  
   
   div.risk-level.fade-in(ng-show="init && !user.declinedLocation && user.isPhoenix!==false")
     h2.risk-label.fade-in Most likely crime
@@ -40,4 +40,5 @@ div(ng-controller="NIController").font-color.fade-in
     | more  
     i.fa.fa-chevron-right
     i.fa.fa-chevron-right
- 
+ div.risk-level
+   include ./../../components/modal/_default.jade
