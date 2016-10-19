@@ -238,11 +238,15 @@ var calcData = function(arg, callback){
         for (var i = 0; i < 24; i++){
           crimeTypeArray[i] = {};
         }
+        var daySum = 0;
+        var timeSum = 0;
         for (var i = 0; i < docs.length; i++) {
           // add to score
           info.time[docs[i].time].score += docs[i].score;
           info.timeOfDay[parseInt(docs[i].time/4)] += docs[i].score;
+          timeSum =+ docs[i].score;
           for (var j = 0; j < 7; j++) {
+            daySum += docs[i].dayOfWeek[j];
             info.dayOfWeek[j] += docs[i].dayOfWeek[j];
           }
 
@@ -255,6 +259,13 @@ var calcData = function(arg, callback){
             crimeTypeArray[docs[i].time][inst] += docs[i].crimeType[inst];
           }
         }
+        for (var j = 0; j < 6; j++) {
+          info.timeOfDay[j] /= (timeSum / 100);
+        }
+        for (var j = 0; j < 7; j++) {
+          info.dayOfWeek[j] /= (daySum / 100);
+        }
+        var sum = 0;
         for (var i = 0; i < 24; i++){
           // compute risk based on score
           info.time[i].score /=  docs.length/24;
@@ -267,7 +278,6 @@ var calcData = function(arg, callback){
 
           // compute guess based on crimeType weighting
           var max = 0;
-          var sum = 0;
           for (var inst in crimeTypeArray[i]){
             if (crimeTypeArray[i][inst] > max) {
               max = crimeTypeArray[i][inst];
