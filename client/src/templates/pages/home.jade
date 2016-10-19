@@ -6,31 +6,35 @@ div(ng-controller="NIController").font-color.fade-in
   
   br
 
-  div.manual-location.fade-in(ng-show="user.declinedLocation")
+  div.non-local.fade-in(ng-show="user.isPhoenix===false")
+    h2 Sorry, but we only have data for Phoenix, AZ at this time
+    p Please check back as we are planning to add more locations! Thanks
+
+  div.manual-location.fade-in(ng-show="user.declinedLocation || user.isPhoenix===false")
     h2 Enter location
     p: small The more detailed the address the better the data
     form(ng-submit="submitManualInput()")
       input(type="text" placeholder="Something Google will understand" ng-model="user.manualLocation")
       button.btn(type="submit") submit
   
-  h2.weight-max.time.fade-in(ng-show="init && !user.declinedLocation")
+  h2.weight-max.time.fade-in(ng-show="init && !user.declinedLocation && user.isPhoenix!==false")
     i.fa.fa-minus-square(aria-hidden="true" ng-click="setTime(-1)")
     span#time {{ time | date:'h:mm a'}}
     i.fa.fa-plus-square(aria-hidden="true" ng-click="setTime(1)")
   
-  div.address.fade-in(ng-show="init && !user.declinedLocation" ng-click="user.declinedLocation = true")
+  div.address.fade-in(ng-show="init && !user.declinedLocation && user.isPhoenix!==false" ng-click="user.declinedLocation = true")
     p {{user.formattedAddress}}  
   
-  div.risk-level.fade-in(ng-show="init && !user.declinedLocation")
+  div.risk-level.fade-in(ng-show="init && !user.declinedLocation && user.isPhoenix!==false")
     h2.risk-label Risk level
     p {{riskText}}
       include ./../../components/modal/_default.jade
   
-  div.risk-level.fade-in(ng-show="init && !user.declinedLocation")
+  div.risk-level.fade-in(ng-show="init && !user.declinedLocation && user.isPhoenix!==false")
     h2.risk-label.fade-in Most likely crime
     p.t2 {{mostLikely}}
     
-  a.nav.nav-more(ng-href="#/more" ng-show="init && !user.declinedLocation") 
+  a.nav.nav-more(ng-href="#/more" ng-show="init && !user.declinedLocation && user.isPhoenix!==false") 
     | more  
     i.fa.fa-chevron-right
     i.fa.fa-chevron-right
