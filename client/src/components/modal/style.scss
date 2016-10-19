@@ -14,10 +14,12 @@
 .modal.show-modal  {
     display: block;
 }
-.how.fa {
+.how .fa-question-circle {
     font-size: 20px;
 }
-
+#howModal {
+    z-index: 10000;
+}
 /* Modal Content/Box */
 .risk-level .modal-content {
 	position: relative;
