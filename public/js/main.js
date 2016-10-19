@@ -14414,8 +14414,7 @@ niApp.config(['ChartJsProvider', function (ChartJsProvider) {
 
 niApp.controller('NIController', function NIController($scope, $window, $http, NavigatorGeolocation, $window, $rootScope, userService, timeService) {
   
-  $scope.howModal= false;
-
+  $scope.howModal = false;
 
   var apiUrl = $window.location.origin + '/api';
 
