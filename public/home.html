@@ -20,7 +20,7 @@
   </div>
   <div ng-show="init &amp;&amp; !user.declinedLocation &amp;&amp; user.isPhoenix!==false" class="risk-level fade-in">
     <h2 class="risk-label">Risk level</h2>
-    <p>{{riskText}}<!-- The Modal --><a id="how" href="" ng-click="howModal=true" class="how"><i class="fa fa-question-circle"></i></a>
+    <p>{{riskText}}<a id="how" href="" ng-click="howModal=true" class="how"><i class="fa fa-question-circle"></i></a><!-- The Modal -->
       <div id="howModal" ng-class="{'show-modal': howModal }" class="modal"><!-- Modal content -->
         <div class="modal-content"><span ng-click="howModal=false" class="close">X</span>
           <h3>How does the crime prediction work?</h3>
