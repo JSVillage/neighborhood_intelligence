@@ -5,7 +5,7 @@ niApp.factory('mapService', ['$http', function($http) {
   return {
     getGoogleInfo: function(payload) {
       return $http({
-          url: 'https://maps.googleapis.com/maps/api/geocode/json', 
+          url: 'https://maps.googleapis.com/maps/api/geocode/json',
           method: "GET",
           params: payload
         }).then(function(result) {
@@ -35,7 +35,7 @@ niApp.service('userService', function(NavigatorGeolocation, $http) {
           isPhoenix = true;
         }
       });
-      _user.isPhoenix = isPhoenix;          
+      _user.isPhoenix = isPhoenix;
       _user.formattedAddress = res.data.results[0].formatted_address;
 
     });
@@ -47,11 +47,11 @@ niApp.service('userService', function(NavigatorGeolocation, $http) {
 
   var setUserLocation = function(callback){
     NavigatorGeolocation.getCurrentPosition()
-      .then(function(position) {        
+      .then(function(position) {
         _user.lat = position.coords.latitude;
         _user.lng = position.coords.longitude;
         getGeoData(callback, 'latlng=' + _user.lat + ',' + _user.lng);
-      }, 
+      },
       function(err){
         console.log('Error getting location ...');
         console.log(err);
@@ -95,16 +95,13 @@ niApp.config(['ChartJsProvider', function (ChartJsProvider) {
 }]);
 
 niApp.controller('NIController', function NIController($scope, $window, $http, NavigatorGeolocation, $window, $rootScope, userService, timeService) {
-  
+  var apiUrl = $window.location.origin + '/hm';
   $scope.howModal = false;
-
-  var apiUrl = $window.location.origin + '/api';
-
   $scope.loading = false;
   $scope.init = false;
   $scope.riskLevel = '';
   $scope.riskText = '';
-  $scope.mostLikely = '';  
+  $scope.mostLikely = '';
   $scope.user = userService.getUser();
   $scope.time = timeService.getTime();
   $scope.formattedAddress = '';
@@ -115,20 +112,22 @@ niApp.controller('NIController', function NIController($scope, $window, $http, N
     if($scope.user.declinedLocation){return;}
     $scope.loading = true;
     $http({
-      url: apiUrl + '/' + $scope.user.lat + '/' + $scope.user.lng + '/' + new Date($scope.time), 
+      url: apiUrl + '/' + $scope.user.lat + '/' + $scope.user.lng,
       method: "GET",
       cache: true
     }).then(function(results) {
-      $scope.riskText = results.data.precog.risk;
-      $scope.riskLevel = results.data.precog.risk.toLowerCase();
-      $scope.mostLikely = results.data.precog.guess.type;
+      var date = new Date();
+      var hour = date.getHours();
+      $scope.riskText = results.data.precog.time[hour].risk;
+      $scope.riskLevel = results.data.precog.time[hour].risk.toLowerCase();
+      $scope.mostLikely = results.data.precog.time[hour].guess;
       $scope.loading = false;
       $scope.init = true;
     });
-  };  
+  };
 
-  $scope.setTime = function(hour){   
-    var d = new Date($scope.time); 
+  $scope.setTime = function(hour){
+    var d = new Date($scope.time);
     $scope.time = d.setHours(d.getHours()+hour);
     getData();
   };
@@ -139,7 +138,7 @@ niApp.controller('NIController', function NIController($scope, $window, $http, N
 	// var btn = document.getElementById("how");
 	// // Get the <span> element that closes the modal
 	// var span = document.getElementsByClassName("close")[0];
-	// // When the user clicks on the button, open the modal 
+	// // When the user clicks on the button, open the modal
 	// btn.onclick = function() {
 	//  modal.style.display = "block";
 	// }
@@ -169,7 +168,7 @@ niApp.controller('NIController', function NIController($scope, $window, $http, N
   };
 
   if($scope.user && !$scope.user.lat){
-    $scope.loading = true;    
+    $scope.loading = true;
     userService.setUserLocation(function(){
       $scope.user = userService.getUser();
       $scope.loading = false;
@@ -178,8 +177,8 @@ niApp.controller('NIController', function NIController($scope, $window, $http, N
   } else {
     getData();
   }
-  
-}); 
+
+});
 
 niApp.controller('MoreController', function MoreController($scope, $window, $http, $rootScope, $timeout, userService, timeService) {
 
@@ -201,7 +200,7 @@ niApp.controller('MoreController', function MoreController($scope, $window, $htt
       ]
     }
   };
-  
+
   $scope.timesOfDay = ['12-4am', '4-8am', '8am-12', '12-4pm', '4-8pm', '8pm-12'];
   $scope.daysOfWeek = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
   $scope.highestDay = '';
@@ -211,9 +210,9 @@ niApp.controller('MoreController', function MoreController($scope, $window, $htt
   $scope.todSeries = ['Time of Day'];
   $scope.dowSeries = ['Day of week'];
 
-  $scope.time = timeService.getTime();    
-  
-  var apiUrl = $window.location.origin + '/api';
+  $scope.time = timeService.getTime();
+
+  var apiUrl = $window.location.origin + '/hm';
 
   var indexOfMax = function(arr) {
     if (arr.length === 0) {return -1;}
@@ -233,19 +232,21 @@ niApp.controller('MoreController', function MoreController($scope, $window, $htt
   var getData = function(){
     $scope.loading = true;
     $http({
-      url: apiUrl + '/' + $scope.user.lat + '/' + $scope.user.lng + '/' + new Date($scope.time),  
+      url: apiUrl + '/' + $scope.user.lat + '/' + $scope.user.lng,
       method: "GET",
       cache: true
     }).then(function(results) {
       $scope.init = true;
-      $scope.riskText = results.data.precog.risk;
-      $scope.riskLevel = results.data.precog.risk.toLowerCase();
+      var date = new Date();
+      var hour = date.getHours();
+      $scope.riskText = results.data.precog.time[hour].risk;
+      $scope.riskLevel = results.data.precog.time[hour].risk.toLowerCase();
       $scope.loading = false;
 
       $scope.highestTimeData =results.data.precog.timeOfDay;
       $scope.highestTime = $scope.timesOfDay[indexOfMax(results.data.precog.timeOfDay)];
       $scope.highestDayData = results.data.precog.dayOfWeek;
-      $scope.highestDay = $scope.daysOfWeek[indexOfMax(results.data.precog.dayOfWeek)];  
+      $scope.highestDay = $scope.daysOfWeek[indexOfMax(results.data.precog.dayOfWeek)];
     });
   };
 
@@ -259,10 +260,10 @@ niApp.controller('MoreController', function MoreController($scope, $window, $htt
             $scope.user.lng = res.data.results[0].geometry.location.lng;
             $scope.formattedAddress = res.data.results[0].formatted_address;
             $scope.loading = false;
-            userService.setUser($scope.user); 
+            userService.setUser($scope.user);
             getData();
           });
-      }, 
+      },
       function(err){
 
       }
