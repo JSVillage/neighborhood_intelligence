@@ -873,8 +873,10 @@ main {
   /* Black w/ opacity */ }
 
 .modal.show-modal {
-  display: block;
-  font-size: 50px; }
+  display: block; }
+
+.how.fa {
+  font-size: 20px; }
 
 /* Modal Content/Box */
 .risk-level .modal-content {
