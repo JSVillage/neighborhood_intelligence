@@ -35,7 +35,7 @@ niApp.service('userService', function(NavigatorGeolocation, $http) {
           isPhoenix = true;
         }
       });
-      _user.isPhoenix = isPhoenix;          
+      _user.isPhoenix = isPhoenix;
       _user.formattedAddress = res.data.results[0].formatted_address;
 
     });
@@ -50,29 +50,8 @@ niApp.service('userService', function(NavigatorGeolocation, $http) {
       .then(function(position) {
         _user.lat = position.coords.latitude;
         _user.lng = position.coords.longitude;
-<<<<<<< HEAD
-        $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng='+_user.lat+','+_user.lng+'&sensor=true').then(function(res){
-          console.log(res.data);
-          angular.forEach(res.data.results[0].address_components, function(item){
-            console.log(item);
-          });
-
-
-
-
-          _user.formattedAddress = res.data.results[0].formatted_address;
-
-
-
-        });
-        if(typeof callback === 'function'){
-          callback();
-        }
-      },
-=======
         getGeoData(callback, 'latlng=' + _user.lat + ',' + _user.lng);
-      }, 
->>>>>>> aed8479a70ec0d941a09a23d99599c3c88ce1896
+      },
       function(err){
         console.log('Error getting location ...');
         console.log(err);
@@ -116,16 +95,8 @@ niApp.config(['ChartJsProvider', function (ChartJsProvider) {
 }]);
 
 niApp.controller('NIController', function NIController($scope, $window, $http, NavigatorGeolocation, $window, $rootScope, userService, timeService) {
-<<<<<<< HEAD
-
   var apiUrl = $window.location.origin + '/hm';
-=======
-  
   $scope.howModal = false;
-
-  var apiUrl = $window.location.origin + '/api';
->>>>>>> aed8479a70ec0d941a09a23d99599c3c88ce1896
-
   $scope.loading = false;
   $scope.init = false;
   $scope.riskLevel = '';
