@@ -244,7 +244,7 @@ var calcData = function(arg, callback){
           // add to score
           info.time[docs[i].time].score += docs[i].score;
           info.timeOfDay[parseInt(docs[i].time/4)] += docs[i].score;
-          timeSum =+ docs[i].score;
+          timeSum += docs[i].score;
 
           for (var j = 0; j < 7; j++) {
             daySum += docs[i].dayOfWeek[j];
