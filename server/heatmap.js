@@ -229,7 +229,7 @@ var calcData = function(arg, callback){
         // no crimes reported nearby
         console.log("No crimes reported nearby");
         console.log(info);
-        callback({heatmap: info});
+        callback({precog: info});
       } else {
         console.log(docs.length + " records accessed for risk assessment");
         // compare to thresholds
