@@ -14316,7 +14316,7 @@ module.exports = function(Chart) {
 
 
 //- application
-var niApp = angular.module('niApp', ["ngRoute", "ngMap", "chart.js"]);
+var niApp = angular.module('niApp', ["ngRoute", "ngMap", "chart.js","ngTouch"]);
 
 
 niApp.factory('mapService', ['$http', function($http) {
