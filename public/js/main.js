@@ -14610,6 +14610,11 @@ niApp.controller('MoreController', function MoreController($scope, $window, $htt
 
 });
 
+niApp.controller('IndexController', ['$scope', '$location', function IndexController($scope, $location) {
+  $scope.$on('$locationChangeSuccess', function() {
+        $scope.location = $location.path();
+    });
+}]);
 niApp.directive("home", function () {
     return {
         templateUrl: 'home.html',
