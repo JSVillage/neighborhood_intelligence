@@ -263,7 +263,7 @@ niApp.controller('MoreController', function MoreController($scope, $window, $htt
       $scope.highestDayData = results.data.precog.dayOfWeek;
       $scope.highestDay = $scope.daysOfWeek[indexOfMax(results.data.precog.dayOfWeek)];
       $scope.highestCrimeTypeData = results.data.precog.types;
-      var $scope.highestCrimeType = "";
+      $scope.highestCrimeType = "";
       var max = 0;
       for (var i in $scope.highestCrimeTypeData) {
          $scope.crimeType.push(i);
