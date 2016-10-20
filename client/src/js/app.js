@@ -284,6 +284,10 @@ niApp.controller('MoreController', function MoreController($scope, $window, $htt
     );
   };
 
+  var setPage = function(page) {
+    $location.path(page);
+  };
+
   if($scope.user && !$scope.user.lat){
     getUserLocation();
   }else{
