@@ -942,7 +942,7 @@ main {
   display: block;
   visibility: visible;
   position: absolute;
-  bottom: 20px; }
+  bottom: 10vh; }
 
 #left {
   left: 10%; }
@@ -952,7 +952,7 @@ main {
 
 #one, #two {
   visibility: visible;
-  bottom: 20px;
+  bottom: 10vh;
   padding: 0 10px; }
 
 .center {
