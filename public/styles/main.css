@@ -951,15 +951,15 @@ main {
   right: 10%; }
 
 #one, #two {
-  color: gray;
   visibility: visible;
   bottom: 20px;
   padding: 0 10px; }
 
 .center {
+  color: gray;
   position: absolute;
   left: 50%;
   transform: translateX(-50%); }
 
-.black {
+.center .black {
   color: black; }
