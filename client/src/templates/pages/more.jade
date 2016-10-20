@@ -20,15 +20,6 @@ div(ng-controller="MoreController").font-color.fade-in
       chart-labels="timesOfDay" chart-series="todSeries" chart-options="chartOptions"
       chart-click="chartClick")
 
-  div.risk-level.fade-in(ng-class="{offscreen : !init}")
-    h2.risk-label Most prevalent crime
-    p {{highestCrimeType}}
-    canvas#highestCrimeType.chart.chart-line(chart-data="highestCrimeTypeData"
-      chart-labels="crimeType" chart-series="typeSeries" chart-options="chartOptions"
-      chart-click="chartClick")
-
-
-
   a.nav.nav-back(ng-href="#/")
     i.fa.fa-chevron-left
     i.fa.fa-chevron-left
