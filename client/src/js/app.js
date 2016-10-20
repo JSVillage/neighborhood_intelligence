@@ -272,7 +272,7 @@ niApp.controller('MoreController', function MoreController($scope, $window, $htt
            $scope.highestCrimeType = i;
          }
       }
-      console.log("Crime types: " + $scope.crimeType + ", Values: " + $scope.highestCrimeTypeData + ", Max = " + $scope.highestCrimeType );
+      //console.log("Crime types: " + $scope.crimeType + ", Values: " + $scope.highestCrimeTypeData + ", Max = " + $scope.highestCrimeType );
     });
   };
 
