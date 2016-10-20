@@ -14365,6 +14365,8 @@ niApp.service('userService', function(NavigatorGeolocation, $http) {
       if(typeof callback === 'function'){
         console.log("getGeoData: Calling callback");
         callback();
+      } else {
+        console.log("getGeoData: Can't call callback because not a function");
       }
 
     });
@@ -14485,7 +14487,8 @@ niApp.controller('NIController', function NIController($scope, $window, $http, N
   $scope.submitManualInput = function(){
 
     $scope.user.declinedLocation = false;
-    userService.getGeoData(getData(), 'address='+$scope.user.manualLocation.replace(' ','+')+'+Phoenix+AZ');
+    userService.getGeoData(this.getData(), 'address='+$scope.user.manualLocation.replace(' ','+')+'+Phoenix+AZ');
+    getData();
 
     // $http.get('https://maps.googleapis.com/maps/api/geocode/json?address='+$scope.user.manualLocation.replace(' ','+')+'+Phoenix+AZ&sensor=true').then(function(res){
     //   $scope.user.lat = res.data.results[0].geometry.location.lat;
