@@ -14444,8 +14444,8 @@ niApp.controller('NIController', function NIController($scope, $window, $http, N
       method: "GET",
       cache: true
     }).then(function(results) {
-      var tim = $scope.time;
-      var hour = tim.getHours();
+      var time = new Date($scope.time);
+      var hour = time.getHours();
       $scope.riskText = results.data.precog.time[hour].risk;
       $scope.riskLevel = results.data.precog.time[hour].risk.toLowerCase();
       $scope.mostLikely = results.data.precog.time[hour].guess;
@@ -14570,8 +14570,8 @@ niApp.controller('MoreController', function MoreController($scope, $window, $htt
       cache: true
     }).then(function(results) {
       $scope.init = true;
-      var date = new Date();
-      var hour = date.getHours();
+      var time = new Date($scope.time);
+      var hour = time.getHours();
       $scope.riskText = results.data.precog.time[hour].risk;
       $scope.riskLevel = results.data.precog.time[hour].risk.toLowerCase();
       $scope.loading = false;
@@ -14621,6 +14621,7 @@ niApp.controller('IndexController', ['$scope', '$location', function IndexContro
         $scope.location = $location.path();
     });
 }]);
+
 niApp.directive("home", function () {
     return {
         templateUrl: 'home.html',
