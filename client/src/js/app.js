@@ -124,8 +124,8 @@ niApp.controller('NIController', function NIController($scope, $window, $http, N
       method: "GET",
       cache: true
     }).then(function(results) {
-      var time = $scope.time;
-      var hour = time.getHours();
+      var tim = $scope.time;
+      var hour = tim.getHours();
       $scope.riskText = results.data.precog.time[hour].risk;
       $scope.riskLevel = results.data.precog.time[hour].risk.toLowerCase();
       $scope.mostLikely = results.data.precog.time[hour].guess;
