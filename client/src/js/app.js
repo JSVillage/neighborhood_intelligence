@@ -167,8 +167,9 @@ niApp.controller('NIController', function NIController($scope, $window, $http, N
   $scope.submitManualInput = function(){
 
     $scope.user.declinedLocation = false;
-    userService.getGeoData(getData(), 'address='+$scope.user.manualLocation.replace(' ','+')+'+Phoenix+AZ');
-    getData();
+    userService.getGeoData(function(){console.log("inside submitManualInput() callback function, about to call getData()");getData();}, 
+      'address='+$scope.user.manualLocation.replace(' ','+')+'+Phoenix+AZ');
+
 
     // $http.get('https://maps.googleapis.com/maps/api/geocode/json?address='+$scope.user.manualLocation.replace(' ','+')+'+Phoenix+AZ&sensor=true').then(function(res){
     //   $scope.user.lat = res.data.results[0].geometry.location.lat;
