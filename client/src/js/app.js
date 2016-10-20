@@ -1,4 +1,4 @@
-var niApp = angular.module('niApp', ["ngRoute", "ngMap", "chart.js"]);
+var niApp = angular.module('niApp', ["ngRoute", "ngMap", "chart.js","ngTouch"]);
 
 
 niApp.factory('mapService', ['$http', function($http) {
@@ -124,8 +124,8 @@ niApp.controller('NIController', function NIController($scope, $window, $http, N
       method: "GET",
       cache: true
     }).then(function(results) {
-      var time = new Date($scope.time);
-      var hour = time.getHours();
+      var tim = $scope.time;
+      var hour = tim.getHours();
       $scope.riskText = results.data.precog.time[hour].risk;
       $scope.riskLevel = results.data.precog.time[hour].risk.toLowerCase();
       $scope.mostLikely = results.data.precog.time[hour].guess;
@@ -250,8 +250,8 @@ niApp.controller('MoreController', function MoreController($scope, $window, $htt
       cache: true
     }).then(function(results) {
       $scope.init = true;
-      var time = new Date($scope.time);
-      var hour = time.getHours();
+      var date = new Date();
+      var hour = date.getHours();
       $scope.riskText = results.data.precog.time[hour].risk;
       $scope.riskLevel = results.data.precog.time[hour].risk.toLowerCase();
       $scope.loading = false;
@@ -283,6 +283,10 @@ niApp.controller('MoreController', function MoreController($scope, $window, $htt
       }
     );
   };
+
+  /*var setPage = function(page) {
+    $location.path(page);
+  };*/
 
   if($scope.user && !$scope.user.lat){
     getUserLocation();
