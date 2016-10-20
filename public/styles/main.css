@@ -937,8 +937,7 @@ main {
   text-decoration: none;
   cursor: pointer; }
 
-#left,
-#right {
+#left, #right {
   color: black;
   display: block;
   visibility: visible;
@@ -952,18 +951,9 @@ main {
   right: 10%; }
 
 #one, #two {
-  display: block;
   visibility: visible;
   bottom: 10vh;
-  padding: 0 10px;
-  position: absolute;
-  color: gray; }
-
-#one {
-  left: 46%; }
-
-#two {
-  right: 54%; }
+  padding: 0 10px; }
 
 .center {
   color: gray;
@@ -971,5 +961,5 @@ main {
   left: 50%;
   transform: translateX(-50%); }
 
-#one.black, #two.black {
+.center .black {
   color: black; }
