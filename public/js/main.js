@@ -9,7 +9,7 @@ factory(root.angular);
 }
 }(this, function(angular) {
 /**
- * AngularJS Google Maps Ver. 1.17.3
+ * AngularJS Google Maps Ver. 1.17.7
  *
  * The MIT License (MIT)
  * 
@@ -210,6 +210,8 @@ angular.module('ngMap', []);
         ((typeof center === 'string') && center.match(/\{\{.*\}\}/))
       ) {
         mapOptions.center = new google.maps.LatLng(0, 0);
+      } else if( (typeof center === 'string') && center.match(/[0-9.-]*,[0-9.-]*/) ){
+           mapOptions.center = new google.maps.LatLng(center);
       } else if (!(center instanceof google.maps.LatLng)) {
         var geoCenter = mapOptions.center;
         delete mapOptions.center;
@@ -521,9 +523,9 @@ angular.module('ngMap', []);
       position && (this.position = position); /* jshint ignore:line */
 
       if (this.getProjection() && typeof this.position.lng == 'function') {
-        var posPixel = this.getProjection().fromLatLngToDivPixel(this.position);
         var _this = this;
         var setPosition = function() {
+          var posPixel = _this.getProjection().fromLatLngToDivPixel(_this.position);
           var x = Math.round(posPixel.x - (_this.el.offsetWidth/2));
           var y = Math.round(posPixel.y - _this.el.offsetHeight - 10); // 10px for anchor
           _this.el.style.left = x + "px";
@@ -2489,7 +2491,7 @@ angular.module('ngMap', []);
 
       // convert output more for center and position
       if (
-        (options.key == 'center' || options.key == 'center') &&
+        (options.key == 'center' || options.key == 'position') &&
         output instanceof Array
       ) {
         output = new google.maps.LatLng(output[0], output[1]);
@@ -14355,11 +14357,17 @@ niApp.service('userService', function(NavigatorGeolocation, $http) {
       });
       _user.isPhoenix = isPhoenix;
       _user.formattedAddress = res.data.results[0].formatted_address;
+      _user.lat = res.data.results[0].geometry.location.lat;
+      _user.lng = res.data.results[0].geometry.location.lng;
+
+      console.log("getGeoData: isPhoenix = " + isPhoenix);
+
+      if(typeof callback === 'function'){
+        console.log("getGeoData: Calling callback");
+        callback();
+      }
 
     });
-    if(typeof callback === 'function'){
-      callback();
-    }
 
   };
 
@@ -14427,20 +14435,21 @@ niApp.controller('NIController', function NIController($scope, $window, $http, N
   // $scope.googleMapsUrl="https://maps.google.com/maps/api/js?key=AIzaSyAtvTUqW2i2tbup-B9tW-4NQ6-bb1H3I_w"
 
   var getData = function(){
+    console.log("Entered getData" );
     if($scope.user.declinedLocation){return;}
     $scope.loading = true;
     console.log("sending hm request for " + $scope.user.lat + "," + $scope.user.lng );
     $http({
-      url: apiUrl + '/' + $scope.user.lat + '/' + $scope.user.lng,
+      url: apiUrl + '/' + $scope.user.lat.toFixed(3) + '/' + $scope.user.lng.toFixed(3),
       method: "GET",
       cache: true
     }).then(function(results) {
-      var date = new Date();
-      var hour = date.getHours();
+      var tim = $scope.time;
+      var hour = tim.getHours();
       $scope.riskText = results.data.precog.time[hour].risk;
       $scope.riskLevel = results.data.precog.time[hour].risk.toLowerCase();
       $scope.mostLikely = results.data.precog.time[hour].guess;
-      console.log("result: " + $scope.riskLevel + "," + $scope.mostlikely );
+      console.log("result: " + results.data.precog + " hour: " + hour + " guess: " + results.data.precog.time[hour].guess);
       $scope.loading = false;
       $scope.init = true;
     });
@@ -14489,12 +14498,15 @@ niApp.controller('NIController', function NIController($scope, $window, $http, N
 
   if($scope.user && !$scope.user.lat){
     $scope.loading = true;
+    console.log("setUserLocation() used to call getData()");
     userService.setUserLocation(function(){
       $scope.user = userService.getUser();
       $scope.loading = false;
+      console.log("inside setUserLocation() callback function, about to call getData()");
       getData();
     });
   } else {
+    console.log("Raw call to getData()");
     getData();
   }
 
