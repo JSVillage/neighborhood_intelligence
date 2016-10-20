@@ -42,10 +42,10 @@ niApp.service('userService', function(NavigatorGeolocation, $http) {
 
       console.log("getGeoData: isPhoenix = " + isPhoenix);
 
-      //if(typeof callback === 'function'){
-      //  console.log("getGeoData: Calling callback");
+      if(typeof callback === 'function'){
+        console.log("getGeoData: Calling callback");
         callback();
-      //}
+      }
 
     });
 
