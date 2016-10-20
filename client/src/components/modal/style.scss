@@ -70,7 +70,8 @@
     text-decoration: none;
     cursor: pointer;
 }
-#left, #right {
+#left, 
+#right {
     color: black;
     display: block;
     visibility: visible;
@@ -84,9 +85,18 @@
     right: 10%;
 }
 #one, #two {
+    display: block;
     visibility: visible;
     bottom: 10vh;
     padding: 0 10px;
+    position: absolute;
+    color: gray;
+}
+#one {
+    left: 46%;
+}
+#two {
+    right: 54%;
 }
 .center {
     color: gray;
@@ -94,6 +104,6 @@
     left: 50%;
     transform: translateX(-50%);
 }
-.center .black {
+#one.black, #two.black {
     color: black;
 }
