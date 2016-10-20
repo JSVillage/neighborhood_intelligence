@@ -42,10 +42,10 @@ niApp.service('userService', function(NavigatorGeolocation, $http) {
 
       console.log("getGeoData: isPhoenix = " + isPhoenix);
 
-      if(typeof callback === 'function'){
-        console.log("getGeoData: Calling callback");
+      //if(typeof callback === 'function'){
+      //  console.log("getGeoData: Calling callback");
         callback();
-      }
+      //}
 
     });
 
@@ -124,7 +124,8 @@ niApp.controller('NIController', function NIController($scope, $window, $http, N
       method: "GET",
       cache: true
     }).then(function(results) {
-      var hour = $scope.time.getHours();
+      var time = $scope.time;
+      var hour = time.getHours();
       $scope.riskText = results.data.precog.time[hour].risk;
       $scope.riskLevel = results.data.precog.time[hour].risk.toLowerCase();
       $scope.mostLikely = results.data.precog.time[hour].guess;
