@@ -936,3 +936,29 @@ main {
   color: orange;
   text-decoration: none;
   cursor: pointer; }
+
+#left, #right {
+  color: black;
+  display: block;
+  visibility: visible;
+  position: absolute;
+  bottom: 20px; }
+
+#left {
+  left: 10%; }
+
+#right {
+  right: 10%; }
+
+#one, #two {
+  color: gray;
+  display: block;
+  visibility: visible;
+  position: absolute;
+  bottom: 20px;
+  padding: 0 10px; }
+
+.center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%); }
