@@ -6,14 +6,19 @@
   <div ng-show="loading" class="loading"></div><br/>
   <div ng-class="{offscreen : !init}" class="risk-level fade-in">
     <h2 class="risk-label">Day of highest crime</h2>
-    <p>{{highestDay}} </p>
+    <p>{{highestDay}}</p>
     <canvas id="highestDay" chart-data="highestDayData" chart-labels="daysOfWeek" chart-series="dowSeries" chart-options="chartOptions" chart-click="chartClick" class="chart chart-line"></canvas>
   </div>
   <div ng-class="{offscreen : !init}" class="risk-level fade-in">
     <h2 class="risk-label">Time of highest crime</h2>
-    <p>{{highestTime}} </p>
+    <p>{{highestTime}}</p>
     <canvas id="highestTime" chart-data="highestTimeData" chart-labels="timesOfDay" chart-series="todSeries" chart-options="chartOptions" chart-click="chartClick" class="chart chart-line"></canvas>
-  </div><a ng-href="#/" class="nav nav-back"> <i class="fa fa-chevron-left"></i><i class="fa fa-chevron-left"></i> back </a>
+  </div>
+  <div ng-class="{offscreen : !init}" class="risk-level fade-in">
+    <h2 class="risk-label">Most prevalent crime</h2>
+    <p>{{highestCrimeType}}</p>
+    <canvas id="highestCrimeType" chart-data="highestCrimeTypeData" chart-labels="crimeType" chart-series="typeSeries" chart-options="chartOptions" chart-click="chartClick" class="chart chart-line"></canvas>
+  </div><a ng-href="#/" class="nav nav-back"><i class="fa fa-chevron-left"></i><i class="fa fa-chevron-left"></i> back</a>
   
   
 </div>

@@ -1,31 +1,38 @@
 div(ng-controller="MoreController").font-color.fade-in
   h1.title.fade-in Precog
   h2.sub-title.fade-in neighborhood intelligence
-  
+
   div.stage(ng-class="riskLevel")
   div.loading(ng-show="loading")
-  
+
   br
   div.risk-level.fade-in(ng-class="{offscreen : !init}")
     h2.risk-label Day of highest crime
-    p {{highestDay}} 
+    p {{highestDay}}
     canvas#highestDay.chart.chart-line(chart-data="highestDayData"
       chart-labels="daysOfWeek" chart-series="dowSeries" chart-options="chartOptions"
       chart-click="chartClick")
 
   div.risk-level.fade-in(ng-class="{offscreen : !init}")
     h2.risk-label Time of highest crime
-    p {{highestTime}} 
+    p {{highestTime}}
     canvas#highestTime.chart.chart-line(chart-data="highestTimeData"
       chart-labels="timesOfDay" chart-series="todSeries" chart-options="chartOptions"
       chart-click="chartClick")
 
-  
+  div.risk-level.fade-in(ng-class="{offscreen : !init}")
+    h2.risk-label Most prevalent crime
+    p {{highestCrimeType}}
+    canvas#highestCrimeType.chart.chart-line(chart-data="highestCrimeTypeData"
+      chart-labels="crimeType" chart-series="typeSeries" chart-options="chartOptions"
+      chart-click="chartClick")
 
-  a.nav.nav-back(ng-href="#/") 
+
+
+  a.nav.nav-back(ng-href="#/")
     i.fa.fa-chevron-left
     i.fa.fa-chevron-left
-    |  back 
+    |  back
 
   //- div.col-half
   //-   canvas.charts#dayChart(width="165" height="180")

@@ -131,7 +131,7 @@ niApp.controller('NIController', function NIController($scope, $window, $http, N
       $scope.riskText = results.data.precog.time[hour].risk;
       $scope.riskLevel = results.data.precog.time[hour].risk.toLowerCase();
       $scope.mostLikely = results.data.precog.time[hour].guess;
-      console.log("result: " + results.data.precog + " hour: " + hour + " guess: " + results.data.precog.time[hour].guess);
+      //console.log("result: " + results.data.precog + " hour: " + hour + " guess: " + results.data.precog.time[hour].guess);
       $scope.loading = false;
       $scope.init = true;
     });
@@ -167,8 +167,7 @@ niApp.controller('NIController', function NIController($scope, $window, $http, N
   $scope.submitManualInput = function(){
 
     $scope.user.declinedLocation = false;
-    userService.getGeoData(function(){console.log("inside submitManualInput() callback function, about to call getData()");getData();}, 
-      'address='+$scope.user.manualLocation.replace(' ','+')+'+Phoenix+AZ');
+    userService.getGeoData(function(){getData()}, 'address='+$scope.user.manualLocation.replace(' ','+')+'+Phoenix+AZ');
 
 
     // $http.get('https://maps.googleapis.com/maps/api/geocode/json?address='+$scope.user.manualLocation.replace(' ','+')+'+Phoenix+AZ&sensor=true').then(function(res){
@@ -182,15 +181,15 @@ niApp.controller('NIController', function NIController($scope, $window, $http, N
 
   if($scope.user && !$scope.user.lat){
     $scope.loading = true;
-    console.log("setUserLocation() used to call getData()");
+    //console.log("setUserLocation() used to call getData()");
     userService.setUserLocation(function(){
       $scope.user = userService.getUser();
       $scope.loading = false;
-      console.log("inside setUserLocation() callback function, about to call getData()");
+      //console.log("inside setUserLocation() callback function, about to call getData()");
       getData();
     });
   } else {
-    console.log("Raw call to getData()");
+    //console.log("Raw call to getData()");
     getData();
   }
 
@@ -219,13 +218,14 @@ niApp.controller('MoreController', function MoreController($scope, $window, $htt
 
   $scope.timesOfDay = ['12-4am', '4-8am', '8am-12', '12-4pm', '4-8pm', '8pm-12'];
   $scope.daysOfWeek = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  $scope.crimeType = [];
   $scope.highestDay = '';
   $scope.highestDayData = [0,0,0,0,0,0];
   $scope.highestTime = '';
   $scope.highestTimeData = [0,0,0,0,0,0,0];
   $scope.todSeries = ['Time of Day'];
   $scope.dowSeries = ['Day of week'];
-
+  $scope.typeSeries = ['Crime type']
   $scope.time = timeService.getTime();
 
   var apiUrl = $window.location.origin + '/hm';
@@ -260,11 +260,21 @@ niApp.controller('MoreController', function MoreController($scope, $window, $htt
       $scope.riskLevel = results.data.precog.time[hour].risk.toLowerCase();
       $scope.loading = false;
 
-      $scope.highestTimeData =results.data.precog.timeOfDay;
+      $scope.highestTimeData = results.data.precog.timeOfDay;
       $scope.highestTime = $scope.timesOfDay[indexOfMax(results.data.precog.timeOfDay)];
       $scope.highestDayData = results.data.precog.dayOfWeek;
       $scope.highestDay = $scope.daysOfWeek[indexOfMax(results.data.precog.dayOfWeek)];
-      console.log("result: " + $scope.highestTime + "," + $scope.highestDay );
+      $scope.highestCrimeTypeData = results.data.precog.types;
+      var $scope.highestCrimeType = "";
+      var max = 0;
+      for (var i in $scope.highestCrimeTypeData) {
+         $scope.crimeType.push(i);
+         if ($scope.highestCrimeTypeData[i] > max) {
+           max = $scope.highestCrimeTypeData[i];
+           $scope.highestCrimeType = i;
+         }
+      }
+      console.log("Crime types: " + $scope.crimeType + ", Values: " + $scope.highestCrimeTypeData + ", Max = " + $scope.highestCrimeType );
     });
   };
 
