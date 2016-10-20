@@ -245,7 +245,7 @@ niApp.controller('MoreController', function MoreController($scope, $window, $htt
     $scope.loading = true;
     console.log("sending hm request for " + $scope.user.lat + "," + $scope.user.lng );
     $http({
-      url: apiUrl + '/' + $scope.user.lat + '/' + $scope.user.lng,
+      url: apiUrl + '/' + $scope.user.lat.toFixed(3) + '/' + $scope.user.lng.toFixed(3) ,
       method: "GET",
       cache: true
     }).then(function(results) {

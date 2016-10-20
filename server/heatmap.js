@@ -221,8 +221,8 @@ var calcData = function(arg, callback){
     console.log(queryPoint);
     heatmap.find(queryPoint,{},{}).toArray(function(err, docs){
       //var pointHeatmap = interpolateHeatmap(docs);
-      var info = {time: [], timeOfDay: [11,10,18,18,22,20], dayOfWeek: [12,16,12,18,17,14,12], types: {}};
-      //var info = {time: [], timeOfDay: [0,0,0,0,0,0], dayOfWeek: [0,0,0,0,0,0,0], types: {}};
+      //var info = {time: [], timeOfDay: [11,10,18,18,22,20], dayOfWeek: [12,16,12,18,17,14,12], types: {}};
+      var info = {time: [], timeOfDay: [0,0,0,0,0,0], dayOfWeek: [0,0,0,0,0,0,0], types: {}};
       for (var i = 0; i < 24; i++){
         info.time[i] = {score: 0, risk: "LOW", guess: "DRUG OFFENSE"};
       }
