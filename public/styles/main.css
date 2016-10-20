@@ -952,9 +952,7 @@ main {
 
 #one, #two {
   color: gray;
-  display: block;
   visibility: visible;
-  position: absolute;
   bottom: 20px;
   padding: 0 10px; }
 
@@ -962,3 +960,6 @@ main {
   position: absolute;
   left: 50%;
   transform: translateX(-50%); }
+
+.black {
+  color: black; }
