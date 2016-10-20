@@ -42,11 +42,12 @@ niApp.service('userService', function(NavigatorGeolocation, $http) {
 
       console.log("getGeoData: isPhoenix = " + isPhoenix);
 
+      if(typeof callback === 'function'){
+        console.log("getGeoData: Calling callback");
+        callback();
+      }
+
     });
-    if(typeof callback === 'function'){
-      console.log("getGeoData: Calling callback");
-      callback();
-    }
 
   };
 
@@ -123,12 +124,11 @@ niApp.controller('NIController', function NIController($scope, $window, $http, N
       method: "GET",
       cache: true
     }).then(function(results) {
-      var date = new Date();
-      var hour = date.getHours();
+      var hour = $scope.time.getHours();
       $scope.riskText = results.data.precog.time[hour].risk;
       $scope.riskLevel = results.data.precog.time[hour].risk.toLowerCase();
       $scope.mostLikely = results.data.precog.time[hour].guess;
-      console.log("result: " + $scope.riskLevel + "," + $scope.mostlikely );
+      console.log("result: " + results.data.precog + " hour: " + hour + " guess: " + results.data.precog.time[hour].guess);
       $scope.loading = false;
       $scope.init = true;
     });
@@ -177,12 +177,15 @@ niApp.controller('NIController', function NIController($scope, $window, $http, N
 
   if($scope.user && !$scope.user.lat){
     $scope.loading = true;
+    console.log("setUserLocation() used to call getData()");
     userService.setUserLocation(function(){
       $scope.user = userService.getUser();
       $scope.loading = false;
+      console.log("inside setUserLocation() callback function, about to call getData()");
       getData();
     });
   } else {
+    console.log("Raw call to getData()");
     getData();
   }
 
