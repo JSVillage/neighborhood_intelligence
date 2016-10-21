@@ -26,6 +26,8 @@ niApp.service('userService', function(NavigatorGeolocation, $http) {
     _user = user;
   };
 
+  var test = "test";
+
   var getGeoData = function(callback, q){
 
     $http.get('https://maps.googleapis.com/maps/api/geocode/json?' + q + '&sensor=true').then(function(res){
