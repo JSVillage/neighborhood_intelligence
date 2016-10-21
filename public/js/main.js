@@ -14821,6 +14821,12 @@ niApp.config(function ($routeProvider) {
     when('/more', {
     	templateUrl: 'more.html'
     }).
+    when('/type', {
+    	templateUrl: 'type.html'
+    }).
+    when('/heatmap', {
+    	templateUrl: 'heatmap.html'
+    }).
     otherwise('/');
 });
 
