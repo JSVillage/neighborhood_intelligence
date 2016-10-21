@@ -1,5 +1,6 @@
 //- bower components
 //= include ../bower_components/ngmap/build/scripts/ng-map.js 
+//= include ../node_modules/ngtouch/src/ngTouch.js
 //= include ../node_modules/chart.js/dist/Chart.js
 //= include ../node_modules/angular-chart.js/dist/angular-chart.js
 
