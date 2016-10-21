@@ -33,7 +33,7 @@ niApp.controller('NIController', function NIController($scope, $window, $http, N
   $scope.user = userService.getUser();
   $scope.time = timeService.getTime();
   $scope.formattedAddress = '';
-  $scope.selectedIndex = navService.currentIndex;
+  $scope.selectedIndex = navService.currentIndex = 0;
 
   $scope.onSwipeLeft = function(){
     $scope.selectedIndex ++;
@@ -101,7 +101,7 @@ niApp.controller('MoreController', function MoreController($scope, $window, $htt
   $scope.riskLevel = '';
   $scope.charts = [];
   $scope.user = userService.getUser();
-  $scope.selectedIndex = navService.currentIndex;
+  $scope.selectedIndex = navService.currentIndex = 1;
 
   $scope.onSwipeLeft = function(){
     $scope.selectedIndex ++;
@@ -213,7 +213,7 @@ niApp.controller('TypeController', function TypeController($scope, $window, $htt
   $scope.riskLevel = '';
   $scope.charts = [];
   $scope.user = userService.getUser();
-  $scope.selectedIndex = navService.currentIndex;
+  $scope.selectedIndex = navService.currentIndex = 2;
 
   $scope.onSwipeLeft = function(){
     $scope.selectedIndex ++;
@@ -342,7 +342,7 @@ niApp.controller('HeatmapController', function HeatmapController($scope, $window
                     "1gxtXOEWr8l6ksUn2XuoSWJk8PgKCAqFU4IY0rlbr",
                     "1_NIOWKin-h5zLI0bODI0OaLLr80o1oukRROgSt54"];
 
-  $scope.selectedIndex = navService.currentIndex;
+  $scope.selectedIndex = navService.currentIndex = 3;
 
   $scope.onSwipeLeft = function(){
     $scope.selectedIndex ++;
