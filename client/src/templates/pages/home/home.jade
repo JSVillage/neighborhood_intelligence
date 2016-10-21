@@ -30,9 +30,10 @@
   
   div.risk-level.fade-in(ng-show="init && !user.declinedLocation && user.isPhoenix!==false")
     h2.risk-label Risk level
-    p {{user.riskText}}
-      a#how.how(href="" ng-click="howModal=true")
+      a.how(href="" ng-click="howModal=true")
         i.fa.fa-question-circle
+    p {{user.riskText}}
+      
   
   
   div.risk-level.fade-in(ng-show="init && !user.declinedLocation && user.isPhoenix!==false")

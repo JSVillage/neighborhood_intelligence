@@ -21,8 +21,8 @@
     <p class="underline">{{user.formattedAddress}}  </p>
   </div>
   <div ng-show="init &amp;&amp; !user.declinedLocation &amp;&amp; user.isPhoenix!==false" class="risk-level fade-in">
-    <h2 class="risk-label">Risk level</h2>
-    <p>{{user.riskText}}<a id="how" href="" ng-click="howModal=true" class="how"><i class="fa fa-question-circle"></i></a></p>
+    <h2 class="risk-label">Risk level<a href="" ng-click="howModal=true" class="how"><i class="fa fa-question-circle"></i></a></h2>
+    <p>{{user.riskText}}</p>
   </div>
   <div ng-show="init &amp;&amp; !user.declinedLocation &amp;&amp; user.isPhoenix!==false" class="risk-level fade-in">
     <h2 class="risk-label fade-in">Most likely crime</h2>

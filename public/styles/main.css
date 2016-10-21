@@ -863,6 +863,9 @@ main {
   max-width: 100%;
   overflow: hidden; }
 
+.risk-label {
+  position: relative; }
+
 .manual-location {
   padding: 30px 0; }
   .manual-location input[type=text] {
@@ -876,17 +879,31 @@ main {
   bottom: 10vh;
   padding: 0 10px; }
 
-.pager .center a {
-  color: rgba(255, 255, 255, 0.5);
+.pager .center {
   position: absolute;
   left: 50%;
   transform: translateX(-50%); }
+  .pager .center a {
+    color: rgba(255, 255, 255, 0.5); }
 
 .pager .active {
   color: white; }
 
 .heatmap {
   margin-bottom: 30px; }
+
+.how {
+  position: absolute;
+  display: inline-block;
+  height: 12px;
+  width: 12px;
+  text-align: center;
+  color: #fff;
+  top: 0;
+  right: -12px; }
+  .how .fa-question-circle {
+    font-size: 12px;
+    color: #fff; }
 
 /* The Modal (background) */
 .risk-level .modal {
@@ -911,11 +928,6 @@ main {
 
 .modal.show-modal {
   display: block; }
-
-.how .fa-question-circle {
-  font-size: 20px;
-  padding-left: 5px;
-  color: #27a9e1; }
 
 /* Modal Content/Box */
 .risk-level .modal-content {

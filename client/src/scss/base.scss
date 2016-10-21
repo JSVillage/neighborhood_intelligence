@@ -83,7 +83,9 @@ main{
   max-width: 100%;
   overflow: hidden;
 }
-
+.risk-label{
+  position: relative;
+}
 .manual-location{
   padding: 30px 0;
   input[type=text]{
@@ -99,11 +101,14 @@ main{
         bottom: 10vh;
         padding: 0 10px;
     }
-    .center a{
-        color: rgba(255,255,255,.5);
+    .center {
+        
         position: absolute;
         left: 50%;
         transform: translateX(-50%);
+        a{
+          color: rgba(255,255,255,.5);
+        }
     }
 }
 
@@ -112,4 +117,19 @@ main{
 }
 .heatmap{
   margin-bottom: 30px;
+}
+
+.how {
+  position: absolute;
+  display: inline-block;
+  height: 12px;
+  width: 12px;
+  text-align: center; 
+  color: #fff;
+  top: 0;
+  right: -12px; 
+  .fa-question-circle {
+    font-size: 12px;
+    color: #fff;
+  }
 }
