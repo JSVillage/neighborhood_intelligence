@@ -9,7 +9,7 @@ factory(root.angular);
 }
 }(this, function(angular) {
 /**
- * AngularJS Google Maps Ver. 1.17.7
+ * AngularJS Google Maps Ver. 1.17.3
  *
  * The MIT License (MIT)
  * 
@@ -210,8 +210,6 @@ angular.module('ngMap', []);
         ((typeof center === 'string') && center.match(/\{\{.*\}\}/))
       ) {
         mapOptions.center = new google.maps.LatLng(0, 0);
-      } else if( (typeof center === 'string') && center.match(/[0-9.-]*,[0-9.-]*/) ){
-           mapOptions.center = new google.maps.LatLng(center);
       } else if (!(center instanceof google.maps.LatLng)) {
         var geoCenter = mapOptions.center;
         delete mapOptions.center;
@@ -523,9 +521,9 @@ angular.module('ngMap', []);
       position && (this.position = position); /* jshint ignore:line */
 
       if (this.getProjection() && typeof this.position.lng == 'function') {
+        var posPixel = this.getProjection().fromLatLngToDivPixel(this.position);
         var _this = this;
         var setPosition = function() {
-          var posPixel = _this.getProjection().fromLatLngToDivPixel(_this.position);
           var x = Math.round(posPixel.x - (_this.el.offsetWidth/2));
           var y = Math.round(posPixel.y - _this.el.offsetHeight - 10); // 10px for anchor
           _this.el.style.left = x + "px";
@@ -2491,7 +2489,7 @@ angular.module('ngMap', []);
 
       // convert output more for center and position
       if (
-        (options.key == 'center' || options.key == 'position') &&
+        (options.key == 'center' || options.key == 'center') &&
         output instanceof Array
       ) {
         output = new google.maps.LatLng(output[0], output[1]);
@@ -3303,7 +3301,62 @@ angular.module('ngMap', []);
 
 return 'ngMap';
 }));
-//= include ../node_modules/ngtouch/src/ngTouch.js
+"use strict";
+
+angular.module("ngTouch", [])
+.directive("ngTouchstart", function () {
+    return {
+        controller: ["$scope", "$element", function ($scope, $element) {
+
+            $element.bind("touchstart", onTouchStart);
+            function onTouchStart(event) {
+                var method = $element.attr("ng-touchstart");
+                $scope.$event = event;
+                $scope.$apply(method);
+            }
+
+        }]
+    }
+})
+.directive("ngTouchmove", function () {
+    return {
+        controller: ["$scope", "$element", function ($scope, $element) {
+
+            $element.bind("touchstart", onTouchStart);
+            function onTouchStart(event) {
+                event.preventDefault();
+                $element.bind("touchmove", onTouchMove);
+                $element.bind("touchend", onTouchEnd);
+            }
+            function onTouchMove(event) {
+                var method = $element.attr("ng-touchmove");
+                $scope.$event = event;
+                $scope.$apply(method);
+            }
+            function onTouchEnd(event) {
+                event.preventDefault();
+                $element.unbind("touchmove", onTouchMove);
+                $element.unbind("touchend", onTouchEnd);
+            }
+
+        }]
+    }
+})
+.directive("ngTouchend", function () {
+    return {
+        controller: ["$scope", "$element", function ($scope, $element) {
+
+            $element.bind("touchend", onTouchEnd);
+            function onTouchEnd(event) {
+                var method = $element.attr("ng-touchend");
+                $scope.$event = event;
+                $scope.$apply(method);
+            }
+
+        }]
+    }
+});
+
 /*!
  * Chart.js
  * http://chartjs.org/
@@ -14336,83 +14389,7 @@ niApp.factory('mapService', ['$http', function($http) {
   };
 }]);
 
-niApp.service('userService', function(NavigatorGeolocation, $http) {
-  var _user = {};
 
-  var getUser = function(){
-    return _user;
-  };
-
-  var setUser = function(user){
-    _user = user;
-  };
-
-  var getGeoData = function(callback, q){
-
-    $http.get('https://maps.googleapis.com/maps/api/geocode/json?' + q + '&sensor=true').then(function(res){
-      var isPhoenix = false;
-      angular.forEach(res.data.results[0].address_components, function(item){
-        if(item.short_name == 'Phoenix'){
-          isPhoenix = true;
-        }
-      });
-      _user.isPhoenix = isPhoenix;
-      _user.formattedAddress = res.data.results[0].formatted_address;
-      _user.lat = res.data.results[0].geometry.location.lat;
-      _user.lng = res.data.results[0].geometry.location.lng;
-
-      //console.log("getGeoData: isPhoenix = " + isPhoenix);
-
-      if(typeof callback === 'function'){
-        //console.log("getGeoData: Calling callback");
-        callback();
-      }
-
-    });
-
-  };
-
-  var setUserLocation = function(callback){
-    NavigatorGeolocation.getCurrentPosition()
-      .then(function(position) {
-        _user.lat = position.coords.latitude;
-        _user.lng = position.coords.longitude;
-        getGeoData(callback, 'latlng=' + _user.lat + ',' + _user.lng);
-      },
-      function(err){
-        console.log('Error getting location ...');
-        console.log(err);
-        _user.declinedLocation = true;
-        if(typeof callback === 'function'){
-          callback();
-        }
-      });
-  };
-
-  return {
-    getUser : getUser,
-    setUser : setUser,
-    setUserLocation : setUserLocation,
-    getGeoData : getGeoData
-  }
-});
-
-niApp.service('timeService', function() {
-  var _time = new Date();
-
-  var getTime = function(){
-    return _time;
-  };
-
-  var setTime = function(time){
-    _time = time;
-  };
-
-  return {
-    getTime : getTime,
-    setTime : setTime
-  }
-});
 
 niApp.config(['ChartJsProvider', function (ChartJsProvider) {
   // Configure all charts
@@ -14839,7 +14816,83 @@ niApp.directive("more", function () {
         controller: 'MoreController'
     };
 });
-//= include services.js
+angular.module('niApp').service('userService', function(NavigatorGeolocation, $http) {
+  var _user = {};
+
+  var getUser = function(){
+    return _user;
+  };
+
+  var setUser = function(user){
+    _user = user;
+  };
+
+  var getGeoData = function(callback, q){
+
+    $http.get('https://maps.googleapis.com/maps/api/geocode/json?' + q + '&sensor=true').then(function(res){
+      var isPhoenix = false;
+      angular.forEach(res.data.results[0].address_components, function(item){
+        if(item.short_name == 'Phoenix'){
+          isPhoenix = true;
+        }
+      });
+      _user.isPhoenix = isPhoenix;
+      _user.formattedAddress = res.data.results[0].formatted_address;
+      _user.lat = res.data.results[0].geometry.location.lat;
+      _user.lng = res.data.results[0].geometry.location.lng;
+
+      //console.log("getGeoData: isPhoenix = " + isPhoenix);
+
+      if(typeof callback === 'function'){
+        //console.log("getGeoData: Calling callback");
+        callback();
+      }
+
+    });
+
+  };
+
+  var setUserLocation = function(callback){
+    NavigatorGeolocation.getCurrentPosition()
+      .then(function(position) {
+        _user.lat = position.coords.latitude;
+        _user.lng = position.coords.longitude;
+        getGeoData(callback, 'latlng=' + _user.lat + ',' + _user.lng);
+      },
+      function(err){
+        console.log('Error getting location ...');
+        console.log(err);
+        _user.declinedLocation = true;
+        if(typeof callback === 'function'){
+          callback();
+        }
+      });
+  };
+
+  return {
+    getUser : getUser,
+    setUser : setUser,
+    setUserLocation : setUserLocation,
+    getGeoData : getGeoData
+  }
+});
+
+niApp.service('timeService', function() {
+  var _time = new Date();
+
+  var getTime = function(){
+    return _time;
+  };
+
+  var setTime = function(time){
+    _time = time;
+  };
+
+  return {
+    getTime : getTime,
+    setTime : setTime
+  }
+});
 niApp.config(function ($routeProvider) {
     $routeProvider.
     when('/', {
