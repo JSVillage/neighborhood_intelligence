@@ -99,15 +99,15 @@ main{
         padding: 0 10px;
     }
     .center {
-        color: gray;
+        color: rgba(255,255,255,.5);
         position: absolute;
         left: 50%;
         transform: translateX(-50%);
     }
 }
 
-.pager .black {
-    color: black;
+.pager .active {
+  color: white;
 }
 .heatmap{
   margin-bottom: 30px;

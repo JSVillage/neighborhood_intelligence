@@ -15077,12 +15077,13 @@ niApp.config(['ChartJsProvider', function (ChartJsProvider) {
 }]);
 
 
-niApp.controller('IndexController', ['$scope', '$location', function IndexController($scope, $location, navService) {
+niApp.controller('IndexController', ['$scope', '$location', function IndexController($scope, $location, navService, userService) {
   $scope.$on('$locationChangeSuccess', function() {
-        $scope.location = $location.path();
+      $scope.user = userService.getUser();    
+      $scope.location = $location.path();
     });
 }]);
-
+  
 // niApp.directive("home", function () {
 //     return {
 //         templateUrl: 'home.html',

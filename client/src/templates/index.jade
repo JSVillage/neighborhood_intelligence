@@ -8,12 +8,12 @@ block title
 
 block content
   div(ng-view)
-  span(ng-controller="IndexController" class="pager")
+  span(ng-controller="IndexController" class="pager fade-in" ng-show="user.lat")
     //i#left.fa.fa-chevron-left(ng-hide="location =='/'")
     span.center
-      i.fa.fa-circle(ng-class="{ 'black': location =='/' }")
-      i.fa.fa-circle(ng-class="{ 'black': location =='/more' }")
-      i.fa.fa-circle(ng-class="{ 'black': location =='/type' }")
-      i.fa.fa-circle(ng-class="{ 'black': location =='/heatmap' }")
+      i.fa.fa-circle(ng-class="{ 'active': location =='/' }")
+      i.fa.fa-circle(ng-class="{ 'active': location =='/more' }")
+      i.fa.fa-circle(ng-class="{ 'active': location =='/type' }")
+      i.fa.fa-circle(ng-class="{ 'active': location =='/heatmap' }")
     
  
