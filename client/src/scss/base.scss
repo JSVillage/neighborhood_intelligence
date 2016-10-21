@@ -92,3 +92,23 @@ main{
     display: block;
   }
 }
+.pager {
+    i {
+        visibility: visible;
+        bottom: 10vh;
+        padding: 0 10px;
+    }
+    .center {
+        color: gray;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+}
+
+.pager .black {
+    color: black;
+}
+.heatmap{
+  margin-bottom: 30px;
+}

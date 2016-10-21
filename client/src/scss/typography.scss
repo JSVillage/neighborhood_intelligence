@@ -193,7 +193,7 @@ li{list-style:none;}
   }
 }
 .sub-title {
-  color: #000;
+  color: #fff;
   margin-top: 10px;
   font-size: 19px;
   font-family: 'montserratultralight';
@@ -201,8 +201,8 @@ li{list-style:none;}
   position: relative;
   z-index: 1;
 }
-.title a{
-  color: #000;
+.title, .title  a{
+  color: #fff;
   margin-bottom: 0;
   // margin-top: 29px;
   font-weight: 100;

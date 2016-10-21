@@ -404,7 +404,7 @@ li {
       right: 0; }
 
 .sub-title {
-  color: #000;
+  color: #fff;
   margin-top: 10px;
   font-size: 19px;
   font-family: 'montserratultralight';
@@ -412,8 +412,8 @@ li {
   position: relative;
   z-index: 1; }
 
-.title a {
-  color: #000;
+.title, .title a {
+  color: #fff;
   margin-bottom: 0;
   font-weight: 100;
   position: relative;
@@ -870,6 +870,23 @@ main {
     text-align: center;
     display: block; }
 
+.pager i {
+  visibility: visible;
+  bottom: 10vh;
+  padding: 0 10px; }
+
+.pager .center {
+  color: gray;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%); }
+
+.pager .black {
+  color: black; }
+
+.heatmap {
+  margin-bottom: 30px; }
+
 /* The Modal (background) */
 .risk-level .modal {
   display: none;
@@ -963,17 +980,3 @@ main {
 
 #right {
   right: 10%; }
-
-#one, #two {
-  visibility: visible;
-  bottom: 10vh;
-  padding: 0 10px; }
-
-.center {
-  color: gray;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%); }
-
-.center .black {
-  color: black; }

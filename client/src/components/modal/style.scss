@@ -83,17 +83,3 @@
 #right {
     right: 10%;
 }
-#one, #two {
-    visibility: visible;
-    bottom: 10vh;
-    padding: 0 10px;
-}
-.center {
-    color: gray;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-}
-.center .black {
-    color: black;
-}
