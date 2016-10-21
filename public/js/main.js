@@ -15478,6 +15478,21 @@ niApp.directive("more", function () {
         controller: 'MoreController'
     };
 });
+
+niApp.directive("type", function () {
+    return {
+        templateUrl: 'type.html',
+        controller: 'TypeController'
+    };
+});
+
+niApp.directive("heatmap", function () {
+    return {
+        templateUrl: 'heatmap.html',
+        controller: 'HeatmapController'
+    };
+});
+
 angular.module('niApp').service('userService', function(NavigatorGeolocation, $http) {
   var _user = {};
 
