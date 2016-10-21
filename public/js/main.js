@@ -15079,12 +15079,13 @@ niApp.config(['ChartJsProvider', function (ChartJsProvider) {
 }]);
 
 
-niApp.controller('IndexController', ['$scope', '$location', function IndexController($scope, $location, navService) {
+niApp.controller('IndexController', ['$scope', '$location', 'navService', 'userService', function IndexController($scope, $location, navService, userService) {
   $scope.$on('$locationChangeSuccess', function() {
-        $scope.location = $location.path();
+      $scope.user = userService.getUser();    
+      $scope.location = $location.path();
     });
 }]);
-
+  
 // niApp.directive("home", function () {
 //     return {
 //         templateUrl: 'home.html',
@@ -15195,7 +15196,6 @@ angular.module('niApp').service('navService', function() {
   var currentIndex = 0;
 
   var navigate = function(i,$location){
-    console.log(i);
     currentIndex = i = i < 0 ? 3 : i > 3 ? 0 : i;
     switch (i) {
       case 1:
@@ -15319,73 +15319,6 @@ angular.module('niApp').controller('HeatmapController', function HeatmapControll
   }
 
 });
-angular.module('niApp').controller('NIController', function NIController($scope, $window, $http, NavigatorGeolocation, $window, $rootScope, userService, timeService, $location, navService) {
-  var apiUrl = $window.location.origin + '/hm';
-  $scope.howModal = false;
-  $scope.loading = false;
-  $scope.init = false;
-  $scope.riskLevel = '';
-  $scope.riskText = '';
-  $scope.mostLikely = '';
-  $scope.user = userService.getUser();
-  $scope.time = timeService.getTime();
-  $scope.selectedIndex = navService.currentIndex = 0;
-
-  $scope.onSwipeLeft = function(){
-    $scope.selectedIndex ++;
-    navService.navigate($scope.selectedIndex, $location);
-  };
-  $scope.onSwipeRight = function(){
-    $scope.selectedIndex --;
-    navService.navigate($scope.selectedIndex, $location);
-  };
-
-  var getData = function(){
-    //console.log("Entered getData" );
-    if($scope.user.declinedLocation){return;}
-    $scope.loading = true;
-    console.log("sending hm request for " + $scope.user.lat + "," + $scope.user.lng );
-    $http({
-      url: apiUrl + '/' + $scope.user.lat.toFixed(3) + '/' + $scope.user.lng.toFixed(3),
-      method: "GET",
-      cache: true
-    }).then(function(results) {
-      var time = new Date($scope.time);
-      var hour = time.getHours();
-      $scope.user.riskText = results.data.precog.time[hour].risk;
-      $scope.user.riskLevel = results.data.precog.time[hour].risk.toLowerCase();
-      $scope.user.mostLikely = results.data.precog.time[hour].guess;
-      //console.log("result: " + results.data.precog + " hour: " + hour + " guess: " + results.data.precog.time[hour].guess);
-      $scope.loading = false;
-      $scope.init = true;
-    });
-  };
-
-  $scope.setTime = function(hour){
-    var d = new Date($scope.time);
-    $scope.time = d.setHours(d.getHours()+hour);
-    getData();
-  };
-
-  $scope.submitManualInput = function(){
-
-    $scope.user.declinedLocation = false;
-    userService.getGeoData(function(){getData()}, 'address='+$scope.user.manualLocation.replace(' ','+')+'+Phoenix+AZ');
-
-  };
-
-  if($scope.user && !$scope.user.lat){
-    $scope.loading = true;
-    userService.setUserLocation(function(){
-      $scope.user = userService.getUser();
-      $scope.loading = false;
-      getData();
-    });
-  } else {
-    getData();
-  }
-
-});
 
 angular.module('niApp').controller('MoreController', function MoreController($scope, $window, $http, $rootScope, $timeout, userService, timeService, $location, navService) {
 
@@ -15395,6 +15328,7 @@ angular.module('niApp').controller('MoreController', function MoreController($sc
   $scope.charts = [];
   $scope.user = userService.getUser();
   $scope.selectedIndex = navService.currentIndex = 1;
+  console.log($scope.user);
 
   $scope.onSwipeLeft = function(){
     $scope.selectedIndex ++;
@@ -15472,6 +15406,73 @@ angular.module('niApp').controller('MoreController', function MoreController($sc
   /*var setPage = function(page) {
     $location.path(page);
   };*/
+
+  if($scope.user && !$scope.user.lat){
+    $scope.loading = true;
+    userService.setUserLocation(function(){
+      $scope.user = userService.getUser();
+      $scope.loading = false;
+      getData();
+    });
+  } else {
+    getData();
+  }
+
+});
+angular.module('niApp').controller('NIController', function NIController($scope, $window, $http, NavigatorGeolocation, $window, $rootScope, userService, timeService, $location, navService) {
+  var apiUrl = $window.location.origin + '/hm';
+  $scope.howModal = false;
+  $scope.loading = false;
+  $scope.init = false;
+  $scope.riskLevel = '';
+  $scope.riskText = '';
+  $scope.mostLikely = '';
+  $scope.user = userService.getUser();
+  $scope.time = timeService.getTime();
+  $scope.selectedIndex = navService.currentIndex = 0;
+
+  $scope.onSwipeLeft = function(){
+    $scope.selectedIndex ++;
+    navService.navigate($scope.selectedIndex, $location);
+  };
+  $scope.onSwipeRight = function(){
+    $scope.selectedIndex --;
+    navService.navigate($scope.selectedIndex, $location);
+  };
+
+  var getData = function(){
+    //console.log("Entered getData" );
+    if($scope.user.declinedLocation){return;}
+    $scope.loading = true;
+    console.log("sending hm request for " + $scope.user.lat + "," + $scope.user.lng );
+    $http({
+      url: apiUrl + '/' + $scope.user.lat.toFixed(3) + '/' + $scope.user.lng.toFixed(3),
+      method: "GET",
+      cache: true
+    }).then(function(results) {
+      var time = new Date($scope.time);
+      var hour = time.getHours();
+      $scope.user.riskText = results.data.precog.time[hour].risk;
+      $scope.user.riskLevel = results.data.precog.time[hour].risk.toLowerCase();
+      $scope.user.mostLikely = results.data.precog.time[hour].guess;
+      //console.log("result: " + results.data.precog + " hour: " + hour + " guess: " + results.data.precog.time[hour].guess);
+      $scope.loading = false;
+      $scope.init = true;
+    });
+  };
+
+  $scope.setTime = function(hour){
+    var d = new Date($scope.time);
+    $scope.time = d.setHours(d.getHours()+hour);
+    getData();
+  };
+
+  $scope.submitManualInput = function(){
+
+    $scope.user.declinedLocation = false;
+    userService.getGeoData(function(){getData()}, 'address='+$scope.user.manualLocation.replace(' ','+')+'+Phoenix+AZ');
+
+  };
 
   if($scope.user && !$scope.user.lat){
     $scope.loading = true;

@@ -14,11 +14,7 @@
 .modal.show-modal  {
     display: block;
 }
-.how .fa-question-circle {
-    font-size: 20px;
-    padding-left: 5px;
-    color: #27a9e1;
-}
+
 /* Modal Content/Box */
 .risk-level .modal-content {
 	position: relative;
@@ -82,18 +78,4 @@
 }
 #right {
     right: 10%;
-}
-#one, #two {
-    visibility: visible;
-    bottom: 10vh;
-    padding: 0 10px;
-}
-.center {
-    color: gray;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-}
-.center .black {
-    color: black;
 }

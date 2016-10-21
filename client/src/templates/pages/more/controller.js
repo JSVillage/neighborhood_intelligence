@@ -7,6 +7,7 @@ angular.module('niApp').controller('MoreController', function MoreController($sc
   $scope.charts = [];
   $scope.user = userService.getUser();
   $scope.selectedIndex = navService.currentIndex = 1;
+  console.log($scope.user);
 
   $scope.onSwipeLeft = function(){
     $scope.selectedIndex ++;

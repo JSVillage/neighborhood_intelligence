@@ -1,5 +1,5 @@
 div(ng-controller="HeatmapController" ng-swipe-right="onSwipeRight($event)" ng-swipe-left="onSwipeLeft($event)").font-color.fade-in
-  h1.title.fade-in Precog
+  h1.title.fade-in: a(ng-href="#/") Precog
   h2.sub-title.fade-in neighborhood intelligence
 
   div.stage(ng-class="user.riskLevel")
@@ -9,13 +9,14 @@ div(ng-controller="HeatmapController" ng-swipe-right="onSwipeRight($event)" ng-s
   div.risk-level.fade-in(ng-class="{offscreen : !init}")
     h2.risk-label City Heatmap
 
-  div(ng-map zoom="11" center="{{user.lat}},{{user.lng}}" ng-if="user.lat")
-    //-"33.45,-112.07"
-    fusion-tables-layer(query="{ select: 'latitude', from: '{{mapKey[hour]}}'}", heatmap = "{enabled: true}")
-  div(ng-map zoom="10" center="33.45,-112.02" ng-if="!user.lat")
-    fusion-tables-layer(query="{ select: 'latitude', from: '{{mapKey[hour]}}'}", heatmap = "{enabled: true}")
+  .heatmap
+    div(ng-map zoom="11" center="{{user.lat}},{{user.lng}}" ng-if="user.lat")
+      //-"33.45,-112.07"
+      fusion-tables-layer(query="{ select: 'latitude', from: '{{mapKey[hour]}}'}", heatmap = "{enabled: true}")
+    div(ng-map zoom="10" center="33.45,-112.02" ng-if="!user.lat")
+      fusion-tables-layer(query="{ select: 'latitude', from: '{{mapKey[hour]}}'}", heatmap = "{enabled: true}")
 
-  a.nav.nav-back(ng-href="#/")
-    i.fa.fa-chevron-left
-    i.fa.fa-chevron-left
-    |  back
+  //- a.nav.nav-back(ng-href="#/")
+  //-   i.fa.fa-chevron-left
+  //-   i.fa.fa-chevron-left
+  //-   |  back

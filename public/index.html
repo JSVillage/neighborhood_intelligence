@@ -23,8 +23,7 @@
   </head>
   <body>
     <main>
-      <div ng-view></div><span ng-controller="IndexController">
-        <!--i#left.fa.fa-chevron-left(ng-hide="location =='/'")--><span class="center"><i id="one" ng-class="{ 'black': location =='/' }" class="fa fa-circle"></i><i id="two" ng-class="{ 'black': location =='/more' }" class="fa fa-circle"></i><i id="three" ng-class="{ 'black': location =='/type' }" class="fa fa-circle"></i><i id="four" ng-class="{ 'black': location =='/heatmap' }" class="fa fa-circle"></i></span></span>
+      <div ng-view></div><span ng-controller="IndexController" ng-show="user.lat" ng-cloak class="pager fade-in"><span class="center"><a href="#/"><i ng-class="{ 'active': location =='/' }" class="fa fa-circle"></i></a><a href="#/more"><i ng-class="{ 'active': location =='/more' }" class="fa fa-circle"></i></a><a href="#/type"><i ng-class="{ 'active': location =='/type' }" class="fa fa-circle"></i></a><a href="#/heatmap"><i ng-class="{ 'active': location =='/heatmap' }" class="fa fa-circle"></i></a></span></span>
     </main>
     <script src="//maps.google.com/maps/api/js?key=AIzaSyC7Q9QRwWo07WGrCluT8zSWa2pQj5cmXME"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
