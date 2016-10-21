@@ -15083,33 +15083,33 @@ niApp.controller('IndexController', ['$scope', '$location', function IndexContro
     });
 }]);
 
-niApp.directive("home", function () {
-    return {
-        templateUrl: 'home.html',
-        controller: 'NIController'
-    };
-});
+// niApp.directive("home", function () {
+//     return {
+//         templateUrl: 'home.html',
+//         controller: 'NIController'
+//     };
+// });
 
-niApp.directive("more", function () {
-    return {
-        templateUrl: 'more.html',
-        controller: 'MoreController'
-    };
-});
+// niApp.directive("more", function () {
+//     return {
+//         templateUrl: 'more.html',
+//         controller: 'MoreController'
+//     };
+// });
 
-niApp.directive("type", function () {
-    return {
-        templateUrl: 'type.html',
-        controller: 'TypeController'
-    };
-});
+// niApp.directive("type", function () {
+//     return {
+//         templateUrl: 'type.html',
+//         controller: 'TypeController'
+//     };
+// });
 
-niApp.directive("heatmap", function () {
-    return {
-        templateUrl: 'heatmap.html',
-        controller: 'HeatmapController'
-    };
-});
+// niApp.directive("heatmap", function () {
+//     return {
+//         templateUrl: 'heatmap.html',
+//         controller: 'HeatmapController'
+//     };
+// });
 
 angular.module('niApp').service('userService', function(NavigatorGeolocation, $http) {
   var _user = {};
