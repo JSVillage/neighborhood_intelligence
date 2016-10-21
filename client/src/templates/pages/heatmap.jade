@@ -8,13 +8,13 @@ div(ng-controller="HeatmapController").font-color.fade-in
   br
   div.risk-level.fade-in(ng-class="{offscreen : !init}")
     h2.risk-label City Heatmap
-    p {{time}}
+    p {{mapKey[hour]}}
 
-  div(ng-map zoom="10" center="{{user.lat}},{{user.lng}}" ng-if="user.lat")
+  div(ng-map zoom="11" center="{{user.lat}},{{user.lng}}" ng-if="user.lat")
     //-"33.45,-112.07"
-    fusion-tables-layer(query="{ select: 'location', from: {{mapKey[hours]}}}", heatmap = "{enabled: true}")
+    fusion-tables-layer(query="{ select: 'location', from: {{mapKey[hour]}}}", heatmap = "{enabled: true}")
   div(ng-map zoom="10" center="33.45,-112.02" ng-if="!user.lat")
-    fusion-tables-layer(query="{ select: 'location', from: {{mapKey[hours]}}}", heatmap = "{enabled: true}")
+    fusion-tables-layer(query="{ select: 'location', from: {{mapKey[hour]}}}", heatmap = "{enabled: true}")
 
   a.nav.nav-back(ng-href="#/")
     i.fa.fa-chevron-left
