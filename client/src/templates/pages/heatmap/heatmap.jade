@@ -11,15 +11,9 @@ div(ng-controller="HeatmapController" ng-swipe-right="onSwipeRight($event)" ng-s
 
   .heatmap
     div(ng-map zoom="12" center="{{user.lat}},{{user.lng}}" ng-if="user.lat")
-    fusion-tables-layer(query="{ select: 'loc/1', from: '{{mapKey[hour]}}',
-                                  where {{'loc/1' > user.lat - 0.1}} AND {{'loc/1' < user.lat + 0.1}} AND
-                                        {{'loc/0' > user.lng - 0.1}} AND {{'loc/0' < user.lng + 0.1}} }",
-                                  heatmap = "{enabled: true}")
+    fusion-tables-layer(query="{ select: 'lat', from: '{{mapKey[hour]}}', where {{lat > user.lat - 0.1}} AND {{lat < user.lat + 0.1}} AND {{lng > user.lng - 0.1}} AND {{lng < user.lng + 0.1}} }",heatmap = "{enabled: true}")
     div(ng-map zoom="10" center="33.45,-112.02" ng-if="!user.lat")
-    fusion-tables-layer(query="{ select: 'loc/1', from: '{{mapKey[hour]}}',
-                                  where {{'loc/1' > user.lat - 0.1}} AND {{'loc/1' < user.lat + 0.1}} AND
-                                        {{'loc/0' > user.lng - 0.1}} AND {{'loc/0' < user.lng + 0.1}} }",
-                                  heatmap = "{enabled: true}")
+    fusion-tables-layer(query="{ select: 'lat', from: '{{mapKey[hour]}}', where {{lat > user.lat - 0.1}} AND {{lat < user.lat + 0.1}} AND {{lng > user.lng - 0.1}} AND {{lng < user.lng + 0.1}} }",heatmap = "{enabled: true}")
 
   //- a.nav.nav-back(ng-href="#/")
   //-   i.fa.fa-chevron-left
