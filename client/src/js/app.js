@@ -100,7 +100,7 @@ niApp.config(['ChartJsProvider', function (ChartJsProvider) {
   });
 }]);
 
-niApp.controller('NIController', function NIController($scope, $window, $http, NavigatorGeolocation, $window, $rootScope, userService, timeService) {
+niApp.controller('NIController', function NIController($scope, $window, $http, NavigatorGeolocation, $window, $rootScope, userService, timeService, $location) {
   var apiUrl = $window.location.origin + '/hm';
   $scope.howModal = false;
   $scope.loading = false;
