@@ -59,7 +59,7 @@ angular.module('niApp').service('userService', function(NavigatorGeolocation, $h
   }
 });
 
-niApp.service('timeService', function() {
+angular.module('niApp').service('timeService', function() {
   var _time = new Date();
 
   var getTime = function(){
@@ -73,5 +73,32 @@ niApp.service('timeService', function() {
   return {
     getTime : getTime,
     setTime : setTime
+  }
+});
+
+angular.module('niApp').service('navService', function() {
+  var currentIndex = 0;
+
+  var navigate = function(i){
+    currentIndex = i = i < 0 ? 3 : i > 3 ? 0 : i;
+    switch (i) {
+      case 1:
+        $location.url("/more");
+        break;
+      case 2:
+        $location.url("/type");
+        break;
+      case 3:
+        $location.url("/heatmap");
+        break;
+      default:
+        $location.url("/");
+        break;
+    }
+  };
+
+  return {
+    currentIndex : currentIndex,
+    navigate : navigate
   }
 });
