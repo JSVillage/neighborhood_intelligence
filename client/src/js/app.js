@@ -1,4 +1,4 @@
-var niApp = angular.module('niApp', ["ngRoute", "ngMap", "chart.js","ngTouch"]);
+var niApp = angular.module('niApp', ["ngRoute", "ngMap", "chart.js", "ngTouch"]);
 
 
 niApp.factory('mapService', ['$http', function($http) {
@@ -100,7 +100,7 @@ niApp.config(['ChartJsProvider', function (ChartJsProvider) {
   });
 }]);
 
-niApp.controller('NIController', function NIController($scope, $window, $http, NavigatorGeolocation, $window, $rootScope, userService, timeService) {
+niApp.controller('NIController', function NIController($scope, $window, $http, NavigatorGeolocation, $window, $rootScope, userService, timeService, $location) {
   var apiUrl = $window.location.origin + '/hm';
   $scope.howModal = false;
   $scope.loading = false;
@@ -115,6 +115,14 @@ niApp.controller('NIController', function NIController($scope, $window, $http, N
 
   // $scope.googleMapsUrl="https://maps.google.com/maps/api/js?key=AIzaSyAtvTUqW2i2tbup-B9tW-4NQ6-bb1H3I_w"
 
+  $scope.onSwipeLeft = function(){
+    $scope.selectedIndex --;
+    alert('swipe left');
+  };
+  $scope.onSwipeRight = function(){
+    $scope.selectedIndex ++;
+    alert('swipe right');
+  };
   $scope.$watch('selectedIndex', function(current, old) {
     switch (current) {
       case 0:
