@@ -9,7 +9,7 @@ factory(root.angular);
 }
 }(this, function(angular) {
 /**
- * AngularJS Google Maps Ver. 1.17.7
+ * AngularJS Google Maps Ver. 1.17.3
  *
  * The MIT License (MIT)
  * 
@@ -210,8 +210,6 @@ angular.module('ngMap', []);
         ((typeof center === 'string') && center.match(/\{\{.*\}\}/))
       ) {
         mapOptions.center = new google.maps.LatLng(0, 0);
-      } else if( (typeof center === 'string') && center.match(/[0-9.-]*,[0-9.-]*/) ){
-           mapOptions.center = new google.maps.LatLng(center);
       } else if (!(center instanceof google.maps.LatLng)) {
         var geoCenter = mapOptions.center;
         delete mapOptions.center;
@@ -523,9 +521,9 @@ angular.module('ngMap', []);
       position && (this.position = position); /* jshint ignore:line */
 
       if (this.getProjection() && typeof this.position.lng == 'function') {
+        var posPixel = this.getProjection().fromLatLngToDivPixel(this.position);
         var _this = this;
         var setPosition = function() {
-          var posPixel = _this.getProjection().fromLatLngToDivPixel(_this.position);
           var x = Math.round(posPixel.x - (_this.el.offsetWidth/2));
           var y = Math.round(posPixel.y - _this.el.offsetHeight - 10); // 10px for anchor
           _this.el.style.left = x + "px";
@@ -2491,7 +2489,7 @@ angular.module('ngMap', []);
 
       // convert output more for center and position
       if (
-        (options.key == 'center' || options.key == 'position') &&
+        (options.key == 'center' || options.key == 'center') &&
         output instanceof Array
       ) {
         output = new google.maps.LatLng(output[0], output[1]);
@@ -15096,12 +15094,12 @@ niApp.controller('NIController', function NIController($scope, $window, $http, N
   // $scope.googleMapsUrl="https://maps.google.com/maps/api/js?key=AIzaSyAtvTUqW2i2tbup-B9tW-4NQ6-bb1H3I_w"
 
   $scope.onSwipeLeft = function(){
-    $scope.selectedIndex --;
-    alert('swipe left');
+    $scope.selectedIndex ++;
+    alert($scope.selectedIndex);
   };
   $scope.onSwipeRight = function(){
-    $scope.selectedIndex ++;
-    alert('swipe right');
+    $scope.selectedIndex --;
+    alert($scope.selectedIndex);
   };
   $scope.$watch('selectedIndex', function(current, old) {
     switch (current) {
@@ -15109,13 +15107,13 @@ niApp.controller('NIController', function NIController($scope, $window, $http, N
         $location.url("/");
         break;
       case 1:
-        $location.url("/more.html");
+        $location.url("/more");
         break;
       case 2:
-        $location.url("/type.html");
+        $location.url("/type");
         break;
       case 3:
-        $location.url("/heatmap.html");
+        $location.url("/heatmap");
         break;
     }
   });

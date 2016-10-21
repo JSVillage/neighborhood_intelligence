@@ -40,12 +40,12 @@ niApp.controller('NIController', function NIController($scope, $window, $http, N
   // $scope.googleMapsUrl="https://maps.google.com/maps/api/js?key=AIzaSyAtvTUqW2i2tbup-B9tW-4NQ6-bb1H3I_w"
 
   $scope.onSwipeLeft = function(){
-    $scope.selectedIndex --;
-    alert('swipe left');
+    $scope.selectedIndex ++;
+    alert($scope.selectedIndex);
   };
   $scope.onSwipeRight = function(){
-    $scope.selectedIndex ++;
-    alert('swipe right');
+    $scope.selectedIndex --;
+    alert($scope.selectedIndex);
   };
   $scope.$watch('selectedIndex', function(current, old) {
     switch (current) {
@@ -53,13 +53,13 @@ niApp.controller('NIController', function NIController($scope, $window, $http, N
         $location.url("/");
         break;
       case 1:
-        $location.url("/more.html");
+        $location.url("/more");
         break;
       case 2:
-        $location.url("/type.html");
+        $location.url("/type");
         break;
       case 3:
-        $location.url("/heatmap.html");
+        $location.url("/heatmap");
         break;
     }
   });
