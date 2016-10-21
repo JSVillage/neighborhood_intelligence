@@ -67,7 +67,9 @@ angular.module('niApp').controller('MoreController', function MoreController($sc
       cache: true
     }).then(function(results) {
       $scope.init = true;
+      console.log($scope.time);
       var time = new Date($scope.time);
+      console.log(time);
       var hour = time.getHours();
       $scope.user.riskText = results.data.precog.time[hour].risk;
       $scope.user.riskLevel = results.data.precog.time[hour].risk.toLowerCase();

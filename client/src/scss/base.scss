@@ -96,20 +96,20 @@ main{
   }
 }
 .pager {
-    i {
-        visibility: visible;
-        bottom: 10vh;
-        padding: 0 10px;
-    }
-    .center {
-        
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-        a{
-          color: rgba(255,255,255,.5);
-        }
-    }
+  i {
+      visibility: visible;
+      bottom: 10vh;
+      padding: 0 10px;
+  }
+  .center {
+      
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      a{
+        color: rgba(255,255,255,.5);
+      }
+  }
 }
 
 .pager .active {
