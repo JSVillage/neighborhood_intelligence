@@ -1,4 +1,4 @@
-var niApp = angular.module('niApp', ["ngRoute", "ngMap", "chart.js","ngTouch"]);
+var niApp = angular.module('niApp', ["ngRoute", "ngMap", "chart.js", "ngTouch"]);
 
 
 niApp.factory('mapService', ['$http', function($http) {
