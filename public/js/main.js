@@ -9,7 +9,7 @@ factory(root.angular);
 }
 }(this, function(angular) {
 /**
- * AngularJS Google Maps Ver. 1.17.3
+ * AngularJS Google Maps Ver. 1.17.7
  *
  * The MIT License (MIT)
  * 
@@ -210,6 +210,8 @@ angular.module('ngMap', []);
         ((typeof center === 'string') && center.match(/\{\{.*\}\}/))
       ) {
         mapOptions.center = new google.maps.LatLng(0, 0);
+      } else if( (typeof center === 'string') && center.match(/[0-9.-]*,[0-9.-]*/) ){
+           mapOptions.center = new google.maps.LatLng(center);
       } else if (!(center instanceof google.maps.LatLng)) {
         var geoCenter = mapOptions.center;
         delete mapOptions.center;
@@ -521,9 +523,9 @@ angular.module('ngMap', []);
       position && (this.position = position); /* jshint ignore:line */
 
       if (this.getProjection() && typeof this.position.lng == 'function') {
-        var posPixel = this.getProjection().fromLatLngToDivPixel(this.position);
         var _this = this;
         var setPosition = function() {
+          var posPixel = _this.getProjection().fromLatLngToDivPixel(_this.position);
           var x = Math.round(posPixel.x - (_this.el.offsetWidth/2));
           var y = Math.round(posPixel.y - _this.el.offsetHeight - 10); // 10px for anchor
           _this.el.style.left = x + "px";
@@ -2489,7 +2491,7 @@ angular.module('ngMap', []);
 
       // convert output more for center and position
       if (
-        (options.key == 'center' || options.key == 'center') &&
+        (options.key == 'center' || options.key == 'position') &&
         output instanceof Array
       ) {
         output = new google.maps.LatLng(output[0], output[1]);
@@ -15549,11 +15551,11 @@ angular.module('niApp').controller('TypeController', function TypeController($sc
     }
   };
 
-  $scope.crimeType = [];
+  $scope.crimeType = ["LARCENY-THEFT","BURGLARY","DRUG OFFENSE","ROBBERY","MOTOR VEHICLE THEFT","AGGRAVATED ASSAULT","RAPE","ARSON"];
   $scope.typeSeries = ['Crime type']
   $scope.time = timeService.getTime();
-  $scope.highestCrimeTypeData = [];
-  $scope.highestCrimeType = '';
+  $scope.highestCrimeTypeData = [5,7,2,9,4,5,2,1];
+  $scope.highestCrimeType = 'ROBBERY';
 
   var apiUrl = $window.location.origin + '/hm';
 
@@ -15571,7 +15573,7 @@ angular.module('niApp').controller('TypeController', function TypeController($sc
       $scope.riskText = results.data.precog.time[hour].risk;
       $scope.riskLevel = results.data.precog.time[hour].risk.toLowerCase();
       $scope.loading = false;
-
+/*
       $scope.highestCrimeTypeData = results.data.precog.types;
       $scope.highestCrimeType = "";
       var max = 0;
@@ -15581,7 +15583,7 @@ angular.module('niApp').controller('TypeController', function TypeController($sc
            max = $scope.highestCrimeTypeData[i];
            $scope.highestCrimeType = i;
          }
-      }
+      }*/
       console.log("Crime types: " + $scope.crimeType + ", Values: " + $scope.highestCrimeTypeData + ", Max = " + $scope.highestCrimeType );
     });
   };
@@ -15617,3 +15619,4 @@ angular.module('niApp').controller('TypeController', function TypeController($sc
   }
 
 });
+
