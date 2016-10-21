@@ -15577,7 +15577,7 @@ angular.module('niApp').controller('TypeController', function TypeController($sc
       $scope.riskLevel = results.data.precog.time[hour].risk.toLowerCase();
       $scope.loading = false;
 
-      $scope.highestCrimeTypeData = ;
+      $scope.highestCrimeTypeData = [];
       $scope.highestCrimeType = "";
       var max = 0;
       for (var i in results.data.precog.types) {
