@@ -29,14 +29,11 @@ angular.module('niApp').controller('TypeController', function TypeController($sc
     }
   };
 
-  //$scope.crimeType = ["LARCENY-THEFT","BURGLARY","DRUG OFFENSE","ROBBERY","MOTOR VEHICLE THEFT","AGGRAVATED ASSAULT","RAPE","ARSON"];
   $scope.crimeType = [];
   $scope.typeSeries = ['Crime type']
   $scope.time = timeService.getTime();
   $scope.highestCrimeTypeData = [];
   $scope.highestCrimeType = '';
-  //$scope.highestCrimeTypeData = [5,7,2,9,4,5,2,1];
-  //$scope.highestCrimeType = 'ROBBERY';
 
   var apiUrl = $window.location.origin + '/hm';
 
@@ -66,7 +63,7 @@ angular.module('niApp').controller('TypeController', function TypeController($sc
            $scope.highestCrimeType = i;
          }
       }
-      console.log("Crime types: " + $scope.crimeType + ", Values: " + $scope.highestCrimeTypeData + ", Max = " + $scope.highestCrimeType );
+      //console.log("Crime types: " + $scope.crimeType + ", Values: " + $scope.highestCrimeTypeData + ", Max = " + $scope.highestCrimeType );
     });
   };
 
