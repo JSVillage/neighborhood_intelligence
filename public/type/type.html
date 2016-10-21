@@ -1,0 +1,12 @@
+
+<div ng-controller="TypeController" ng-swipe-right="onSwipeRight($event)" ng-swipe-left="onSwipeLeft($event)" class="font-color fade-in">
+  <h1 class="title fade-in">Precog</h1>
+  <h2 class="sub-title fade-in">neighborhood intelligence</h2>
+  <div ng-class="riskLevel" class="stage"></div>
+  <div ng-show="loading" class="loading"></div><br/>
+  <div ng-class="{offscreen : !init}" class="risk-level fade-in">
+    <h2 class="risk-label">Most prevalent crime</h2>
+    <p>{{highestCrimeType}}</p>
+    <canvas id="highestCrimeType" chart-data="highestCrimeTypeData" chart-labels="crimeType" chart-series="typeSeries" chart-options="chartOptions" chart-click="chartClick" class="chart chart-line"></canvas>
+  </div><a ng-href="#/" class="nav nav-back"><i class="fa fa-chevron-left"></i><i class="fa fa-chevron-left"></i> back</a>
+</div>
