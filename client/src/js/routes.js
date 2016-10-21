@@ -1,16 +1,16 @@
 niApp.config(function ($routeProvider) {
     $routeProvider.
     when('/', {
-        templateUrl: 'home.html'
+        templateUrl: 'home/home.html'
     }).
     when('/more', {
-    	templateUrl: 'more.html'
+    	templateUrl: 'more/more.html'
     }).
     when('/type', {
-    	templateUrl: 'type.html'
+    	templateUrl: 'type/type.html'
     }).
     when('/heatmap', {
-    	templateUrl: 'heatmap.html'
+    	templateUrl: 'heatmap/heatmap.html'
     }).
     otherwise('/');
 });
