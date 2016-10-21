@@ -15238,6 +15238,8 @@ niApp.config(function ($routeProvider) {
 		
 
 
+
+
 angular.module('niApp').controller('HeatmapController', function HeatmapController($scope, $window, $http, $rootScope, $timeout, userService, timeService, NgMap, $location, navService) {
 
   $scope.loading = false;
@@ -15317,8 +15319,6 @@ angular.module('niApp').controller('HeatmapController', function HeatmapControll
   }
 
 });
-
-
 angular.module('niApp').controller('NIController', function NIController($scope, $window, $http, NavigatorGeolocation, $window, $rootScope, userService, timeService, $location, navService) {
   var apiUrl = $window.location.origin + '/hm';
   $scope.howModal = false;
