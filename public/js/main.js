@@ -9,7 +9,7 @@ factory(root.angular);
 }
 }(this, function(angular) {
 /**
- * AngularJS Google Maps Ver. 1.17.7
+ * AngularJS Google Maps Ver. 1.17.3
  *
  * The MIT License (MIT)
  * 
@@ -210,8 +210,6 @@ angular.module('ngMap', []);
         ((typeof center === 'string') && center.match(/\{\{.*\}\}/))
       ) {
         mapOptions.center = new google.maps.LatLng(0, 0);
-      } else if( (typeof center === 'string') && center.match(/[0-9.-]*,[0-9.-]*/) ){
-           mapOptions.center = new google.maps.LatLng(center);
       } else if (!(center instanceof google.maps.LatLng)) {
         var geoCenter = mapOptions.center;
         delete mapOptions.center;
@@ -523,9 +521,9 @@ angular.module('ngMap', []);
       position && (this.position = position); /* jshint ignore:line */
 
       if (this.getProjection() && typeof this.position.lng == 'function') {
+        var posPixel = this.getProjection().fromLatLngToDivPixel(this.position);
         var _this = this;
         var setPosition = function() {
-          var posPixel = _this.getProjection().fromLatLngToDivPixel(_this.position);
           var x = Math.round(posPixel.x - (_this.el.offsetWidth/2));
           var y = Math.round(posPixel.y - _this.el.offsetHeight - 10); // 10px for anchor
           _this.el.style.left = x + "px";
@@ -2491,7 +2489,7 @@ angular.module('ngMap', []);
 
       // convert output more for center and position
       if (
-        (options.key == 'center' || options.key == 'position') &&
+        (options.key == 'center' || options.key == 'center') &&
         output instanceof Array
       ) {
         output = new google.maps.LatLng(output[0], output[1]);
@@ -15262,7 +15260,7 @@ niApp.controller('MoreController', function MoreController($scope, $window, $htt
 
 });
 
-niApp.controller('TypeController', function TypeController($scope, $window, $http, $rootScope, $timeout, userService, timeService) {
+niApp.controller('TypeController', function TypeController($scope, $window, $http, $rootScope, $timeout, userService, timeService, navService) {
 
   $scope.loading = false;
   $scope.init = false;
@@ -15362,7 +15360,7 @@ niApp.controller('TypeController', function TypeController($scope, $window, $htt
 
 });
 
-niApp.controller('HeatmapController', function HeatmapController($scope, $window, $http, $rootScope, $timeout, userService, timeService, NgMap) {
+niApp.controller('HeatmapController', function HeatmapController($scope, $window, $http, $rootScope, $timeout, userService, timeService, NgMap, navService) {
 
   $scope.loading = false;
   $scope.init = false;
@@ -15461,7 +15459,7 @@ niApp.controller('HeatmapController', function HeatmapController($scope, $window
 
 });
 
-niApp.controller('IndexController', ['$scope', '$location', function IndexController($scope, $location) {
+niApp.controller('IndexController', ['$scope', '$location', function IndexController($scope, $location, navService) {
   $scope.$on('$locationChangeSuccess', function() {
         $scope.location = $location.path();
     });

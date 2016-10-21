@@ -206,7 +206,7 @@ niApp.controller('MoreController', function MoreController($scope, $window, $htt
 
 });
 
-niApp.controller('TypeController', function TypeController($scope, $window, $http, $rootScope, $timeout, userService, timeService) {
+niApp.controller('TypeController', function TypeController($scope, $window, $http, $rootScope, $timeout, userService, timeService, navService) {
 
   $scope.loading = false;
   $scope.init = false;
@@ -306,7 +306,7 @@ niApp.controller('TypeController', function TypeController($scope, $window, $htt
 
 });
 
-niApp.controller('HeatmapController', function HeatmapController($scope, $window, $http, $rootScope, $timeout, userService, timeService, NgMap) {
+niApp.controller('HeatmapController', function HeatmapController($scope, $window, $http, $rootScope, $timeout, userService, timeService, NgMap, navService) {
 
   $scope.loading = false;
   $scope.init = false;
@@ -405,7 +405,7 @@ niApp.controller('HeatmapController', function HeatmapController($scope, $window
 
 });
 
-niApp.controller('IndexController', ['$scope', '$location', function IndexController($scope, $location) {
+niApp.controller('IndexController', ['$scope', '$location', function IndexController($scope, $location, navService) {
   $scope.$on('$locationChangeSuccess', function() {
         $scope.location = $location.path();
     });
