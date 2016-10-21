@@ -451,7 +451,7 @@ niApp.controller('HeatmapController', function HeatmapController($scope, $window
 
   var getData = function(){
     $scope.loading = true;
-    console.log("downloading 24 heat maps for Phoenix" );
+    //console.log("downloading 24 heat maps for Phoenix" );
     $http({
       url: apiUrl + '/' + $scope.user.lat.toFixed(3) + '/' + $scope.user.lng.toFixed(3) ,
       method: "GET",
