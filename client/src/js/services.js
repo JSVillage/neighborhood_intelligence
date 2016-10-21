@@ -79,7 +79,8 @@ angular.module('niApp').service('timeService', function() {
 angular.module('niApp').service('navService', function() {
   var currentIndex = 0;
 
-  var navigate = function(i){
+  var navigate = function(i,$location){
+    console.log(i);
     currentIndex = i = i < 0 ? 3 : i > 3 ? 0 : i;
     switch (i) {
       case 1:

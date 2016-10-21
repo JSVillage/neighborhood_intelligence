@@ -214,7 +214,14 @@ body {
   text-align: center; }
 
 p {
-  margin: 0 0 20px; }
+  margin: 0 0 20px;
+  -webkit-user-select: none;
+  /* Chrome all / Safari all */
+  -moz-user-select: none;
+  /* Firefox all */
+  -ms-user-select: none;
+  /* IE 10+ */
+  user-select: none; }
 
 small {
   font-size: 85%; }
@@ -244,7 +251,14 @@ h6 {
   margin: 0 0 10px;
   font-family: inherit;
   color: inherit;
-  text-rendering: optimizelegibility; }
+  text-rendering: optimizelegibility;
+  -webkit-user-select: none;
+  /* Chrome all / Safari all */
+  -moz-user-select: none;
+  /* Firefox all */
+  -ms-user-select: none;
+  /* IE 10+ */
+  user-select: none; }
 
 h1 {
   font-size: 35px;
