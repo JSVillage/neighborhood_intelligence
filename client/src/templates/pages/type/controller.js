@@ -2,7 +2,7 @@ angular.module('niApp').controller('TypeController', function TypeController($sc
 
   $scope.loading = false;
   $scope.init = false;
-  $scope.riskLevel = '';
+  // $scope.riskLevel = '';
   $scope.charts = [];
   $scope.user = userService.getUser();
   $scope.selectedIndex = navService.currentIndex = 2;
