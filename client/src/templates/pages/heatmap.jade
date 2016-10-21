@@ -1,25 +1,22 @@
-doctype html
-html(ng-app="ngMap")
-  head
-    meta(name="viewport", content="initial-scale=1.0, user-scalable=no")
-  body
-    div(ng-controller="HeatmapController").font-color.fade-in
-      h1.title.fade-in Precog
-      h2.sub-title.fade-in neighborhood intelligence
+div(ng-controller="HeatmapController").font-color.fade-in
+  h1.title.fade-in Precog
+  h2.sub-title.fade-in neighborhood intelligence
 
-      div.stage(ng-class="riskLevel")
-      div.loading(ng-show="loading")
+  div.stage(ng-class="riskLevel")
+  div.loading(ng-show="loading")
 
-      br
-      div.risk-level.fade-in(ng-class="{offscreen : !init}")
-        h2.risk-label City Heatmap
-        p {{time}}
+  br
+  div.risk-level.fade-in(ng-class="{offscreen : !init}")
+    h2.risk-label City Heatmap
+    p {{time}}
 
-      div.ng-map zoom="10" center="{{user.lat}},{{user.lng}}"
-        //-"33.45,-112.07"
-        fusion-tables-layer query="{ select: 'location', from: {{mapKey[hours]}}}", heatmap = "{enabled: true}"
+  div(ng-map zoom="10" center="{{user.lat}},{{user.lng}}" ng-if="user.lat")
+    //-"33.45,-112.07"
+    fusion-tables-layer query="{ select: 'location', from: {{mapKey[hours]}}}", heatmap = "{enabled: true}"
+  div(ng-map zoom="10" center="33.45,-112.02" ng-if="!user.lat")
+  fusion-tables-layer query="{ select: 'location', from: {{mapKey[hours]}}}", heatmap = "{enabled: true}"
 
-      a.nav.nav-back(ng-href="#/")
-        i.fa.fa-chevron-left
-        i.fa.fa-chevron-left
-        |  back
+  a.nav.nav-back(ng-href="#/")
+    i.fa.fa-chevron-left
+    i.fa.fa-chevron-left
+    |  back
