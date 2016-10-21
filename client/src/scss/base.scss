@@ -4,6 +4,7 @@ body, html{
 	min-height: 100vh;
   background: linear-gradient(#ccc, #fff);
   position: relative;
+  text-shadow: 0 0  5px rgba(0,0,0,.1);
 }
 main{
   padding: 30px 30px 80px;
@@ -98,7 +99,7 @@ main{
         bottom: 10vh;
         padding: 0 10px;
     }
-    .center {
+    .center a{
         color: rgba(255,255,255,.5);
         position: absolute;
         left: 50%;
