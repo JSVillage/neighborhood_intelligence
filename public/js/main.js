@@ -14436,17 +14436,20 @@ niApp.controller('NIController', function NIController($scope, $window, $http, N
   $scope.$watch('selectedIndex', function(current, old) {
     switch (current) {
       case 0:
-        $location.url("/view1");
+        $location.url("/");
         break;
       case 1:
-        $location.url("/view2");
+        $location.url("/more.html");
         break;
       case 2:
-        $location.url("/view3");
+        $location.url("/type.html");
+        break;
+      case 3:
+        $location.url("/heatmap.html");
         break;
     }
   });
-  
+
   var getData = function(){
     //console.log("Entered getData" );
     if($scope.user.declinedLocation){return;}
