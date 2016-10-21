@@ -15077,7 +15077,7 @@ niApp.config(['ChartJsProvider', function (ChartJsProvider) {
 }]);
 
 
-niApp.controller('IndexController', ['$scope', '$location', function IndexController($scope, $location, navService, userService) {
+niApp.controller('IndexController', ['$scope', '$location', 'navService', 'userService', function IndexController($scope, $location, navService, userService) {
   $scope.$on('$locationChangeSuccess', function() {
       $scope.user = userService.getUser();    
       $scope.location = $location.path();
