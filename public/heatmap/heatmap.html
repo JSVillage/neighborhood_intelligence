@@ -5,12 +5,14 @@
   <div ng-class="user.riskLevel" class="stage"></div>
   <div ng-show="loading" class="loading"></div><br/>
   <div ng-class="{offscreen : !init}" class="risk-level fade-in">
-    <h2 class="risk-label">City Heatmap</h2>
+    <h2 class="risk-label">City Heatmap -- Coming Soon</h2>
   </div>
   <div class="heatmap">
-    <div ng-map="ng-map" zoom="12" center="{{user.lat}},{{user.lng}}" ng-if="user.lat"></div>
-    <fusion-tables-layer query="{ select: 'lat', from: '{{mapKey[hour]}}', where {{lat &gt; user.lat - 0.1}} AND {{lat &lt; user.lat + 0.1}} AND {{lng &gt; user.lng - 0.1}} AND {{lng &lt; user.lng + 0.1}} }" heatmap="{enabled: true}"></fusion-tables-layer>
-    <div ng-map="ng-map" zoom="10" center="33.45,-112.02" ng-if="!user.lat"></div>
-    <fusion-tables-layer query="{ select: 'lat', from: '{{mapKey[hour]}}', where {{lat &gt; user.lat - 0.1}} AND {{lat &lt; user.lat + 0.1}} AND {{lng &gt; user.lng - 0.1}} AND {{lng &lt; user.lng + 0.1}} }" heatmap="{enabled: true}"></fusion-tables-layer>
+    <div ng-map="ng-map" zoom="7" center="{{user.lat}},{{user.lng}}" ng-if="user.lat">
+      <fusion-tables-layer query="{ select: 'lat', from: '{{mapKey[hour]}}'}" heatmap="{enabled: true}"></fusion-tables-layer>
+    </div>
+    <div ng-map="ng-map" zoom="7" center="33.45,-112.02" ng-if="!user.lat">,heatmap = "{enabled: true}")
+      <fusion-tables-layer query="{ select: 'lat', from: '{{mapKey[hour]}}'}" heatmap="{enabled: true}"></fusion-tables-layer>
+    </div>
   </div>
 </div>
