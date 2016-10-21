@@ -1,5 +1,6 @@
 div(ng-controller="NIController").font-color.fade-in
-  h1.title.fade-in( ng-swipe-right="alert('left')" ng-swipe-left="alert('right')") Precog
+  div(style="height:100px;width:100%" ng-swipe-right="alert('left')" ng-swipe-left="alert('right')")
+  h1.title.fade-in Precog
   h2.sub-title.fade-in neighborhood intelligence
   div.stage(ng-class="riskLevel")
   
