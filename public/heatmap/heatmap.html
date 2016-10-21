@@ -9,8 +9,8 @@
   </div>
   <div class="heatmap">
     <div ng-map="ng-map" zoom="12" center="{{user.lat}},{{user.lng}}" ng-if="user.lat"></div>
-    <fusion-tables-layer query="{ select: 'loc/1', from: '{{mapKey[hour]}}',where {{'loc/1' &gt; user.lat - 0.1}} AND {{'loc/1' &lt; user.lat + 0.1}} AND {{'loc/0' &gt; user.lng - 0.1}} AND {{'loc/0' &lt; user.lng + 0.1}} }" heatmap="{enabled: true}"></fusion-tables-layer>
+    <fusion-tables-layer query="{ select: 'lat', from: '{{mapKey[hour]}}', where {{lat &gt; user.lat - 0.1}} AND {{lat &lt; user.lat + 0.1}} AND {{lng &gt; user.lng - 0.1}} AND {{lng &lt; user.lng + 0.1}} }" heatmap="{enabled: true}"></fusion-tables-layer>
     <div ng-map="ng-map" zoom="10" center="33.45,-112.02" ng-if="!user.lat"></div>
-    <fusion-tables-layer query="{ select: 'loc/1', from: '{{mapKey[hour]}}',where {{'loc/1' &gt; user.lat - 0.1}} AND {{'loc/1' &lt; user.lat + 0.1}} AND {{'loc/0' &gt; user.lng - 0.1}} AND {{'loc/0' &lt; user.lng + 0.1}} }" heatmap="{enabled: true}"></fusion-tables-layer>
+    <fusion-tables-layer query="{ select: 'lat', from: '{{mapKey[hour]}}', where {{lat &gt; user.lat - 0.1}} AND {{lat &lt; user.lat + 0.1}} AND {{lng &gt; user.lng - 0.1}} AND {{lng &lt; user.lng + 0.1}} }" heatmap="{enabled: true}"></fusion-tables-layer>
   </div>
 </div>
