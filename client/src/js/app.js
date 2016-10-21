@@ -411,7 +411,7 @@ niApp.controller('TypeController', function TypeController($scope, $window, $htt
 
 });
 
-niApp.controller('HeatmapController', function HeatmapController($scope, $window, $http, $rootScope, $timeout, userService, timeService) {
+niApp.controller('HeatmapController', function HeatmapController($scope, $window, $http, $rootScope, $timeout, userService, timeService, NgMap) {
 
   $scope.loading = false;
   $scope.init = false;

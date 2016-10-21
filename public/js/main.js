@@ -9,7 +9,7 @@ factory(root.angular);
 }
 }(this, function(angular) {
 /**
- * AngularJS Google Maps Ver. 1.17.3
+ * AngularJS Google Maps Ver. 1.17.7
  *
  * The MIT License (MIT)
  * 
@@ -210,6 +210,8 @@ angular.module('ngMap', []);
         ((typeof center === 'string') && center.match(/\{\{.*\}\}/))
       ) {
         mapOptions.center = new google.maps.LatLng(0, 0);
+      } else if( (typeof center === 'string') && center.match(/[0-9.-]*,[0-9.-]*/) ){
+           mapOptions.center = new google.maps.LatLng(center);
       } else if (!(center instanceof google.maps.LatLng)) {
         var geoCenter = mapOptions.center;
         delete mapOptions.center;
@@ -521,9 +523,9 @@ angular.module('ngMap', []);
       position && (this.position = position); /* jshint ignore:line */
 
       if (this.getProjection() && typeof this.position.lng == 'function') {
-        var posPixel = this.getProjection().fromLatLngToDivPixel(this.position);
         var _this = this;
         var setPosition = function() {
+          var posPixel = _this.getProjection().fromLatLngToDivPixel(_this.position);
           var x = Math.round(posPixel.x - (_this.el.offsetWidth/2));
           var y = Math.round(posPixel.y - _this.el.offsetHeight - 10); // 10px for anchor
           _this.el.style.left = x + "px";
@@ -2489,7 +2491,7 @@ angular.module('ngMap', []);
 
       // convert output more for center and position
       if (
-        (options.key == 'center' || options.key == 'center') &&
+        (options.key == 'center' || options.key == 'position') &&
         output instanceof Array
       ) {
         output = new google.maps.LatLng(output[0], output[1]);
@@ -3301,62 +3303,7 @@ angular.module('ngMap', []);
 
 return 'ngMap';
 }));
-"use strict";
-
-angular.module("ngTouch", [])
-.directive("ngTouchstart", function () {
-    return {
-        controller: ["$scope", "$element", function ($scope, $element) {
-
-            $element.bind("touchstart", onTouchStart);
-            function onTouchStart(event) {
-                var method = $element.attr("ng-touchstart");
-                $scope.$event = event;
-                $scope.$apply(method);
-            }
-
-        }]
-    }
-})
-.directive("ngTouchmove", function () {
-    return {
-        controller: ["$scope", "$element", function ($scope, $element) {
-
-            $element.bind("touchstart", onTouchStart);
-            function onTouchStart(event) {
-                event.preventDefault();
-                $element.bind("touchmove", onTouchMove);
-                $element.bind("touchend", onTouchEnd);
-            }
-            function onTouchMove(event) {
-                var method = $element.attr("ng-touchmove");
-                $scope.$event = event;
-                $scope.$apply(method);
-            }
-            function onTouchEnd(event) {
-                event.preventDefault();
-                $element.unbind("touchmove", onTouchMove);
-                $element.unbind("touchend", onTouchEnd);
-            }
-
-        }]
-    }
-})
-.directive("ngTouchend", function () {
-    return {
-        controller: ["$scope", "$element", function ($scope, $element) {
-
-            $element.bind("touchend", onTouchEnd);
-            function onTouchEnd(event) {
-                var method = $element.attr("ng-touchend");
-                $scope.$event = event;
-                $scope.$apply(method);
-            }
-
-        }]
-    }
-});
-
+//= include ../node_modules/ngtouch/src/ngTouch.js
 /*!
  * Chart.js
  * http://chartjs.org/
@@ -14785,7 +14732,7 @@ niApp.controller('TypeController', function TypeController($scope, $window, $htt
 
 });
 
-niApp.controller('HeatmapController', function HeatmapController($scope, $window, $http, $rootScope, $timeout, userService, timeService) {
+niApp.controller('HeatmapController', function HeatmapController($scope, $window, $http, $rootScope, $timeout, userService, timeService, NgMap) {
 
   $scope.loading = false;
   $scope.init = false;
