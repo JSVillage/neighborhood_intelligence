@@ -43,6 +43,7 @@ angular.module('niApp').controller('NIController', function NIController($scope,
   $scope.setTime = function(hour){
     var d = new Date($scope.time);
     $scope.time = d.setHours(d.getHours()+hour);
+    timeService.setTime($scope.time);
     getData();
   };
 
