@@ -2,7 +2,7 @@
 <div ng-controller="NIController" ng-swipe-right="onSwipeRight($event)" ng-swipe-left="onSwipeLeft($event)" class="font-color fade-in"> 
   <h1 class="title fade-in">Precog</h1>
   <h2 class="sub-title fade-in">neighborhood intelligence</h2>
-  <div ng-class="riskLevel" class="stage"></div>
+  <div ng-class="user.riskLevel" class="stage"></div>
   <div ng-show="loading" class="loading"></div><br/>
   <div ng-show="user.isPhoenix===false" class="non-local fade-in">
     <h2>Sorry, but we only have data for Phoenix, AZ at this time</h2>
@@ -22,11 +22,11 @@
   </div>
   <div ng-show="init &amp;&amp; !user.declinedLocation &amp;&amp; user.isPhoenix!==false" class="risk-level fade-in">
     <h2 class="risk-label">Risk level</h2>
-    <p>{{riskText}}<a id="how" href="" ng-click="howModal=true" class="how"><i class="fa fa-question-circle"></i></a></p>
+    <p>{{user.riskText}}<a id="how" href="" ng-click="howModal=true" class="how"><i class="fa fa-question-circle"></i></a></p>
   </div>
   <div ng-show="init &amp;&amp; !user.declinedLocation &amp;&amp; user.isPhoenix!==false" class="risk-level fade-in">
     <h2 class="risk-label fade-in">Most likely crime</h2>
-    <p class="t2">{{mostLikely}}</p>
+    <p class="t2">{{user.mostLikely}}</p>
   </div><a ng-href="#/more" ng-show="init &amp;&amp; !user.declinedLocation &amp;&amp; user.isPhoenix!==false" class="nav nav-more">
      
     more  <i class="fa fa-chevron-right"></i><i class="fa fa-chevron-right"></i></a>
