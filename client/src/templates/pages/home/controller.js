@@ -55,15 +55,12 @@ angular.module('niApp').controller('NIController', function NIController($scope,
 
   if($scope.user && !$scope.user.lat){
     $scope.loading = true;
-    //console.log("setUserLocation() used to call getData()");
     userService.setUserLocation(function(){
       $scope.user = userService.getUser();
       $scope.loading = false;
-      //console.log("inside setUserLocation() callback function, about to call getData()");
       getData();
     });
   } else {
-    //console.log("Raw call to getData()");
     getData();
   }
 

@@ -9,7 +9,7 @@ factory(root.angular);
 }
 }(this, function(angular) {
 /**
- * AngularJS Google Maps Ver. 1.17.7
+ * AngularJS Google Maps Ver. 1.17.3
  *
  * The MIT License (MIT)
  * 
@@ -210,8 +210,6 @@ angular.module('ngMap', []);
         ((typeof center === 'string') && center.match(/\{\{.*\}\}/))
       ) {
         mapOptions.center = new google.maps.LatLng(0, 0);
-      } else if( (typeof center === 'string') && center.match(/[0-9.-]*,[0-9.-]*/) ){
-           mapOptions.center = new google.maps.LatLng(center);
       } else if (!(center instanceof google.maps.LatLng)) {
         var geoCenter = mapOptions.center;
         delete mapOptions.center;
@@ -523,9 +521,9 @@ angular.module('ngMap', []);
       position && (this.position = position); /* jshint ignore:line */
 
       if (this.getProjection() && typeof this.position.lng == 'function') {
+        var posPixel = this.getProjection().fromLatLngToDivPixel(this.position);
         var _this = this;
         var setPosition = function() {
-          var posPixel = _this.getProjection().fromLatLngToDivPixel(_this.position);
           var x = Math.round(posPixel.x - (_this.el.offsetWidth/2));
           var y = Math.round(posPixel.y - _this.el.offsetHeight - 10); // 10px for anchor
           _this.el.style.left = x + "px";
@@ -2491,7 +2489,7 @@ angular.module('ngMap', []);
 
       // convert output more for center and position
       if (
-        (options.key == 'center' || options.key == 'position') &&
+        (options.key == 'center' || options.key == 'center') &&
         output instanceof Array
       ) {
         output = new google.maps.LatLng(output[0], output[1]);
@@ -15307,33 +15305,14 @@ angular.module('niApp').controller('HeatmapController', function HeatmapControll
     });
   };
 
-  var getUserLocation = function(){
-    $scope.loading = true;
-    $window.navigator.geolocation.getCurrentPosition(
-      function(pos){
-        $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng='+pos.coords.latitude+','+pos.coords.longitude+'&sensor=true')
-          .then(function(res){
-            $scope.user.lat = res.data.results[0].geometry.location.lat;
-            $scope.user.lng = res.data.results[0].geometry.location.lng;
-            $scope.formattedAddress = res.data.results[0].formatted_address;
-            $scope.loading = false;
-            userService.setUser($scope.user);
-            getData();
-          });
-      },
-      function(err){
-
-      }
-    );
-  };
-
-  /*var setPage = function(page) {
-    $location.path(page);
-  };*/
-
   if($scope.user && !$scope.user.lat){
-    getUserLocation();
-  }else{
+    $scope.loading = true;
+    userService.setUserLocation(function(){
+      $scope.user = userService.getUser();
+      $scope.loading = false;
+      getData();
+    });
+  } else {
     getData();
   }
 
@@ -15395,15 +15374,12 @@ angular.module('niApp').controller('NIController', function NIController($scope,
 
   if($scope.user && !$scope.user.lat){
     $scope.loading = true;
-    //console.log("setUserLocation() used to call getData()");
     userService.setUserLocation(function(){
       $scope.user = userService.getUser();
       $scope.loading = false;
-      //console.log("inside setUserLocation() callback function, about to call getData()");
       getData();
     });
   } else {
-    //console.log("Raw call to getData()");
     getData();
   }
 
@@ -15489,33 +15465,20 @@ angular.module('niApp').controller('MoreController', function MoreController($sc
     });
   };
 
-  var getUserLocation = function(){
-    $scope.loading = true;
-    $window.navigator.geolocation.getCurrentPosition(
-      function(pos){
-        $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng='+pos.coords.latitude+','+pos.coords.longitude+'&sensor=true')
-          .then(function(res){
-            $scope.user.lat = res.data.results[0].geometry.location.lat;
-            $scope.user.lng = res.data.results[0].geometry.location.lng;
-            $scope.formattedAddress = res.data.results[0].formatted_address;
-            $scope.loading = false;
-            userService.setUser($scope.user);
-            getData();
-          });
-      },
-      function(err){
-
-      }
-    );
-  };
+  
 
   /*var setPage = function(page) {
     $location.path(page);
   };*/
 
   if($scope.user && !$scope.user.lat){
-    getUserLocation();
-  }else{
+    $scope.loading = true;
+    userService.setUserLocation(function(){
+      $scope.user = userService.getUser();
+      $scope.loading = false;
+      getData();
+    });
+  } else {
     getData();
   }
 
@@ -15592,33 +15555,19 @@ angular.module('niApp').controller('TypeController', function TypeController($sc
     });
   };
 
-  var getUserLocation = function(){
-    $scope.loading = true;
-    $window.navigator.geolocation.getCurrentPosition(
-      function(pos){
-        $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng='+pos.coords.latitude+','+pos.coords.longitude+'&sensor=true')
-          .then(function(res){
-            $scope.user.lat = res.data.results[0].geometry.location.lat;
-            $scope.user.lng = res.data.results[0].geometry.location.lng;
-            $scope.formattedAddress = res.data.results[0].formatted_address;
-            $scope.loading = false;
-            userService.setUser($scope.user);
-            getData();
-          });
-      },
-      function(err){
-
-      }
-    );
-  };
 
   /*var setPage = function(page) {
     $location.path(page);
   };*/
 
   if($scope.user && !$scope.user.lat){
-    getUserLocation();
-  }else{
+    $scope.loading = true;
+    userService.setUserLocation(function(){
+      $scope.user = userService.getUser();
+      $scope.loading = false;
+      getData();
+    });
+  } else {
     getData();
   }
 

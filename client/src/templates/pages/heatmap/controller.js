@@ -65,33 +65,14 @@ angular.module('niApp').controller('HeatmapController', function HeatmapControll
     });
   };
 
-  var getUserLocation = function(){
-    $scope.loading = true;
-    $window.navigator.geolocation.getCurrentPosition(
-      function(pos){
-        $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng='+pos.coords.latitude+','+pos.coords.longitude+'&sensor=true')
-          .then(function(res){
-            $scope.user.lat = res.data.results[0].geometry.location.lat;
-            $scope.user.lng = res.data.results[0].geometry.location.lng;
-            $scope.formattedAddress = res.data.results[0].formatted_address;
-            $scope.loading = false;
-            userService.setUser($scope.user);
-            getData();
-          });
-      },
-      function(err){
-
-      }
-    );
-  };
-
-  /*var setPage = function(page) {
-    $location.path(page);
-  };*/
-
   if($scope.user && !$scope.user.lat){
-    getUserLocation();
-  }else{
+    $scope.loading = true;
+    userService.setUserLocation(function(){
+      $scope.user = userService.getUser();
+      $scope.loading = false;
+      getData();
+    });
+  } else {
     getData();
   }
 
