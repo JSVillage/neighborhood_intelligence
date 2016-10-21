@@ -2,7 +2,7 @@
 <div ng-controller="MoreController" ng-swipe-right="onSwipeRight($event)" ng-swipe-left="onSwipeLeft($event)" class="font-color fade-in">
   <h1 class="title fade-in">Precog</h1>
   <h2 class="sub-title fade-in">neighborhood intelligence</h2>
-  <div ng-class="riskLevel" class="stage"></div>
+  <div ng-class="user.riskLevel" class="stage"></div>
   <div ng-show="loading" class="loading"></div><br/>
   <div ng-class="{offscreen : !init}" class="risk-level fade-in">
     <h2 class="risk-label">Day of highest crime</h2>
