@@ -15091,11 +15091,11 @@ niApp.controller('NIController', function NIController($scope, $window, $http, N
 
   $scope.onSwipeLeft = function(){
     $scope.selectedIndex ++;
-    navService.navigate($scope.selectedIndex);
+    navService.navigate($scope.selectedIndex, $location);
   };
   $scope.onSwipeRight = function(){
     $scope.selectedIndex --;
-    navService.navigate($scope.selectedIndex);
+    navService.navigate($scope.selectedIndex, $location);
   };
 
   var getData = function(){
@@ -15159,11 +15159,11 @@ niApp.controller('MoreController', function MoreController($scope, $window, $htt
 
   $scope.onSwipeLeft = function(){
     $scope.selectedIndex ++;
-    navService.navigate($scope.selectedIndex);
+    navService.navigate($scope.selectedIndex, $location);
   };
   $scope.onSwipeRight = function(){
     $scope.selectedIndex --;
-    navService.navigate($scope.selectedIndex);
+    navService.navigate($scope.selectedIndex, $location);
   };
 
   $scope.dataOptions = {
@@ -15260,7 +15260,7 @@ niApp.controller('MoreController', function MoreController($scope, $window, $htt
 
 });
 
-niApp.controller('TypeController', function TypeController($scope, $window, $http, $rootScope, $timeout, userService, timeService, navService) {
+niApp.controller('TypeController', function TypeController($scope, $window, $http, $rootScope, $timeout, userService, timeService, $location, navService) {
 
   $scope.loading = false;
   $scope.init = false;
@@ -15271,11 +15271,11 @@ niApp.controller('TypeController', function TypeController($scope, $window, $htt
 
   $scope.onSwipeLeft = function(){
     $scope.selectedIndex ++;
-    navService.navigate($scope.selectedIndex);
+    navService.navigate($scope.selectedIndex, $location);
   };
   $scope.onSwipeRight = function(){
     $scope.selectedIndex --;
-    navService.navigate($scope.selectedIndex);
+    navService.navigate($scope.selectedIndex, $location);
   };
 
   $scope.dataOptions = {
@@ -15360,7 +15360,7 @@ niApp.controller('TypeController', function TypeController($scope, $window, $htt
 
 });
 
-niApp.controller('HeatmapController', function HeatmapController($scope, $window, $http, $rootScope, $timeout, userService, timeService, NgMap, navService) {
+niApp.controller('HeatmapController', function HeatmapController($scope, $window, $http, $rootScope, $timeout, userService, timeService, NgMap, $location, navService) {
 
   $scope.loading = false;
   $scope.init = false;
@@ -15400,11 +15400,11 @@ niApp.controller('HeatmapController', function HeatmapController($scope, $window
 
   $scope.onSwipeLeft = function(){
     $scope.selectedIndex ++;
-    navService.navigate($scope.selectedIndex);
+    navService.navigate($scope.selectedIndex, $location);
   };
   $scope.onSwipeRight = function(){
     $scope.selectedIndex --;
-    navService.navigate($scope.selectedIndex);
+    navService.navigate($scope.selectedIndex, $location);
   };                    
 
   var apiUrl = $window.location.origin + '/hm';
