@@ -26,8 +26,6 @@ niApp.service('userService', function(NavigatorGeolocation, $http) {
     _user = user;
   };
 
-  var test = "test";
-
   var getGeoData = function(callback, q){
 
     $http.get('https://maps.googleapis.com/maps/api/geocode/json?' + q + '&sensor=true').then(function(res){
@@ -113,9 +111,24 @@ niApp.controller('NIController', function NIController($scope, $window, $http, N
   $scope.user = userService.getUser();
   $scope.time = timeService.getTime();
   $scope.formattedAddress = '';
+  $scope.selectedIndex = 0;
 
   // $scope.googleMapsUrl="https://maps.google.com/maps/api/js?key=AIzaSyAtvTUqW2i2tbup-B9tW-4NQ6-bb1H3I_w"
 
+  $scope.$watch('selectedIndex', function(current, old) {
+    switch (current) {
+      case 0:
+        $location.url("/view1");
+        break;
+      case 1:
+        $location.url("/view2");
+        break;
+      case 2:
+        $location.url("/view3");
+        break;
+    }
+  });
+  
   var getData = function(){
     //console.log("Entered getData" );
     if($scope.user.declinedLocation){return;}
