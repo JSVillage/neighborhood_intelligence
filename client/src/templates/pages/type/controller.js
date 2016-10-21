@@ -29,11 +29,14 @@ angular.module('niApp').controller('TypeController', function TypeController($sc
     }
   };
 
-  $scope.crimeType = ["LARCENY-THEFT","BURGLARY","DRUG OFFENSE","ROBBERY","MOTOR VEHICLE THEFT","AGGRAVATED ASSAULT","RAPE","ARSON"];
+  //$scope.crimeType = ["LARCENY-THEFT","BURGLARY","DRUG OFFENSE","ROBBERY","MOTOR VEHICLE THEFT","AGGRAVATED ASSAULT","RAPE","ARSON"];
+  $scope.crimeType = [];
   $scope.typeSeries = ['Crime type']
   $scope.time = timeService.getTime();
-  $scope.highestCrimeTypeData = [5,7,2,9,4,5,2,1];
-  $scope.highestCrimeType = 'ROBBERY';
+  $scope.highestCrimeTypeData = [];
+  $scope.highestCrimeType = '';
+  //$scope.highestCrimeTypeData = [5,7,2,9,4,5,2,1];
+  //$scope.highestCrimeType = 'ROBBERY';
 
   var apiUrl = $window.location.origin + '/hm';
 
@@ -51,17 +54,18 @@ angular.module('niApp').controller('TypeController', function TypeController($sc
       $scope.riskText = results.data.precog.time[hour].risk;
       $scope.riskLevel = results.data.precog.time[hour].risk.toLowerCase();
       $scope.loading = false;
-/*
-      $scope.highestCrimeTypeData = results.data.precog.types;
+
+      $scope.highestCrimeTypeData = ;
       $scope.highestCrimeType = "";
       var max = 0;
-      for (var i in $scope.highestCrimeTypeData) {
+      for (var i in results.data.precog.types) {
          $scope.crimeType.push(i);
-         if ($scope.highestCrimeTypeData[i] > max) {
-           max = $scope.highestCrimeTypeData[i];
+         $scope.highestCrimeTypeData.push(results.data.precog.types[i])
+         if (results.data.precog.types[i] > max) {
+           max = results.data.precog.types[i];
            $scope.highestCrimeType = i;
          }
-      }*/
+      }
       console.log("Crime types: " + $scope.crimeType + ", Values: " + $scope.highestCrimeTypeData + ", Max = " + $scope.highestCrimeType );
     });
   };
