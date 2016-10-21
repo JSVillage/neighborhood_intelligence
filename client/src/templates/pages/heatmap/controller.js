@@ -2,7 +2,7 @@ angular.module('niApp').controller('HeatmapController', function HeatmapControll
 
   $scope.loading = false;
   $scope.init = false;
-  $scope.riskLevel = '';
+  // $scope.riskLevel = '';
   $scope.user = userService.getUser();
 
   $scope.time = timeService.getTime();

@@ -8,7 +8,6 @@ angular.module('niApp').controller('NIController', function NIController($scope,
   $scope.mostLikely = '';
   $scope.user = userService.getUser();
   $scope.time = timeService.getTime();
-  $scope.formattedAddress = '';
   $scope.selectedIndex = navService.currentIndex = 0;
 
   $scope.onSwipeLeft = function(){
@@ -32,9 +31,9 @@ angular.module('niApp').controller('NIController', function NIController($scope,
     }).then(function(results) {
       var time = new Date($scope.time);
       var hour = time.getHours();
-      $scope.riskText = results.data.precog.time[hour].risk;
-      $scope.riskLevel = results.data.precog.time[hour].risk.toLowerCase();
-      $scope.mostLikely = results.data.precog.time[hour].guess;
+      $scope.user.riskText = results.data.precog.time[hour].risk;
+      $scope.user.riskLevel = results.data.precog.time[hour].risk.toLowerCase();
+      $scope.user.mostLikely = results.data.precog.time[hour].guess;
       //console.log("result: " + results.data.precog + " hour: " + hour + " guess: " + results.data.precog.time[hour].guess);
       $scope.loading = false;
       $scope.init = true;

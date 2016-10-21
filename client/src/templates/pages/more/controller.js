@@ -68,8 +68,8 @@ angular.module('niApp').controller('MoreController', function MoreController($sc
       $scope.init = true;
       var time = new Date($scope.time);
       var hour = time.getHours();
-      $scope.riskText = results.data.precog.time[hour].risk;
-      $scope.riskLevel = results.data.precog.time[hour].risk.toLowerCase();
+      $scope.user.riskText = results.data.precog.time[hour].risk;
+      $scope.user.riskLevel = results.data.precog.time[hour].risk.toLowerCase();
       $scope.loading = false;
 
       $scope.highestTimeData = results.data.precog.timeOfDay;
