@@ -8,7 +8,7 @@ block title
 
 block content
   div(ng-view)
-  span(ng-controller="IndexController" class="pager fade-in" ng-show="user.lat")
+  span(ng-controller="IndexController" class="pager fade-in" ng-show="user.lat" ng-cloak)
     span.center
       i.fa.fa-circle(ng-class="{ 'active': location =='/' }")
       i.fa.fa-circle(ng-class="{ 'active': location =='/more' }")
