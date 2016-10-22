@@ -11,7 +11,7 @@ p {
   -webkit-user-select: none;  /* Chrome all / Safari all */
   -moz-user-select: none;     /* Firefox all */
   -ms-user-select: none;      /* IE 10+ */
-  user-select: none;   
+  user-select: none;
 }
 small {
   font-size: 85%;
@@ -46,7 +46,7 @@ h6 {
   -webkit-user-select: none;  /* Chrome all / Safari all */
   -moz-user-select: none;     /* Firefox all */
   -ms-user-select: none;      /* IE 10+ */
-  user-select: none;   
+  user-select: none;
 }
 h1 {
   font-size: 35px;
@@ -193,7 +193,7 @@ li{list-style:none;}
   }
 }
 .sub-title {
-  color: #fff;
+  color: #111;
   margin-top: 10px;
   font-size: 19px;
   font-family: 'montserratultralight';
@@ -202,7 +202,7 @@ li{list-style:none;}
   z-index: 1;
 }
 .title, .title  a{
-  color: #fff;
+  color: #111;
   margin-bottom: 0;
   // margin-top: 29px;
   font-weight: 100;
@@ -276,5 +276,5 @@ li{list-style:none;}
         url('/media/fonts/montserrat-ultralight-webfont.svg#montserratultralight') format('svg');
     font-weight: normal;
     font-style: normal;
-    
+
 }

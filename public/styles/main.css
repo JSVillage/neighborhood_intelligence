@@ -404,7 +404,7 @@ li {
       right: 0; }
 
 .sub-title {
-  color: #fff;
+  color: #111;
   margin-top: 10px;
   font-size: 19px;
   font-family: 'montserratultralight';
@@ -413,7 +413,7 @@ li {
   z-index: 1; }
 
 .title, .title a {
-  color: #fff;
+  color: #111;
   margin-bottom: 0;
   font-weight: 100;
   position: relative;
